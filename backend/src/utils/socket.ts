@@ -1,14 +1,14 @@
 import {nanoid} from "nanoid"
 
+import type {MessageError, MessageSuccess, MessageRequest, ResponseStatus} from "@/types/messages"
 import type {RawData} from "ws"
-import type {RequestMessage, ErrorMessage, SuccessMessage, ResponseStatus} from "@/types/messages"
 
-export function prepareRequestMsg<T extends string, D = any>(message: RawData): RequestMessage<T, D> | null {
+export function prepareRequestMsg<T extends string, D = any>(message: RawData): MessageRequest<T, D> | null {
   try {
     try {
-      const {type, data, id} = JSON.parse(message.toString()) as RequestMessage<T, D>
+      const {type, data, eid} = JSON.parse(message.toString()) as MessageRequest<T, D>
 
-      return {type, data, id}
+      return {type, data, eid}
     } catch (error) {
       console.log(error)
       return null
@@ -20,13 +20,13 @@ export function prepareRequestMsg<T extends string, D = any>(message: RawData): 
 }
 
 export function prepareSuccessMsg<T extends string, D = any>(msg: {
-  id?: number | string
+  eid?: number | string
   type: T
   data: D
   status: ResponseStatus
 }) {
-  const response: SuccessMessage<T, D> = {
-    id: msg.id ?? nanoid(),
+  const response: MessageSuccess<T, D> = {
+    eid: msg.eid ?? nanoid(),
     type: msg.type,
     data: msg.data,
     status: msg.status,
@@ -37,18 +37,18 @@ export function prepareSuccessMsg<T extends string, D = any>(msg: {
 }
 
 export function prepareErrorMsg<T extends string>({
-  id,
+  eid,
   type,
   error,
   code,
 }: {
-  id?: number | string
+  eid?: number | string
   type: T
   error: string
   code: number
 }) {
-  const response: ErrorMessage<T> = {
-    id: id ?? nanoid(),
+  const response: MessageError<T> = {
+    eid: eid ?? nanoid(),
     type,
     data: {msg: error, code},
     status: "error",

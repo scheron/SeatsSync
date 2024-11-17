@@ -11,32 +11,32 @@ model bookings {
   id         Int       @id @default(autoincrement())
   seat_ids   Json
   status     String?   @default("pending") @db.VarChar(20)
-  created_at DateTime? @default(now()) @db.Timestamp(6)
-  expires_at DateTime? @db.Timestamp(6)
+  created_at DateTime  @default(now()) @db.Timestamptz(6) 
+  expires_at DateTime? @db.Timestamptz(6)
 }
 
 model cinemas {
   id              Int               @id @default(autoincrement())
-  create_time     DateTime?         @db.Date
-  name            String            @db.VarChar(255)
-  color           String            @db.VarChar(7)
-  seating_schemes seating_schemes[]
+  create_time     DateTime?         @db.Timestamptz(6) 
+  name            String            @db.VarChar(255) 
+  color           String            @db.VarChar(7) 
+  seating_schemes seating_schemes[] 
 }
 
 model seating_schemes {
   id        Int      @id @default(autoincrement())
   cinema_id Int?
-  name      String   @db.VarChar(255)
+  name      String   @db.VarChar(255) 
   cinemas   cinemas? @relation(fields: [cinema_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  seats     seats[]
+  seats     seats[] 
 }
 
 model seats {
   id              Int              @id @default(autoincrement())
   scheme_id       Int?
-  x               Int
-  y               Int
-  status          String?          @default("free") @db.VarChar(20)
-  category        String?          @default("regular") @db.VarChar(50)
+  x               Int              
+  y               Int              
+  status          String?          @default("free") @db.VarChar(20) 
+  category        String?          @default("regular") @db.VarChar(50) 
   seating_schemes seating_schemes? @relation(fields: [scheme_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }

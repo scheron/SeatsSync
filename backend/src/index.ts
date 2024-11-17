@@ -2,7 +2,8 @@ import dotenv from "dotenv"
 import express from "express"
 import http from "http"
 import {WebSocketServer} from "ws"
-import {onMessage} from "./routes/socket"
+import {onMessage} from "./sockets/cinemas.socket"
+import {getAllCinemas} from "./models/cinemas.model"
 
 dotenv.config()
 
@@ -24,6 +25,10 @@ wss.on("connection", (ws) => {
 
 app.get("/", (req, res) => {
   res.send("Hello from server")
+})
+
+app.get("/cinemas", async (req, res) => {
+  res.send(await getAllCinemas())
 })
 
 const PORT = process.env.PORT || 3001

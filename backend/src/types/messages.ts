@@ -1,26 +1,39 @@
 export type ResponseStatus = "performed" | "error" | "snapshot" | "update"
 
-export type RequestMessage<T extends string, D = any> = {
+export type MessageRequest<T extends string, D = any> = {
+  /** External user id */
+  eid: string | number
+  /** Message type */
   type: T
+  /** Message data */
   data: D
-  id: string | number
 }
 
-export type SuccessMessage<T extends string, D = any> = {
-  type: T
-  data: D
-  id: string | number
-  status: ResponseStatus
+export type MessageSuccess<T extends string, D = any> = {
+  /** External user id */
+  eid: string | number
+  /** Message timestamp */
   ts: number
+  /** Message response status */
+  status: ResponseStatus
+  /** Message data */
+  data: D
+  /** Message type */
+  type: T
 }
 
-export type ErrorMessage<T extends string> = {
+export type MessageError<T extends string> = {
+  /** External user id */
+  eid: string | number
+  /** Message timestamp */
+  ts: number
+  /** Message response status */
+  status: ResponseStatus
+  /** Message data */
   type: T
+  /** Error message */
   data: {
     msg: string
     code: number
   }
-  id: string | number
-  status: ResponseStatus
-  ts: number
 }

@@ -18,18 +18,18 @@ export const onMessage = async (ws: WebSocket, message: RawData) => {
     const request = prepareRequestMsg<MessageType, Cinema | null>(message)
     if (!request) return
 
-    const {data = null, id, type} = request
+    const {data = null, eid, type} = request
 
     if (!methods[type]) {
-      ws.send(prepareErrorMsg({id, type, code: 404, error: "Unknown message type"}))
+      ws.send(prepareErrorMsg({eid, type, code: 404, error: "Unknown message type"}))
       return
     }
 
     try {
       const result = await methods[type](data)
-      ws.send(prepareSuccessMsg({id, type, data: result, status: "performed"}))
+      ws.send(prepareSuccessMsg({eid, type, data: result, status: "performed"}))
     } catch (error) {
-      ws.send(prepareErrorMsg({id, type, error: error.message, code: 555}))
+      ws.send(prepareErrorMsg({eid, type, error: error.message, code: 555}))
     }
   } catch (error) {
     // ws.send(prepareErrorMsg(internalError)
