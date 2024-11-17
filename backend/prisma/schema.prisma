@@ -22,7 +22,6 @@ model SeatingScheme {
   created_at DateTime       @default(now()) @db.Timestamptz(6) 
   cinema    Cinema          @relation(fields: [cinema_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   seats     Seat[]                                              
-  bookings  Booking[]                                           
 }
 
 model Seat {
@@ -33,6 +32,7 @@ model Seat {
   status          String?         @default("free") @db.VarChar(20)     
   category        String?         @default("regular") @db.VarChar(50)  
   seating_scheme  SeatingScheme?  @relation(fields: [scheme_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  bookings        BookingSeat[]   
 }
 
 model Pricing {
@@ -43,11 +43,19 @@ model Pricing {
 
 model Booking {
   id         Int       @id @default(autoincrement())            
-  scheme_id  Int                                                 
-  seat_ids   Json                                                
-  session_id String                                              
+  session_id String    @db.VarChar(255)                         
   status     String?   @default("pending") @db.VarChar(20)       
   created_at DateTime  @default(now()) @db.Timestamptz(6)        
   expires_at DateTime? @db.Timestamptz(6)                        
-  seating_scheme SeatingScheme @relation(fields: [scheme_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  seats      BookingSeat[] 
+}
+
+model BookingSeat {
+  booking_id Int                                            
+  seat_id    Int                                            
+
+  booking    Booking @relation(fields: [booking_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  seat       Seat    @relation(fields: [seat_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([booking_id, seat_id]) 
 }
