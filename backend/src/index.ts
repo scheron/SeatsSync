@@ -5,7 +5,7 @@ import {WebSocketServer} from "ws"
 import {onMessage} from "./sockets/cinemas.socket"
 import {getAllCinemas} from "./models/cinemas.model"
 
-dotenv.config()
+dotenv.config({path: "../../.env"})
 
 const app = express()
 const server = http.createServer(app)
