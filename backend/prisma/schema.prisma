@@ -16,46 +16,84 @@ model Cinema {
 }
 
 model SeatingScheme {
-  id        Int             @id @default(autoincrement())        
-  cinema_id Int                                                  
-  name      String          @db.VarChar(255)                    
-  created_at DateTime       @default(now()) @db.Timestamptz(6) 
-  cinema    Cinema          @relation(fields: [cinema_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  seats     Seat[]                                              
+  id          Int             @id @default(autoincrement())        
+  created_at  DateTime        @default(now()) @db.Timestamptz(6) 
+  cinema_id   Int                                                  
+  name        String          @db.VarChar(255)                    
+  width       Int             
+  height      Int            
+  seats       Seat[]                                              
+  bookings    Booking[]                                           
+
+  cinema      Cinema          @relation(fields: [cinema_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model Seat {
   id              Int             @id @default(autoincrement())  
-  scheme_id       Int                                                 
+  seating_scheme_id       Int                                                 
+  seat_type_id    Int
+  row             Int
+  place           Int
   x               Int                                                  
   y               Int                                                  
+  width           Int
+  height          Int
+  rotation        Float
   status          String?         @default("free") @db.VarChar(20)     
-  category        String?         @default("regular") @db.VarChar(50)  
-  seating_scheme  SeatingScheme?  @relation(fields: [scheme_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  bookings        BookingSeat[]   
+  booking         BookingSeat[]
+
+  seating_scheme  SeatingScheme?  @relation(fields: [seating_scheme_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  seat_type       SeatType     @relation(fields: [seat_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+
+model SeatType {
+  id          Int          @id @default(autoincrement())
+  name        String
+  price       Pricing[]
+  ticket_types TicketType[] 
+  seats       Seat[]
+}
+
+model TicketType {
+  id        Int      @id @default(autoincrement())              
+  name      String
+  price       Pricing[]
+  seat_type SeatType @relation(fields: [seat_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  seat_type_id Int
+
 }
 
 model Pricing {
-  id        Int      @id @default(autoincrement())              
-  category  String   @db.VarChar(50)                           
-  price     Float                                            
+  id           Int         @id @default(autoincrement())
+  seat_type_id Int         
+  ticket_type_id Int       
+  price        Float       
+
+  seat_type     SeatType    @relation(fields: [seat_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  ticket_type   TicketType  @relation(fields: [ticket_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([seat_type_id, ticket_type_id]) 
+}
+
+model BookingSeat {
+  seat_id     Int
+  booking_id  Int
+
+  seat        Seat         @relation(fields: [seat_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  booking     Booking      @relation(fields: [booking_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  @@id([booking_id, seat_id]) 
 }
 
 model Booking {
   id         Int       @id @default(autoincrement())            
-  session_id String    @db.VarChar(255)                         
+  seating_scheme_id  Int                                                 
+  session_id String                                              
   status     String?   @default("pending") @db.VarChar(20)       
+
   created_at DateTime  @default(now()) @db.Timestamptz(6)        
   expires_at DateTime? @db.Timestamptz(6)                        
-  seats      BookingSeat[] 
-}
 
-model BookingSeat {
-  booking_id Int                                            
-  seat_id    Int                                            
-
-  booking    Booking @relation(fields: [booking_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  seat       Seat    @relation(fields: [seat_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@id([booking_id, seat_id]) 
+  seating_scheme SeatingScheme @relation(fields: [seating_scheme_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  booking_seats BookingSeat[]
 }

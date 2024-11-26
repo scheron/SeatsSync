@@ -32,7 +32,7 @@ async function main() {
     ]
 
     for (const schemeData of schemes) {
-      const scheme = await prisma.seating_scheme.create({data: schemeData})
+      const scheme = await prisma.seating_schemes.create({data: schemeData})
       console.log(`Created seating scheme: ${scheme.name} for cinema: ${cinema.name}`)
 
       const seats = []
@@ -50,7 +50,7 @@ async function main() {
           })
         }
       }
-      await prisma.seat.createMany({data: seats})
+      await prisma.seats.createMany({data: seats})
       console.log(`Added ${seats.length} seats to scheme: ${scheme.name}`)
 
       const bookedSeats = seats.filter((seat) => seat.status === "occupied")
@@ -65,7 +65,7 @@ async function main() {
           expires_at: new Date(new Date().getTime() + 15 * 60 * 1000),
         })
       }
-      await prisma.booking.createMany({data: bookings})
+      await prisma.bookings.createMany({data: bookings})
       console.log(`Created ${bookings.length} bookings.`)
     }
   }
