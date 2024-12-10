@@ -18,6 +18,7 @@
     "node-cache": "^5.1.2",
     "nodemon": "^3.1.7",
     "prisma": "^5.22.0",
+    "winston": "^3.17.0",
     "ws": "^8.18.0"
   },
   "devDependencies": {
@@ -29,12 +30,8 @@
     "typescript": "^5.6.3"
   },
   "_moduleAliases": {
-    "@config": "dist/config",
-    "@controllers": "dist/controllers",
-    "@middlewares": "dist/middlewares",
-    "@models": "dist/models",
-    "@routes": "dist/routes",
-    "@types": "dist/types",
-    "@utils": "dist/utils"
+    "@core": "dist/core",
+    "@modules": "dist/modules",
+    "@shared": "dist/shared"
   }
 }
