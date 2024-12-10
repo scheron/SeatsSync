@@ -1,9 +1,25 @@
 {
-    "arrowParens": "always",
-    "bracketSpacing": false,
-    "printWidth": 120,
-    "semi": false,
-    "singleQuote": false,
-    "tabWidth": 2,
-    "trailingComma": "all"
+  "arrowParens": "always",
+  "bracketSpacing": false,
+  "printWidth": 120,
+  "semi": false,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "trailingComma": "all",
+  "importOrder": [
+    "^vue$",
+    "^vue-(.*)$",
+    "^@vueuse/(.*)$",
+    "<THIRD_PARTY_MODULES>",
+    "^@/core(.*)$",
+    "^@/modules(.*)$",
+    "^@/shared(.*)$",
+    "^(?!.*)[./].*$",
+    "^[./]",
+    "",
+    "<TYPES>",
+    "<TYPES>^[.]"
+  ],
+  "importOrderParserPlugins": ["typescript", "decorators-legacy"],
+  "plugins": ["@ianvs/prettier-plugin-sort-imports"]
 }
