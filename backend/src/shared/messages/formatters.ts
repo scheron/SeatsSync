@@ -1,25 +1,23 @@
 import {nanoid} from "nanoid"
+import {MessageError, MessageRequest, MessageSuccess, ResponseStatus} from "./types"
 
-import type {MessageError, MessageSuccess, MessageRequest, ResponseStatus} from "@/types/messages"
 import type {RawData} from "ws"
 
-export function prepareRequestMsg<T extends string, D = any>(message: RawData): MessageRequest<T, D> | null {
+export function formatRequestMsg<T extends string, D = any>(message: RawData): MessageRequest<T, D> | null {
   try {
     try {
       const {type, data, eid} = JSON.parse(message.toString()) as MessageRequest<T, D>
 
       return {type, data, eid}
-    } catch (error) {
-      console.log(error)
+    } catch {
       return null
     }
-  } catch (error) {
-    console.log(error)
+  } catch {
     return null
   }
 }
 
-export function prepareSuccessMsg<T extends string, D = any>(msg: {
+export function formatResponseSuccessMsg<T extends string, D = any>(msg: {
   eid?: number | string
   type: T
   data: D
@@ -36,7 +34,7 @@ export function prepareSuccessMsg<T extends string, D = any>(msg: {
   return JSON.stringify(response)
 }
 
-export function prepareErrorMsg<T extends string>({
+export function formatResponseErrorMsg<T extends string>({
   eid,
   type,
   error,

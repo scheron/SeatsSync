@@ -1,4 +1,4 @@
-export type ResponseStatus = "performed" | "error" | "snapshot" | "update"
+export type ResponseStatus = "success" | "error" | "snapshot" | "update"
 
 export type MessageRequest<T extends string, D = any> = {
   /** External user id */

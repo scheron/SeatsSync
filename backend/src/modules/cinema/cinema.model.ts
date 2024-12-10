@@ -1,7 +1,7 @@
-import {DB} from "@/config/db"
-import {Cinema} from "@/types/entities"
+import {DB} from "@/core/db"
+import {Cinema} from "./cinema.types"
 
-const db = new DB("cinemas")
+const db = new DB("cinema")
 
 export async function getAllCinemas(): Promise<Cinema[]> {
   return await db.findAll<Cinema>()
