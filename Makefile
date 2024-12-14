@@ -3,7 +3,7 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
-DOCKER = docker-compose
+DOCKER = cd backend && docker-compose
 POSTGRES_CONTAINER = seats_sync
 
 install:

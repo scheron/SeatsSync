@@ -1,56 +1,79 @@
 import {nanoid} from "nanoid"
-import {MessageError, MessageRequest, MessageSuccess, ResponseStatus} from "./types"
 
 import type {RawData} from "ws"
+import type {ErrorCode, MessageError, MessageRequest, MessageSuccess, ResponseStatus} from "./types"
 
-export function formatRequestMsg<T extends string, D = any>(message: RawData): MessageRequest<T, D> | null {
+function validateMessage<T extends string, D>(message: unknown): message is MessageRequest<T, D> {
+  if (!message || typeof message !== "object") return false
+
+  const msg = message as Partial<MessageRequest<T, D>>
+  return typeof msg.type === "string" && (typeof msg.eid === "string" || typeof msg.eid === "number") && "data" in msg
+}
+
+function normalizeEid(eid?: string | number): string {
+  return String(eid ?? nanoid())
+}
+
+export function formatRequest<T extends string, D = unknown>(message: RawData): MessageRequest<T, D> | null {
   try {
-    try {
-      const {type, data, eid} = JSON.parse(message.toString()) as MessageRequest<T, D>
-
-      return {type, data, eid}
-    } catch {
+    if (!validateMessage<T, D>(message)) {
       return null
+    }
+    return {
+      ...message,
+      eid: normalizeEid(message.eid),
+      ts: Date.now(),
     }
   } catch {
     return null
   }
 }
 
-export function formatResponseSuccessMsg<T extends string, D = any>(msg: {
-  eid?: number | string
+export function formatSuccess<T extends string, D = unknown>({
+  eid,
+  type,
+  data,
+  status,
+}: {
+  eid?: string | number
   type: T
   data: D
-  status: ResponseStatus
-}) {
+  status: Extract<ResponseStatus, "success" | "snapshot" | "update">
+}): string {
   const response: MessageSuccess<T, D> = {
-    eid: msg.eid ?? nanoid(),
-    type: msg.type,
-    data: msg.data,
-    status: msg.status,
+    eid: normalizeEid(eid),
+    type,
+    data,
+    status,
     ts: Date.now(),
   }
 
   return JSON.stringify(response)
 }
 
-export function formatResponseErrorMsg<T extends string>({
+export function formatError<T extends string>({
   eid,
   type,
   error,
   code,
+  stack,
 }: {
-  eid?: number | string
+  eid?: string | number
   type: T
   error: string
-  code: number
-}) {
+  code: ErrorCode
+  stack?: string
+}): string {
   const response: MessageError<T> = {
-    eid: eid ?? nanoid(),
+    eid: normalizeEid(eid),
     type,
-    data: {msg: error, code},
     status: "error",
     ts: Date.now(),
+    data: {
+      message: error,
+      code,
+      ...(process.env.NODE_ENV === "development" && stack ? {stack} : {}),
+    },
   }
 
   return JSON.stringify(response)

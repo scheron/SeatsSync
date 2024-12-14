@@ -1,6 +1,7 @@
 node_modules/
 
 *.tsbuildinfo
+logs*
 
 .env
 .env.development.local
