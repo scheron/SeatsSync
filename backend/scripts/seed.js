@@ -14,7 +14,7 @@ async function clearDatabase() {
   await prisma.ticketType.deleteMany()
   await prisma.seat.deleteMany()
   await prisma.seatType.deleteMany()
-  await prisma.seatingScheme.deleteMany()
+  await prisma.hall.deleteMany()
   await prisma.cinema.deleteMany()
 
   await sleepWithMessage("Database cleared.")
@@ -34,22 +34,40 @@ async function createCinemas() {
   return await prisma.cinema.findMany()
 }
 
-async function createSeatingSchemes(cinema) {
-  await sleepWithMessage(`Creating seating schemes for cinema: ${cinema.name}`)
+async function createHalls(cinema, count) {
+  await sleepWithMessage(`Creating halls for cinema: ${cinema.name}`)
 
-  const schemes = [
-    {name: "Main Hall", cinema_id: cinema.id, width: 15, height: 10},
-    {name: "VIP Lounge", cinema_id: cinema.id, width: 10, height: 5},
+  const halls = [
+    {name: "Main Hall", cinema_id: cinema.id, width: 150, height: 100, places: 15, rows: 10},
+    {name: "VIP Lounge", cinema_id: cinema.id, width: 310, height: 350, places: 10, rows: 5},
+    {name: "Auditorium", cinema_id: cinema.id, width: 200, height: 300, places: 20, rows: 10},
+    {name: "Ocean View", cinema_id: cinema.id, width: 300, height: 300, places: 20, rows: 10},
+    {name: "Outer wall", cinema_id: cinema.id, width: 300, height: 300, places: 20, rows: 10},
   ]
 
-  const seatingSchemes = []
-  for (const schemeData of schemes) {
-    const scheme = await prisma.seatingScheme.create({data: schemeData})
-    await sleepWithMessage(`Created seating scheme: ${scheme.name} for cinema: ${cinema.name}`)
-    seatingSchemes.push(scheme)
+  const _halls = []
+
+  for (const hallData of getRandomList(halls, count)) {
+    const hall = await prisma.hall.create({data: hallData})
+
+    await sleepWithMessage(`Created hall: ${hall.name} for cinema: ${cinema.name}`)
+
+    _halls.push(hall)
   }
 
-  return seatingSchemes
+  return _halls
+}
+
+function getRandomList(list, count) {
+  const result = []
+
+  while (result.length < count) {
+    const index = Math.floor(Math.random() * list.length)
+    if (result.includes(list[index])) continue
+    result.push(list[index])
+  }
+
+  return result
 }
 
 async function createSeatTypes() {
@@ -106,33 +124,34 @@ async function createPricing(seatTypeRecords) {
   }
 }
 
-async function createSeats(scheme, seatTypeRecords) {
+async function createSeats(hall, seatTypeRecords) {
   await sleepWithMessage("Creating seats...")
 
   const seats = []
-  for (let row = 1; row <= scheme.height; row++) {
-    for (let col = 1; col <= scheme.width; col++) {
+
+  for (let row = 1; row <= hall.rows; row++) {
+    for (let col = 1; col <= hall.places; col++) {
       seats.push({
-        seating_scheme_id: scheme.id,
+        hall_id: hall.id,
         seat_type_id: col <= 5 ? seatTypeRecords[1].id : seatTypeRecords[0].id,
         row,
         place: col,
-        x: col * 50,
-        y: row * 50,
+        x: Math.min(col * 50, hall.width),
+        y: Math.min(row * 50, hall.height),
         width: 45,
         height: 45,
         rotation: 0,
-        status: Math.random() > 0.8 ? "occupied" : "free",
+        status: Math.random() > 0.7 ? "occupied" : "free",
       })
     }
   }
 
   await prisma.seat.createMany({data: seats})
-  await sleepWithMessage(`Added ${seats.length} seats to scheme: ${scheme.name}`)
+  await sleepWithMessage(`Added ${seats.length} seats to hall: ${hall.name}`)
   return seats
 }
 
-async function createBookings(scheme, seats) {
+async function createBookings(hall, seats) {
   await sleepWithMessage("Creating bookings...")
 
   const bookedSeats = seats.filter((seat) => seat.status === "occupied")
@@ -140,8 +159,8 @@ async function createBookings(scheme, seats) {
 
   for (let i = 0; i < Math.min(5, bookedSeats.length); i += 3) {
     bookings.push({
-      seating_scheme_id: scheme.id,
-      session_id: `session_${Math.random().toString(36).substring(2, 15)}`,
+      hall_id: hall.id,
+      session_id: `session_${Math.random().toString(36).slice(2, 15)}`,
       status: "pending",
       created_at: new Date(),
       expires_at: new Date(new Date().getTime() + 15 * 60 * 1000),
@@ -164,11 +183,11 @@ async function main() {
   await createPricing(seatTypes)
 
   for (const cinema of cinemas) {
-    const schemes = await createSeatingSchemes(cinema)
+    const halls = await createHalls(cinema, Math.floor(Math.random() * 3) + 1)
 
-    for (const scheme of schemes) {
-      const seats = await createSeats(scheme, seatTypes)
-      await createBookings(scheme, seats)
+    for (const hall of halls) {
+      const seats = await createSeats(hall, seatTypes)
+      await createBookings(hall, seats)
     }
   }
 
