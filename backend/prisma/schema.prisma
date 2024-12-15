@@ -7,6 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id               Int       @id @default(autoincrement())
+  username         String    @unique @db.VarChar(255)
+  secret           String    @db.VarChar(255)
+  token            String?   @unique @db.VarChar(255) 
+  recovery_phrase  String?   @unique @db.VarChar(255) 
+  created_at       DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime  @updatedAt @db.Timestamptz(6) 
+}
+
 model Cinema {
   id              Int              @id @default(autoincrement()) 
   name            String           @db.VarChar(255)             
