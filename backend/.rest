@@ -1,0 +1,20 @@
+### POST register
+POST http://localhost:3001/auth/register HTTP/1.1
+content-type: application/json
+
+{
+  "username": "olegardo"
+}
+
+### GET users
+GET http://localhost:3001/auth/users HTTP/1.1
+content-type: application/json
+
+### POST login
+POST http://localhost:3001/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "username": "olegardo",
+  "token": "705880"
+}
