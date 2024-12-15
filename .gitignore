@@ -2,6 +2,9 @@ node_modules/
 
 *.tsbuildinfo
 logs*
+.vscode
+.idea
+.DS_Store
 
 .env
 .env.development.local
