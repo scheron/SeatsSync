@@ -1,8 +1,8 @@
 import {PrismaClient} from "@prisma/client"
-import NodeCache from "node-cache"
+import {LRU} from "@/shared/lru"
 
-const CACHE_TTL = 300
-const cache = new NodeCache()
+const CACHE_TTL = 300_000
+const CACHE_MAX_SIZE = 100
 
 export const prisma = new PrismaClient()
 
@@ -15,37 +15,62 @@ export interface IDB {
 }
 
 export class DB implements IDB {
-  constructor(private tableName: string) {}
+  private cache: LRU<string, unknown>
+
+  constructor(private tableName: string) {
+    this.cache = new LRU<string, unknown>(CACHE_MAX_SIZE)
+  }
 
   async findAll<R>(): Promise<R[]> {
-    const cached = cache.get(this.tableName)
+    const cacheKey = `${this.tableName}:all`
+    const cached = this.cache.get(cacheKey)
 
     if (cached) return cached as R[]
 
     const result = await prisma[this.tableName].findMany()
-    cache.set(this.tableName, result, CACHE_TTL)
+    this.cache.set(cacheKey, result, CACHE_TTL)
+
     return result
   }
 
   async findById<R>(id: number): Promise<R | null> {
-    return await prisma[this.tableName].findUnique({where: {id}})
+    const cacheKey = `${this.tableName}:id:${id}`
+    const cached = this.cache.get(cacheKey)
+
+    if (cached) return cached as R
+
+    const result = await prisma[this.tableName].findUnique({where: {id}})
+    if (result) this.cache.set(cacheKey, result, CACHE_TTL)
+
+    return result
   }
 
   async create<T, R>(data: T): Promise<R> {
-    return await prisma[this.tableName].create({data})
+    const result = await prisma[this.tableName].create({data})
+
+    this.invalidateCache()
+
+    return result
   }
 
   async update<T, R>(id: number, data: T): Promise<R> {
-    const existing = await this.findById(id)
+    const existing = await this.findById<R>(id)
 
     if (!existing) {
       throw new Error(`${this.tableName} with id ${id} not found`)
     }
 
-    return await prisma[this.tableName].update({where: {id}, data})
+    const result = await prisma[this.tableName].update({where: {id}, data})
+
+    this.invalidateCache()
+
+    const cacheKey = `${this.tableName}:id:${id}`
+    this.cache.set(cacheKey, result, CACHE_TTL)
+
+    return result
   }
 
-  async delete(id: number) {
+  async delete(id: number): Promise<void> {
     const existing = await this.findById(id)
 
     if (!existing) {
@@ -53,5 +78,15 @@ export class DB implements IDB {
     }
 
     await prisma[this.tableName].delete({where: {id}})
+
+    this.invalidateCache()
+
+    const cacheKey = `${this.tableName}:id:${id}`
+    this.cache.delete(cacheKey)
+  }
+
+  private invalidateCache(): void {
+    const cacheKey = `${this.tableName}:all`
+    this.cache.delete(cacheKey)
   }
 }
