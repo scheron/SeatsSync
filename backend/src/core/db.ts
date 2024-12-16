@@ -11,7 +11,7 @@ type DBResponse<T> = {success: boolean; data: T | null; error?: string}
 
 export interface IDB {
   findAll<T>(): Promise<DBResponse<T[]>>
-  findById<R>(id: number): Promise<DBResponse<R>>
+  findOne<R>(where: Record<string, unknown>): Promise<DBResponse<R>>
   create<T, R>(data: T): Promise<DBResponse<R>>
   update<T, R>(id: number, data: T): Promise<DBResponse<R>>
   delete(id: number): Promise<DBResponse<null>>
@@ -46,8 +46,8 @@ export class DB implements IDB {
     }
   }
 
-  async findById<R>(id: number): Promise<DBResponse<R>> {
-    const cacheKey = this.getCacheKey("id", id)
+  async findOne<R>(where: Record<string, any>): Promise<DBResponse<R>> {
+    const cacheKey = this.getCacheKey("find", JSON.stringify(where))
     const cached = this.cache.get(cacheKey)
 
     if (cached) {
@@ -56,19 +56,22 @@ export class DB implements IDB {
     }
 
     try {
-      const result = await prisma[this.tableName].findUnique({where: {id}})
+      const result = await prisma[this.tableName].findUnique({where})
 
       if (!result) {
-        logger.info({message: `Record not found in ${this.tableName} for id ${id}`})
+        logger.info({message: `Record not found in ${this.tableName} for query ${JSON.stringify(where)}`})
         return {success: false, data: null, error: "Record not found"}
       }
 
       this.cache.set(cacheKey, result, CACHE_TTL)
-      logger.info({message: `Retrieved record from ${this.tableName} with id ${id}`, data: result})
+      logger.info({message: `Retrieved record from ${this.tableName} for query ${JSON.stringify(where)}`, data: result})
 
       return {success: true, data: result}
     } catch (error: any) {
-      logger.error({message: `Failed to fetch record from ${this.tableName} with id ${id}`, error: error.message})
+      logger.error({
+        message: `Failed to fetch record from ${this.tableName} for query ${JSON.stringify(where)}`,
+        error: error.message,
+      })
       return {success: false, data: null, error: "Database error"}
     }
   }
@@ -90,7 +93,7 @@ export class DB implements IDB {
 
   async update<T, R>(id: number, data: T): Promise<DBResponse<R>> {
     try {
-      const existing = await this.findById<R>(id)
+      const existing = await this.findOne<R>({id})
 
       if (!existing.success || !existing.data) {
         return {success: false, data: null, error: `Record not found`}
@@ -100,7 +103,7 @@ export class DB implements IDB {
 
       this.invalidateCacheById(id)
 
-      const cacheKey = this.getCacheKey("id", id)
+      const cacheKey = this.getCacheKey("find", JSON.stringify({id}))
       this.cache.set(cacheKey, result, CACHE_TTL)
 
       logger.info({message: `Updated record in ${this.tableName} with id ${id}`, data})
@@ -114,7 +117,7 @@ export class DB implements IDB {
 
   async delete(id: number): Promise<DBResponse<null>> {
     try {
-      const existing = await this.findById(id)
+      const existing = await this.findOne({id})
 
       if (!existing.success || !existing.data) {
         return {success: false, data: null, error: `Record not found`}
@@ -124,7 +127,7 @@ export class DB implements IDB {
 
       this.invalidateCacheById(id)
 
-      const cacheKey = this.getCacheKey("id", id)
+      const cacheKey = this.getCacheKey("find", JSON.stringify({id}))
       this.cache.delete(cacheKey)
 
       logger.info({message: `Deleted record from ${this.tableName} with id ${id}`})
@@ -136,7 +139,7 @@ export class DB implements IDB {
     }
   }
 
-  private invalidateCache(): void {
+  private invalidateCache() {
     const cacheKey = `${this.tableName}:all`
 
     this.cache.delete(cacheKey)
@@ -144,14 +147,14 @@ export class DB implements IDB {
     logger.info({message: `Invalidated cache for ${cacheKey}`})
   }
 
-  private invalidateCacheById(id: string | number): void {
-    const cacheKey = this.getCacheKey("id", id)
+  private invalidateCacheById(id: string | number) {
+    const cacheKey = this.getCacheKey("find", JSON.stringify({id}))
     this.cache.delete(cacheKey)
 
     logger.info({message: `Invalidated cache for ${cacheKey}`})
   }
 
-  private getCacheKey(suffix: string, postfix?: string | number): string {
+  private getCacheKey(suffix: string, postfix?: string) {
     return [this.tableName, suffix, postfix].filter(Boolean).join(":")
   }
 }
