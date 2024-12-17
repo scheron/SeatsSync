@@ -4,7 +4,7 @@ import dotenv from "dotenv"
 import express from "express"
 import {WebSocketClient} from "@/core/ws"
 import {loginUser, registerUser, saveRecoveryPhrase} from "@/modules/auth/auth.controller"
-import {handleCinemaSocketMessage} from "@/modules/cinema/cinema.socket"
+import {handleCinemaMessages} from "@/modules/cinema/cinema.socket"
 
 dotenv.config()
 
@@ -24,7 +24,7 @@ const ws = new WebSocketClient(server, {
   pingInterval: 3_000,
   autoCloseTimeout: 10_000,
   onMessage: (ws, message) => {
-    handleCinemaSocketMessage(ws, message)
+    handleCinemaMessages(ws, message)
   },
 })
 

@@ -12,7 +12,7 @@ const methods: Partial<Record<MessageType, Function>> = {
   "cinema.create": async (data: {name: string; color: string}) => await createCinema(data),
 }
 
-export async function handleCinemaSocketMessage(ws: WebSocket, message: RawData) {
+export async function handleCinemaMessages(ws: WebSocket, message: RawData) {
   try {
     const request = formatRequest<MessageType, Cinema | null>(message)
 
