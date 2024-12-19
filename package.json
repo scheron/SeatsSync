@@ -2,24 +2,22 @@
   "name": "seats_sync",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
-    "build": "npm run build --prefix frontend && npm run build --prefix backend",
-    "start": "concurrently \"npm start --prefix frontend\" \"npm start --prefix backend\"",
     "prepare": "husky"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
+    "@vue/compiler-sfc": "^3.5.13",
     "concurrently": "^7.0.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3"
+    "prettier-plugin-tailwindcss": "^0.6.9"
   },
   "lint-staged": {
-    "*.ts": [
-      "prettier --parser=typescript --write"
-    ],
     "*.{js,vue}": [
       "prettier --write"
+    ],
+    "*.ts": [
+      "prettier  --parser=typescript --write"
     ]
   }
 }

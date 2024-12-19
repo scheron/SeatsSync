@@ -3,21 +3,29 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
-DOCKER = cd backend && docker-compose
+DOCKER_COMPOSE = cd backend && docker-compose
 POSTGRES_CONTAINER = seats_sync
+FRONTEND_DIR = frontend
+BACKEND_DIR = backend
+
+.PHONY: install start-db stop-db restart-db create-db init-db seed-db setup lint format
 
 install:
-	cd backend && bun install
-	cd frontend && bun install
+	@echo "Installing dependencies..."
+	cd $(BACKEND_DIR) && bun install
+	cd $(FRONTEND_DIR) && bun install
 
 start-db:
-	$(DOCKER) up -d
+	@echo "Starting database..."
+	$(DOCKER_COMPOSE) up -d
 
 stop-db:
-	$(DOCKER) down
+	@echo "Stopping database..."
+	$(DOCKER_COMPOSE) down
 
 restart-db:
-	$(DOCKER) down && $(DOCKER) up -d
+	@echo "Restarting database..."
+	$(DOCKER_COMPOSE) down && $(DOCKER_COMPOSE) up -d
 
 create-db:
 	@echo "Creating database with user: $(POSTGRES_USER) and database: $(POSTGRES_DB)"
@@ -25,12 +33,25 @@ create-db:
 	docker exec -i $(POSTGRES_CONTAINER) psql -U $(POSTGRES_USER) -d postgres -c "CREATE DATABASE $(POSTGRES_DB);"
 
 init-db:
-	@cd backend && bun prisma db push
+	@echo "Initializing database schema..."
+	cd $(BACKEND_DIR) && bun prisma db push
 
 seed-db:
-	@cd backend && bun run scripts/seed.js
+	@echo "Seeding database..."
+	cd $(BACKEND_DIR) && bun run scripts/seed.js
+
+lint:
+	@echo "Running linter for both frontend and backend..."
+	cd $(FRONTEND_DIR) && bun run lint
+	cd $(BACKEND_DIR) && bun run lint
+
+format:
+	@echo "Running Prettier to format code..."
+	cd $(FRONTEND_DIR) && bun run format
+	cd $(BACKEND_DIR) && bun run format
 
 setup:
+	@echo "Setting up project..."
 	make install
 	make start-db
 	make create-db
