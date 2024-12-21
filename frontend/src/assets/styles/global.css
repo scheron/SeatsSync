@@ -30,4 +30,33 @@
   font-family: Rubik, system-ui, Arial, sans-serif;
   line-height: 1.5;
   font-weight: normal;
+
+}
+
+body {
+  background: hsl(var(--color-primary-100));
+}
+
+
+::-webkit-scrollbar {
+  background: hsl(var(--color-primary-100));
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--color-primary-300));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--color-primary-200));
+}
+
+::-webkit-scrollbar-corner {
+  background: hsl(var(--color-primary-100));
+}
+
+.no-scroll {
+  overflow: hidden;
 }

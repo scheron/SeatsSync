@@ -1,4 +1,4 @@
-import {hexToHsb, hsbToHex} from "@/utils/colors"
+import {hexToHsb, hsbToHsl} from "@/utils/colors"
 
 function calcStepValue(start: number, end: number, steps: number) {
   return Math.round(Math.abs(start - end) / steps)
@@ -45,7 +45,7 @@ export function updateCssVariables(palette: Record<string, [number, number, numb
   const root = document.documentElement
 
   Object.entries(palette).forEach(([key, hsb]) => {
-    const hex = hsbToHex(...hsb)
-    root.style.setProperty(`--color-${key}`, hex)
+    const [h, s, l] = hsbToHsl(...hsb)
+    root.style.setProperty(`--color-${key}`, `${h} ${s}% ${l}%`)
   })
 }
