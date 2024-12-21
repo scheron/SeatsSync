@@ -35,8 +35,8 @@ export const useThemeStore = defineStore("theme", () => {
 
   watch(isDarkMode, setMode, {immediate: true})
   watchUserSystemTheme((isDark) => (isDarkMode.value = isDark))
-  // setPrimaryColor(primaryColor.value)
-  //
+  setPrimaryColor(primaryColor.value)
+
   return {
     isDarkMode,
     toggleDarkMode,

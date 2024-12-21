@@ -1,0 +1,43 @@
+.v-popper--theme-dropdown .v-popper__inner,
+.v-popper--theme-tooltip .v-popper__inner {
+  background: hsl(var(--color-primary-100));
+  color: hsl(var(--color-contrast));
+  border-radius: 4px;
+  border: none;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+  padding: 6px 10px;
+}
+
+.v-popper--theme-dropdown .v-popper__arrow-inner,
+.v-popper--theme-tooltip .v-popper__arrow-inner {
+  visibility: hidden;
+  border-color: hsl(var(--color-primary-300));
+}
+
+.v-popper--theme-dropdown .v-popper__arrow-outer,
+.v-popper--theme-tooltip .v-popper__arrow-outer {
+  visibility: hidden;
+  border-color: hsl(var(--color-primary-300));
+}
+
+.v-popper--theme-dropdown.v-popper__popper--hidden,
+.v-popper--theme-theme.v-popper__popper--hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.15s,
+    visibility 0.15s;
+}
+
+.v-popper--theme-dropdown.v-popper__popper--shown,
+.v-popper--theme-theme.v-popper__popper--shown {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.15s;
+}
+
+.v-popper--theme-dropdown.v-popper__popper--skip-transition,
+.v-popper--theme-theme.v-popper__popper--skip-transition {
+  transition: none !important;
+}

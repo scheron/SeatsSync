@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BaseInput from "@/ui/common/base/BaseInput"
-
-// No additional script needed
 </script>
 
 <template>
@@ -20,7 +18,3 @@ import BaseInput from "@/ui/common/base/BaseInput"
     </div>
   </div>
 </template>
-
-<style>
-/* Add custom styles here if necessary */
-</style>
