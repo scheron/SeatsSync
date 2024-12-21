@@ -1,7 +1,7 @@
 import {Request, Response} from "express"
 import jwt from "jsonwebtoken"
 import speakeasy from "speakeasy"
-import {earlyReturn, earlyReturnResponse} from "@/shared/earlyReturn"
+import {earlyReturnResponse} from "@/shared/earlyReturn"
 import {createUser, findUser} from "./auth.model"
 
 const JWT_SECRET = process.env.JWT_SECRET as string
@@ -43,10 +43,7 @@ export async function loginUser(req: Request<{}, {}, {username: string; token: s
   res.json({message: "Logged in successfully"})
 }
 
-export async function saveRecoveryPhrase(
-  req: Request<any, any, {username: string; recovery_phrase: string}>,
-  res: Response,
-) {
+export async function saveRecoveryPhrase(req: Request<any, any, {username: string; recovery_phrase: string}>, res: Response) {
   const {username, recovery_phrase} = req.body
 
   if (await earlyReturnResponse(res, !username, 400, "Username is required")) return
