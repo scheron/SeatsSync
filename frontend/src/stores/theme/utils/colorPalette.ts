@@ -1,4 +1,4 @@
-import {hexToHsb, hsbToHsl} from "@/utils/colors"
+import {hexToHsb, hsbToHex} from "@/utils/colors"
 
 function calcStepValue(start: number, end: number, steps: number) {
   return Math.round(Math.abs(start - end) / steps)
@@ -9,11 +9,11 @@ export function generatePrimaryPalette(hex: string): {[key: number]: [number, nu
 
   const palette = Array(19).fill(null)
 
-  // Hardcoded values for white, primary color, and black
+  // Hardcoded values for white, black, tint, shade and accent colors
   palette[0] = [0, 0, 100] // White (0)
-  palette[1] = [h, 4, 100] // Step 50 (hardcoded)
-  palette[9] = [h, s, b] // Primary color (450)
-  palette[17] = [h, 60, 12] // Step 850 (hardcoded)
+  palette[1] = [h, 4, 100] // Tint (50)
+  palette[9] = [h, s, b] // Accent (450)
+  palette[17] = [h, 60, 12] // Shade (850)
   palette[18] = [0, 0, 0] // Black (900)
 
   // Calculate incremental steps for tint and shade
@@ -45,7 +45,7 @@ export function updateCssVariables(palette: Record<string, [number, number, numb
   const root = document.documentElement
 
   Object.entries(palette).forEach(([key, hsb]) => {
-    const hsl = hsbToHsl(...hsb)
-    root.style.setProperty(`--color-${key}`, `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`)
+    const hex = hsbToHex(...hsb)
+    root.style.setProperty(`--color-${key}`, hex)
   })
 }

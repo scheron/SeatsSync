@@ -1,29 +1,28 @@
 :root {
-  --color-warn: hsl(35, 100%, 50%);
-  --color-error: hsl(14, 100%, 50%);
-  --color-success: hsl(148, 77%, 43%);
-  --color-info: hsl(204, 89%, 47%);
-  
+  --color-warn: #ff9500;
+  --color-error: #ff3c00;
+  --color-success: #19c268;
+  --color-info: #0d8de3;
 
-  --color-0: hsl(0, 0%, 100%);
-  --color-50: hsl(0, 0%, 0%);
-  --color-100: hsl(0, 0%, 0%);
-  --color-150: hsl(0, 0%, 0%);
-  --color-200: hsl(0, 0%, 0%);
-  --color-250: hsl(0, 0%, 0%);
-  --color-300: hsl(0, 0%, 0%);
-  --color-350: hsl(0, 0%, 0%);
-  --color-400: hsl(0, 0%, 0%);
-  --color-450: hsl(0, 0%, 0%);
-  --color-500: hsl(0, 0%, 0%);
-  --color-550: hsl(0, 0%, 0%);
-  --color-600: hsl(0, 0%, 0%);
-  --color-650: hsl(0, 0%, 0%);
-  --color-700: hsl(0, 0%, 0%);
-  --color-750: hsl(0, 0%, 0%);
-  --color-800: hsl(0, 0%, 0%);
-  --color-850: hsl(0, 0%, 0%);
-  --color-900: hsl(0, 0%, 0%);
+  --color-0: #ffffff;
+  --color-50: #f5f5ff;
+  --color-100: #dcd9fa;
+  --color-150: #c3bff5;
+  --color-200: #aaa5f0;
+  --color-250: #938deb;
+  --color-300: #7d75e6;
+  --color-350: #675ee0;
+  --color-400: #5248db;
+  --color-450: #382cd4;
+  --color-500: #352bbd;
+  --color-550: #3229a6;
+  --color-600: #2e278f;
+  --color-650: #282378;
+  --color-700: #221e61;
+  --color-750: #1c184a;
+  --color-800: #141233;
+  --color-850: #0d0c1f;
+  --color-900: #000000;
 
   --color-primary-100: var(--color-0);
   --color-primary-200: var(--color-50);
@@ -35,15 +34,19 @@
   --color-primary-800: var(--color-350);
   --color-primary-900: var(--color-400);
 
-  .dark {
-    --color-primary-100: var(--color-900);
-    --color-primary-200: var(--color-850);
-    --color-primary-300: var(--color-800);
-    --color-primary-400: var(--color-750);
-    --color-primary-500: var(--color-700);
-    --color-primary-600: var(--color-650);
-    --color-primary-700: var(--color-600);
-    --color-primary-800: var(--color-550);
-    --color-primary-900: var(--color-500);
-  }
+  --color-contrast: var(--color-900);
+}
+
+.dark {
+  --color-primary-100: var(--color-900);
+  --color-primary-200: var(--color-850);
+  --color-primary-300: var(--color-800);
+  --color-primary-400: var(--color-750);
+  --color-primary-500: var(--color-700);
+  --color-primary-600: var(--color-650);
+  --color-primary-700: var(--color-600);
+  --color-primary-800: var(--color-550);
+  --color-primary-900: var(--color-500);
+
+  --color-contrast: var(--color-0);
 }
