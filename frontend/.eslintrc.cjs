@@ -60,6 +60,8 @@ module.exports = {
     "vue/no-dupe-keys": ["error", { groups: [] }],
     "no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
+    "tailwindcss/classnames-order": "off",
+    "tailwindcss/no-custom-classname": "off",
     "unused-imports/no-unused-vars": [
       "warn",
       {
