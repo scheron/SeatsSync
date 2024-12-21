@@ -9,6 +9,36 @@ export default {
   safelist: ["dark"],
   prefix: "",
 
+  theme: {
+    extend: {
+      colors: {
+        accent: "var(--color-450)",
+        tint: "var(--color-50)",
+        shade: "var(--color-850)",
+
+        white: "var(--color-0)",
+        black: "var(--color-900)",
+
+        warn: "var(--color-warn)",
+        error: "var(--color-error)",
+        success: "var(--color-success)",
+        info: "var(--color-info)",
+
+        primary: {
+          100: "var(--color-primary-100)",
+          200: "var(--color-primary-200)",
+          300: "var(--color-primary-300)",
+          400: "var(--color-primary-400)",
+          500: "var(--color-primary-500)",
+          600: "var(--color-primary-600)",
+          700: "var(--color-primary-700)",
+          800: "var(--color-primary-800)",
+          900: "var(--color-primary-900)",
+        },
+      },
+    },
+  },
+
   plugins: [
     plugin(({addUtilities}) => {
       addUtilities({

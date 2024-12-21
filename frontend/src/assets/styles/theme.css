@@ -1,0 +1,49 @@
+:root {
+  --color-warn: hsl(35, 100%, 50%);
+  --color-error: hsl(14, 100%, 50%);
+  --color-success: hsl(148, 77%, 43%);
+  --color-info: hsl(204, 89%, 47%);
+  
+
+  --color-0: hsl(0, 0%, 100%);
+  --color-50: hsl(0, 0%, 0%);
+  --color-100: hsl(0, 0%, 0%);
+  --color-150: hsl(0, 0%, 0%);
+  --color-200: hsl(0, 0%, 0%);
+  --color-250: hsl(0, 0%, 0%);
+  --color-300: hsl(0, 0%, 0%);
+  --color-350: hsl(0, 0%, 0%);
+  --color-400: hsl(0, 0%, 0%);
+  --color-450: hsl(0, 0%, 0%);
+  --color-500: hsl(0, 0%, 0%);
+  --color-550: hsl(0, 0%, 0%);
+  --color-600: hsl(0, 0%, 0%);
+  --color-650: hsl(0, 0%, 0%);
+  --color-700: hsl(0, 0%, 0%);
+  --color-750: hsl(0, 0%, 0%);
+  --color-800: hsl(0, 0%, 0%);
+  --color-850: hsl(0, 0%, 0%);
+  --color-900: hsl(0, 0%, 0%);
+
+  --color-primary-100: var(--color-0);
+  --color-primary-200: var(--color-50);
+  --color-primary-300: var(--color-100);
+  --color-primary-400: var(--color-150);
+  --color-primary-500: var(--color-200);
+  --color-primary-600: var(--color-250);
+  --color-primary-700: var(--color-300);
+  --color-primary-800: var(--color-350);
+  --color-primary-900: var(--color-400);
+
+  .dark {
+    --color-primary-100: var(--color-900);
+    --color-primary-200: var(--color-850);
+    --color-primary-300: var(--color-800);
+    --color-primary-400: var(--color-750);
+    --color-primary-500: var(--color-700);
+    --color-primary-600: var(--color-650);
+    --color-primary-700: var(--color-600);
+    --color-primary-800: var(--color-550);
+    --color-primary-900: var(--color-500);
+  }
+}
