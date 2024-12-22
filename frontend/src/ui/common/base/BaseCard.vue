@@ -32,8 +32,6 @@ const classes = computed(() => {
       <BaseSpinner v-else-if="loaderType === 'spinner'" class="size-10 text-primary-900" />
     </div>
 
-    <div v-if="!loading">
-      <slot />
-    </div>
+    <slot v-else />
   </div>
 </template>

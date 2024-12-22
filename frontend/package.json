@@ -15,6 +15,7 @@
     "clsx": "^2.1.1",
     "floating-vue": "^5.2.2",
     "pinia": "^2.3.0",
+    "qrcode.vue": "^3.6.0",
     "rxjs": "^7.8.1",
     "tailwind-merge": "^2.5.5",
     "vite-svg-loader": "^5.1.0",
