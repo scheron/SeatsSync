@@ -1,24 +1,36 @@
 <script setup lang="ts">
-import BaseCard from "@/ui/common/base/BaseCard.vue"
-import Header from "@/ui/sections/Header.vue"
+import {useDevice} from "@/composables/useDevice"
+import {Carousel, Slide} from "vue3-carousel"
+
+const {isTablet} = useDevice()
+
+const slides = ["start", "middle", "end"]
 </script>
 
 <template>
-  <div class="flex h-svh w-svw flex-col gap-4 bg-primary-200 p-4 text-contrast">
-    <Header />
+  <div class="flex h-screen w-screen flex-col gap-4 overflow-hidden bg-primary-200 p-4 text-contrast">
+    <slot name="header" />
 
-    <div class="grid h-full grid-cols-[1fr_2fr_1fr] gap-4">
-      <div class="flex flex-col gap-4">
-        <BaseCard loading class="h-24"> Left Top Section </BaseCard>
-        <BaseCard loading loader-type="spinner" class="flex-1">Left Main Content</BaseCard>
+    <Carousel v-if="isTablet" class="layout-carousel" height="100%" :perPage="1">
+      <Slide v-for="slide in slides" :key="slide" class="flex h-full flex-col gap-4">
+        <slot :name="slide" />
+      </Slide>
+    </Carousel>
+
+    <div v-else class="grid h-full grid-cols-[1fr_2fr_1fr] gap-4">
+      <div v-for="slide in slides" :key="slide" class="flex flex-col gap-4">
+        <slot :name="slide" />
       </div>
-
-      <div class="flex flex-col gap-4">
-        <BaseCard class="flex-1">Center Main Content</BaseCard>
-        <BaseCard loading class="h-24">Center Bottom Section</BaseCard>
-      </div>
-
-      <BaseCard loading loader-type="spinner">Right Content</BaseCard>
     </div>
   </div>
 </template>
+
+<style lang="css" scoped>
+:deep(.layout-carousel) {
+  height: 100%;
+
+  & .carousel__viewport {
+    height: 100%;
+  }
+}
+</style>

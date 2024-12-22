@@ -4,7 +4,7 @@ import BaseInput from "@/ui/common/base/BaseInput"
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center bg-black p-4 text-white">
+  <div class="flex flex-col items-center justify-center bg-primary-400 p-4 text-white">
     <div class="w-full max-w-sm space-y-4">
       <BaseInput label="Username" placeholder="Enter username" />
       <BaseInput label="2FA-Key" placeholder="Enter 6 digits 2FA-Key" />

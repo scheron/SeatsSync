@@ -1,0 +1,28 @@
+:root {
+  --toastify-toast-width: auto;
+  --toastify-toast-min-height: 34px;
+}
+
+.Toastify__toast-body {
+  padding-right: 10px;
+}
+
+.Toastify__toast-theme--dark {
+  color: hsl(var(--color-text-1));
+  background-color: hsl(var(--color-bg-1));
+}
+.Toastify__toast-theme--light {
+  color: hsl(var(--color-text-1));
+  background-color: hsl(var(--color-bg-1));
+}
+
+.Toastify__close-button {
+  color: hsl(var(--color-text-1));
+}
+.Toastify__close-button > svg {
+  color: hsl(var(--color-text-1));
+}
+.Toastify__close-button:hover,
+.Toastify__close-button:focus {
+  color: hsl(var(--color-text-2));
+}

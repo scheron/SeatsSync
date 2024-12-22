@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, defineProps} from "vue"
+import {computed} from "vue"
 import {cn} from "@/utils/tailwindcss"
 import BaseSpinner from "./BaseSpinner.vue"
 
