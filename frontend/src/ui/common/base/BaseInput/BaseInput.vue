@@ -25,7 +25,7 @@ const sizeClass = sizesVariants(props)
 
 <template>
   <label class="flex w-full flex-col gap-1" :class="$attrs.class">
-    <span v-if="label" class="text-content-3 block text-sm font-medium"> {{ label }} </span>
+    <span v-if="label" class="block text-sm font-medium text-content"> {{ label }} </span>
 
     <div :class="[containerClass, sizeClass]">
       <slot name="before">

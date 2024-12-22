@@ -24,7 +24,7 @@ export default {
         success: "hsl(var(--color-success))",
         info: "hsl(var(--color-info))",
 
-        contrast: "hsl(var(--color-contrast))",
+        content: "hsl(var(--color-content))",
 
         primary: {
           100: "hsl(var(--color-primary-100))",

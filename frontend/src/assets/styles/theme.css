@@ -34,7 +34,7 @@
   --color-primary-800: var(--color-350);
   --color-primary-900: var(--color-400);
 
-  --color-contrast: var(--color-900);
+  --color-content: var(--color-900);
 }
 
 .dark {
@@ -48,7 +48,7 @@
   --color-primary-800: var(--color-550);
   --color-primary-900: var(--color-500);
 
-  --color-contrast: var(--color-0);
+  --color-content: var(--color-0);
 }
 
 .theme-transition {

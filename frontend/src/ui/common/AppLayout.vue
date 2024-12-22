@@ -8,7 +8,7 @@ const slides = ["start", "middle", "end"]
 </script>
 
 <template>
-  <div class="flex h-screen w-screen flex-col gap-4 overflow-hidden bg-primary-200 p-4 text-contrast">
+  <div class="flex h-screen w-screen flex-col gap-4 overflow-hidden bg-primary-200 p-4 text-content">
     <slot name="header" />
 
     <Carousel v-if="isTablet" class="layout-carousel" height="100%" :perPage="1">
