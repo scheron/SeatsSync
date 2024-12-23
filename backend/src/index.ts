@@ -3,8 +3,13 @@ import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import express from "express"
 import {WebSocketClient} from "@/core/ws"
-import {loginUser, registerUser, saveRecoveryPhrase} from "@/modules/auth/auth.controller"
+import {checkAccess} from "@/modules/auth/auth.controller"
+import {handleAuthMessages} from "@/modules/auth/auth.socket"
 import {handleCinemaMessages} from "@/modules/cinema/cinema.socket"
+import {formatError} from "@/shared/messages/formatters"
+import {isMessageType} from "@/shared/messages/validators"
+
+import type {Namespace} from "@/shared/types"
 
 dotenv.config()
 
@@ -16,15 +21,28 @@ const server = createServer(app)
 app.use(express.json())
 app.use(cookieParser())
 
-app.post("/auth/register", registerUser)
-app.post("/auth/login", loginUser)
-app.post("/auth/recovery", saveRecoveryPhrase)
+app.post("/auth/check-access", checkAccess)
+
+const map: Record<Namespace, Function> = {
+  auth: handleAuthMessages,
+  cinema: handleCinemaMessages,
+  hall: () => {},
+  seat: () => {},
+  ticket: () => {},
+}
 
 const ws = new WebSocketClient(server, {
   pingInterval: 3_000,
   autoCloseTimeout: 10_000,
   onMessage: (ws, message) => {
-    handleCinemaMessages(ws, message)
+    const [namespace] = message.type.split(".")
+
+    if (!map[namespace]) {
+      ws.send(formatError({eid: message.eid, type: message.type, error: "Unknown message type", code: 404}))
+      return
+    }
+
+    map[namespace]?.(ws, message)
   },
 })
 

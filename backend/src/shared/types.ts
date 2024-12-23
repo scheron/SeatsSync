@@ -1,3 +1,5 @@
+export type Namespace = "auth" | "cinema" | "hall" | "seat" | "ticket"
+
 export type Cinema = {
   id: number
   name: string

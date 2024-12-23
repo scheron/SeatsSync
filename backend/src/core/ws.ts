@@ -1,12 +1,16 @@
 import {Server} from "http"
-import {RawData, WebSocket, WebSocketServer} from "ws"
+import {WebSocketServer} from "ws"
 import {logger} from "@/shared/logger"
+import {formatRequest} from "@/shared/messages/formatters"
+import {MessageRequest} from "@/shared/messages/types"
+
+import type {RawData, WebSocket} from "ws"
 
 type WebSocketCallbacks = {
   onConnect?: (ws: WebSocket) => void
   onDisconnect?: (ws: WebSocket) => void
   onDestroy?: () => void
-  onMessage?: (ws: WebSocket, message: RawData) => void
+  onMessage?: (ws: WebSocket, message: MessageRequest<any, any>) => void
   onSend?: (ws: WebSocket, message: string) => void
 }
 type WebSocketClientOptions = {
@@ -98,7 +102,14 @@ export class WebSocketClient {
         return
       }
 
-      this.callbacks.onMessage?.(ws, parsedMessage)
+      const request = formatRequest(parsedMessage)
+
+      if (!request) {
+        throw Error(JSON.stringify({message}))
+        return
+      }
+
+      this.callbacks.onMessage?.(ws, request)
     } catch (error) {
       logger.error("Invalid message format: ", {error: error.message})
       ws.send(JSON.stringify({error: "Invalid message format"}))

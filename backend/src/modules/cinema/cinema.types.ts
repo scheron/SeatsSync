@@ -4,4 +4,4 @@ export type Cinema = {
   color: string
 }
 
-export type MessageType = "cinema.get_all" | "cinema.get_one" | "cinema.create"
+export type CinemaMessageType = "cinema.get_all" | "cinema.get_one" | "cinema.create"
