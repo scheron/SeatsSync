@@ -37,21 +37,26 @@ onMounted(async () => {
   code.value = (await requestCode()).code
   loading.value = false
 })
+type Step = "start" | "login" | "register"
+
+const step = ref<Step>("start")
 </script>
 
 <template>
-  <AuthFormLayout label="Register">
+  <AuthFormLayout label="For the access to the system, you need the authenticator application">
     <BaseInput v-model="form.username" label="Username" placeholder="Enter username" />
-    <BaseInput v-model="form.key" label="2FA-Key" placeholder="Enter 6 digits 2FA-Key" />
+
+    <template v-if="step !== 'start'">
+      <BaseInput v-model="form.key" label="2FA-Key" placeholder="Enter 6 digits 2FA-Key" />
+    </template>
 
     <div class="mb-2 flex justify-between text-sm">
-      <BaseButton icon="key" class-icon="size-4" class="gap-1" @click="emit('select-mode', 'recovery')"> Recovery? </BaseButton>
-      <BaseButton icon="enter" class-icon="size-4" class="gap-1" @click="emit('select-mode', 'login')"> Remember? </BaseButton>
+      <BaseButton icon="key" class-icon="size-4" class="gap-1" @click="emit('select-mode', 'recovery')"> Lost your access? </BaseButton>
     </div>
 
-    <BaseButton variant="accent">Register</BaseButton>
+    <BaseButton variant="accent">Enter</BaseButton>
 
-    <template #footer>
+    <template v-if="step === 'register'" #footer>
       <div class="mt-4">
         <BaseCard class="size-52 bg-primary-200 p-0" :loading="loading" loader-type="spinner">
           <QRCode :code="code" :size="208" />

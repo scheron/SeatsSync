@@ -11,7 +11,7 @@ defineProps<{label: string}>()
     <div class="mb-1 w-full border-b border-primary-300"></div>
 
     <div class="flex w-full flex-col gap-2">
-      <div class="mb-2 text-center text-lg font-bold text-content">{{ label }}</div>
+      <div class="mb-2 text-center text-xs font-light text-content/30">{{ label }}</div>
 
       <slot />
     </div>
