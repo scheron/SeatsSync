@@ -30,7 +30,7 @@ export async function findUser({username}: {username: User["username"]}): Promis
 
 export function createCandidate(username: string) {
   const secret = speakeasy.generateSecret({name: `SeatsSync ${username}`})
-  return {username, secret: secret.base32, otpauth_url: secret.otpauth_url, createdAt: Date.now()}
+  return {username, secret: secret.base32, qr_url: secret.otpauth_url, createdAt: Date.now()}
 }
 
 export async function registerCandidate({username, secret, token}: {username: string; secret: string; token: string}) {

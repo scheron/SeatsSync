@@ -45,7 +45,7 @@ const methods: Partial<Record<AuthMessageType, Function>> = {
       const candidate = createCandidate(username)
       candidates.set(username, candidate)
 
-      return {otpatuth_url: candidate.otpauth_url, username, status: "candidate"}
+      return {qr_url: candidate.qr_url, username, status: "candidate"}
     }
   },
 
