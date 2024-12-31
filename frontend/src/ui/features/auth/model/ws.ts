@@ -1,14 +1,16 @@
-import {catchError, EMPTY, interval, Subject, takeUntil, tap} from "rxjs"
+import {randomUUID} from "@/utils/random"
+import {catchError, EMPTY, filter, interval, Subject, takeUntil, tap} from "rxjs"
 import {webSocket, WebSocketSubject} from "rxjs/webSocket"
 
 type Message =
   | 1
   | {
       type: string
-      payload: any
+      data: any
+      eid: string
     }
 
-class WebSocketService {
+export class WebSocketService {
   private socket$: WebSocketSubject<Message> | null = null
   private readonly url: string
   private readonly reconnectInterval = 5000 // 5 секунд
@@ -65,7 +67,7 @@ class WebSocketService {
     this.socket$.next(message)
   }
 
-  public onMessage() {
+  public onMessage(type?: string) {
     if (!this.socket$) {
       console.log("WebSocket is not initialized.")
       return EMPTY
@@ -73,6 +75,8 @@ class WebSocketService {
 
     return this.socket$.asObservable().pipe(
       takeUntil(this.disconnect$),
+      filter((message) => typeof message === "object" && message !== null && "type" in message),
+      filter((message) => (type ? message.type === type : true)),
       catchError((err) => {
         console.log("WebSocket message error:", err)
         return EMPTY
@@ -87,6 +91,10 @@ class WebSocketService {
     this.socket$?.complete()
     this.socket$ = null
   }
+
+  public generateEid() {
+    return randomUUID()
+  }
 }
 
-export const socketService = new WebSocketService("ws://localhost:3001")
+export const ws = new WebSocketService("ws://localhost:3001")
