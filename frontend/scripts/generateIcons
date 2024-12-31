@@ -1,0 +1,92 @@
+//! /usr/bin/env node
+// @ts-nocheck
+
+import {access, constants, mkdir, readdir, readFile, writeFile} from "fs/promises"
+import {basename, extname, join, resolve} from "path"
+import {cwd} from "process"
+
+const ROOT_DIR = resolve(join(cwd(), "./src"))
+const ICONS_DIR = resolve(join(ROOT_DIR, "assets/icons"))
+const COMPONENTS_DIR = resolve(join(ROOT_DIR, "ui/common/icons"))
+const INDEX_FILE = join(COMPONENTS_DIR, "index.ts")
+const TYPES_FILE = join(COMPONENTS_DIR, "types.ts")
+
+;(async () => {
+  try {
+    await mkdir(COMPONENTS_DIR, {recursive: true})
+
+    const files = await readdir(ICONS_DIR)
+
+    let existingIndexContent = ""
+
+    try {
+      existingIndexContent = await readFile(INDEX_FILE, "utf-8")
+    } catch {
+      existingIndexContent = ""
+    }
+
+    const iconNames = []
+    const indexExports = existingIndexContent.split("\n").filter(Boolean)
+
+    for (const file of files) {
+      if (extname(file) !== ".svg") continue
+
+      const iconName = basename(file, ".svg")
+      const componentName = toCamelCase(iconName)
+
+      const componentFile = join(COMPONENTS_DIR, `${componentName}.vue`)
+      iconNames.push(componentName)
+
+      try {
+        await access(componentFile, constants.F_OK)
+        await withSleep(() => console.log(`Icon \x1b[1m\x1b[33m${componentName}\x1b[0m already exists, skipping...`), 100)
+        continue
+      } catch {
+        await withSleep(() => console.log(`Icon \x1b[1m\x1b[32m${componentName}\x1b[0m created!`), 100)
+      }
+
+      const svgContent = await readFile(join(ICONS_DIR, file), "utf-8")
+
+      const cleanedSvg = svgContent.replace(/<\?xml.*?\?>|<!--.*?-->|<!DOCTYPE.*?>/g, "").trim()
+
+      const componentTemplate = `
+<script lang="ts" setup></script>
+
+<template>
+  ${cleanedSvg}
+</template>
+      `.trim()
+
+      await writeFile(componentFile, componentTemplate, "utf-8")
+
+      const exportStatement = `export { default as ${componentName} } from './${componentName}.vue';`
+
+      if (!indexExports.includes(exportStatement)) indexExports.push(exportStatement)
+    }
+
+    await writeFile(INDEX_FILE, indexExports.join("\n") + "\n", "utf-8")
+
+    const typesContent = `
+export type IconName = ${iconNames.map((name) => `"${name}"`).join(" | ")};
+    `.trim()
+
+    await writeFile(TYPES_FILE, typesContent, "utf-8")
+
+    console.log("Icons generated successfully!")
+  } catch (err) {
+    console.error("Error generating icons:", err)
+  }
+})()
+
+function toCamelCase(str) {
+  return str.replace(/[-_](.)/g, (_, char) => char.toUpperCase()).replace(/^./, (char) => char.toUpperCase())
+}
+async function withSleep(cb, ms) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      cb()
+      resolve()
+    }, ms)
+  })
+}
+
