@@ -2,7 +2,7 @@
 
 ## Workflow
 
-Add the plugin to `vite.config.ts` file:
+In `vite.config.ts` file:
 
 ```typescript
 import vue from "@vitejs/plugin-vue"
@@ -23,7 +23,8 @@ export default defineConfig({
 
 ---
 
-### Automatically generated files
+### Workflow
+1. Place your icons in `src/assets/icons` directory.
 
 ```
 src/assets/icons/
@@ -32,7 +33,7 @@ src/assets/icons/
 ├── home.svg
 ```
 
-When running Vite
+2. When running Vite
 
 - **Sprite File:** A sprite is generated at the specified `outputSprite` path (e.g., `public/sprite.svg`).
 - **Type File:** A TypeScript file is created at `typesOutput` (e.g., `src/types/icons.ts`), containing:
@@ -44,7 +45,7 @@ When running Vite
   export type IconName = "arrow-left" | "check" | "home"
   ```
 
-### Using the sprite
+3. Using the sprite
 
 ```vue
 <template>
