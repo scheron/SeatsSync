@@ -4,11 +4,15 @@ import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
 import BaseInput from "@/ui/common/base/BaseInput"
 import QRCode from "@/ui/common/QRCode.vue"
-import AuthFormLayout from "@/ui/layouts/AuthFormLayout.vue"
+import AuthFormLayout from "./AuthFormLayout.vue"
 
 import type {AuthMode} from "../types"
 
 defineProps<{}>()
+const emit = defineEmits<{
+  "select-mode": [AuthMode]
+  back: [void]
+}>()
 
 const form = reactive({
   username: "",
@@ -17,10 +21,6 @@ const form = reactive({
 
 const code = ref("test text 🥸")
 const loading = ref(false)
-
-const emit = defineEmits<{
-  "select-mode": [AuthMode]
-}>()
 
 async function requestCode() {
   const response = {code: "test text 🥸"}
@@ -43,11 +43,13 @@ onMounted(async () => {
   <AuthFormLayout desc="Scan QR code with authenticator application and enter 6 digits 2FA-Key">
     <BaseInput v-model="form.key" label="2FA-Key" placeholder="Enter 6 digits 2FA-Key" />
 
-    <BaseButton variant="accent" class="mt-2">Register</BaseButton>
+    <BaseButton type="submit" variant="accent" class="mt-2">Register</BaseButton>
 
     <div class="flex justify-between text-sm">
-      <BaseButton variant="primary" icon="arrow-left" class="w-1/3 justify-start gap-1" class-icon="size-4" @click="emit('back')">Back</BaseButton>
-      <BaseButton icon="key" class-icon="size-4" class="gap-1">What is 2FA-Key?</BaseButton>
+      <BaseButton type="button" variant="primary" icon="arrow-left" class="w-1/3 justify-start gap-1" class-icon="size-4" @click="emit('back')">
+        Back
+      </BaseButton>
+      <BaseButton type="button" icon="key" class-icon="size-4" class="gap-1">What is 2FA-Key?</BaseButton>
     </div>
 
     <template #footer>

@@ -3,7 +3,7 @@ import {reactive} from "vue"
 import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
 import BaseInput from "@/ui/common/base/BaseInput"
-import AuthFormLayout from "@/ui/layouts/AuthFormLayout.vue"
+import AuthFormLayout from "./AuthFormLayout.vue"
 
 import type {AuthMode} from "../types"
 
@@ -21,7 +21,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <AuthFormLayout label="Recovery">
+  <AuthFormLayout desc="Recovery">
     <BaseInput v-model="form.username" label="Username" placeholder="Enter username" />
     <BaseInput v-model="form.username" label="Recovery phrase" placeholder="Enter recovery phrase" />
     <BaseInput v-model="form.key" label="2FA-Key" placeholder="Enter 6 digits 2FA-Key" />

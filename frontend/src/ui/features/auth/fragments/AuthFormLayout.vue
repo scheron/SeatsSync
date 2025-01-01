@@ -2,6 +2,7 @@
 import Logo from "@/ui/common/Logo.vue"
 
 defineProps<{desc: string}>()
+defineEmits<{submit: [void]}>()
 </script>
 
 <template>
@@ -10,11 +11,11 @@ defineProps<{desc: string}>()
 
     <div class="mb-1 w-full border-b border-primary-300"></div>
 
-    <div class="flex w-full flex-col gap-2">
-      <div class="mb-2 text-center text-xs font-light text-content/30">{{ desc }}</div>
+    <form class="flex w-full flex-col gap-2" @submit.prevent="$emit('submit')">
+      <div class="mb-2 text-center text-xs font-light text-content/50">{{ desc }}</div>
 
       <slot />
-    </div>
+    </form>
     <slot name="footer" />
   </div>
 </template>
