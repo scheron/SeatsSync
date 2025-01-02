@@ -11,7 +11,7 @@ export async function createUser(user: User): Promise<User> {
 
   if (!result.success) {
     logger.error({message: "Failed to create user", error: result.error})
-    throw new Error(result.error || "Failed to create user")
+    throw new Error("Failed to create user")
   }
 
   return result.data!
@@ -22,7 +22,7 @@ export async function findUser({username}: {username: User["username"]}): Promis
 
   if (!result.success) {
     logger.error({message: `Failed to find user ${username}`, error: result.error})
-    throw new Error(result.error || `User ${username} not found`)
+    throw new Error(`User ${username} not found`)
   }
 
   return result.data!
@@ -33,32 +33,40 @@ export function createCandidate(username: string) {
   return {username, secret: secret.base32, qr_url: secret.otpauth_url, createdAt: Date.now()}
 }
 
-export async function registerCandidate({username, secret, token}: {username: string; secret: string; token: string}) {
+export async function registerCandidate({username, secret, code}: {username: string; secret: string; code: string}) {
   if (!username) {
     throw new Error("Username is required")
   }
 
-  const isValid = speakeasy.totp.verify({secret, encoding: "base32", token, window: 1})
+  const isValid = speakeasy.totp.verify({secret, encoding: "base32", token: code, window: 1})
 
   if (!isValid) {
-    throw new Error("Registration failed")
+    throw new Error("Invalid token")
   }
 
-  console.log("Registered candidate", {
-    username,
-    secret,
-    token,
-  })
+  await createUser({username, secret})
 
-  // await createUser({username, secret, token: null, recovery_phrase: null})
-  // res.json({otpauth_url: secret.otpauth_url, secret: secret.base32})
-  // await createUser({username: candidate.username, secret: candidate.secret})
-  // return true
+  return true
 }
 
-export async function loginUser(username: string, token: string) {
-  // const user = await findUserByUsername(username)
-  // if (!user) return null
-  // const isValid = speakeasy.totp.verify({secret: user.secret, encoding: "base32", token})
-  // return isValid ? user : null
+export async function loginUser(username: string, code: string) {
+  const user = await findUser({username})
+  if (!user) return null
+
+  const isValid = speakeasy.totp.verify({secret: user.secret, encoding: "base32", token: code})
+  return isValid ? user : null
+}
+
+export async function updateUser(userData: Partial<User>) {
+  const user = await findUser({username: userData.username})
+  if (!user) return null
+
+  const result = await db.update<typeof userData, User>(user.id, userData)
+
+  if (!result.success) {
+    logger.error({message: `Failed to update user ${userData.username}`, error: result.error})
+    throw new Error(`Failed to update user ${userData.username}`)
+  }
+
+  return result.data!
 }

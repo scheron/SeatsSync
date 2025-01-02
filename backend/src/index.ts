@@ -34,6 +34,7 @@ const map: Record<Namespace, Function> = {
 const ws = new WebSocketClient(server, {
   pingInterval: 3_000,
   autoCloseTimeout: 10_000,
+  enablePingPong: false,
   onMessage: (ws, message) => {
     const [namespace] = message.type.split(".")
 
