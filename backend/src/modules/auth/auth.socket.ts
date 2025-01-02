@@ -9,7 +9,7 @@ import type {WebSocket} from "ws"
 const candidates = new Map<string, {username: string; secret: string; qr_url: string; createdAt: number}>()
 
 const JWT_SECRET = process.env.JWT_SECRET as string
-const CANDIDATE_TIMEOUT = 15 * 60 * 1000
+const CANDIDATE_TIMEOUT = 5 * 60 * 1000
 
 function scheduleCandidateRemoval(username: string) {
   setTimeout(() => {
@@ -22,20 +22,21 @@ function scheduleCandidateRemoval(username: string) {
 
 const handlers: Record<AuthMessageType, (data: any) => Promise<any>> = {
   "auth.start": async ({username}: {username: string}) => {
-    const user = await findUser({username})
-    if (user) {
+    try {
+      const user = await findUser({username})
+
       return {username: user.username, status: "user"}
+    } catch {
+      if (candidates.has(username)) {
+        throw new Error("Registration already in progress")
+      }
+
+      const candidate = createCandidate(username)
+      candidates.set(username, candidate)
+      scheduleCandidateRemoval(username)
+
+      return {qr_url: candidate.qr_url, username, status: "candidate"}
     }
-
-    if (candidates.has(username)) {
-      throw new Error("Registration already in progress")
-    }
-
-    const candidate = createCandidate(username)
-    candidates.set(username, candidate)
-    scheduleCandidateRemoval(username)
-
-    return {qr_url: candidate.qr_url, username, status: "candidate"}
   },
 
   "auth.register": async ({username, code}: {username: string; code: string}) => {
