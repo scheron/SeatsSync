@@ -2,19 +2,26 @@ import {randomUUID} from "@/utils/random"
 import {catchError, EMPTY, filter, interval, Subject, takeUntil, tap} from "rxjs"
 import {webSocket, WebSocketSubject} from "rxjs/webSocket"
 
-type Message =
-  | 1
-  | {
-      type: string
-      data: any
-      eid: string
-    }
+export type ResponseStatus = "success" | "error" | "snapshot" | "update"
+
+export interface RequestMessage<T = any> {
+  type: string
+  data: T
+  eid?: string
+}
+
+export interface ResponseMessage<T> extends RequestMessage<T> {
+  status: ResponseStatus
+}
+
+export type PingMessage = 1
+export type WebSocketMessage<T> = ResponseMessage<T> | PingMessage
 
 export class WebSocketService {
-  private socket$: WebSocketSubject<Message> | null = null
+  private socket$: WebSocketSubject<WebSocketMessage<any>> | null = null
   private readonly url: string
-  private readonly reconnectInterval = 5000 // 5 секунд
-  private readonly pingInterval = 2000 // 2 секунды
+  private readonly reconnectInterval = 5000
+  private readonly pingInterval = 2000
   private readonly disconnect$ = new Subject<void>()
 
   constructor(url: string) {
@@ -23,7 +30,7 @@ export class WebSocketService {
   }
 
   private initSocket() {
-    this.socket$ = webSocket<Message>({
+    this.socket$ = webSocket<WebSocketMessage<any>>({
       url: this.url,
       openObserver: {
         next: () => console.log("WebSocket connection established"),
@@ -49,7 +56,7 @@ export class WebSocketService {
     interval(this.pingInterval)
       .pipe(
         takeUntil(this.disconnect$),
-        tap(() => this.send(1)),
+        tap(() => this.sendPing()),
         catchError((err) => {
           console.log("Ping error:", err)
           return EMPTY
@@ -58,16 +65,29 @@ export class WebSocketService {
       .subscribe()
   }
 
-  public send(message: Message) {
+  send<T = any>(message: RequestMessage<T> | PingMessage) {
     if (!this.socket$) {
       console.log("WebSocket is not connected. Message not sent:", message)
       return
     }
 
-    this.socket$.next(message)
+    if (typeof message !== "number") {
+      message.eid = message.eid ?? this.generateEid()
+    }
+
+    this.socket$.next(message as WebSocketMessage<T>)
   }
 
-  public onMessage(type?: string) {
+  sendPing() {
+    if (!this.socket$) {
+      console.log("WebSocket is not connected. Ping not sent.")
+      return
+    }
+
+    this.socket$.next(1)
+  }
+
+  on<T = any>(type?: string, status?: ResponseStatus) {
     if (!this.socket$) {
       console.log("WebSocket is not initialized.")
       return EMPTY
@@ -75,8 +95,9 @@ export class WebSocketService {
 
     return this.socket$.asObservable().pipe(
       takeUntil(this.disconnect$),
-      filter((message) => typeof message === "object" && message !== null && "type" in message),
+      filter((message): message is ResponseMessage<T> => typeof message === "object" && "status" in message),
       filter((message) => (type ? message.type === type : true)),
+      filter((message) => (status ? message.status === status : true)),
       catchError((err) => {
         console.log("WebSocket message error:", err)
         return EMPTY
@@ -84,7 +105,7 @@ export class WebSocketService {
     )
   }
 
-  public disconnect() {
+  disconnect() {
     console.log("Closing WebSocket connection")
     this.disconnect$.next()
     this.disconnect$.complete()
@@ -92,7 +113,7 @@ export class WebSocketService {
     this.socket$ = null
   }
 
-  public generateEid() {
+  generateEid(): string {
     return randomUUID()
   }
 }

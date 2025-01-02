@@ -7,7 +7,7 @@ import AuthFormLayout from "./AuthFormLayout.vue"
 
 import type {AuthMode} from "../types"
 
-const props = defineProps<{}>()
+defineProps<{}>()
 
 const form = reactive({
   username: "",

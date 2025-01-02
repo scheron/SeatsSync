@@ -4,7 +4,7 @@ import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BaseInput from "@/ui/common/base/BaseInput"
 import AuthFormLayout from "./AuthFormLayout.vue"
 
-const emit = defineEmits<{submit: [string]}>()
+const emit = defineEmits<{submit: [username: string]}>()
 
 const username = ref("")
 </script>

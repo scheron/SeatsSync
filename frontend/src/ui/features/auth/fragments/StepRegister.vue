@@ -1,46 +1,27 @@
 <script setup lang="ts">
-import {onMounted, reactive, ref} from "vue"
+import {reactive} from "vue"
 import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
 import BaseInput from "@/ui/common/base/BaseInput"
 import QRCode from "@/ui/common/QRCode.vue"
 import AuthFormLayout from "./AuthFormLayout.vue"
 
-import type {AuthMode} from "../types"
-
-defineProps<{}>()
-const emit = defineEmits<{
-  "select-mode": [AuthMode]
-  back: [void]
-}>()
+defineProps<{username: string; qrCode: string}>()
+const emit = defineEmits<{submit: [code: string]; back: [void]}>()
 
 const form = reactive({
   username: "",
   key: "",
 })
-
-const code = ref("test text 🥸")
-const loading = ref(false)
-
-async function requestCode() {
-  const response = {code: "test text 🥸"}
-
-  return response
-}
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
-
-onMounted(async () => {
-  loading.value = true
-  await sleep(2000)
-
-  code.value = (await requestCode()).code
-  loading.value = false
-})
 </script>
 
 <template>
-  <AuthFormLayout desc="Scan QR code with authenticator application and enter 6 digits 2FA-Key">
+  <AuthFormLayout desc="Scan QR code with authenticator application and enter 6 digits 2FA-Key" @submit="emit('submit', code)">
+    <div class="mb-4 flex flex-col justify-between">
+      <span class="text-sm text-content/60">Username</span>
+      <span class="truncate text-content">{{ username }}</span>
+    </div>
+
     <BaseInput v-model="form.key" label="2FA-Key" placeholder="Enter 6 digits 2FA-Key" />
 
     <BaseButton type="submit" variant="accent" class="mt-2">Register</BaseButton>
@@ -54,8 +35,8 @@ onMounted(async () => {
 
     <template #footer>
       <div class="mt-4">
-        <BaseCard class="size-52 bg-primary-200 p-0" :loading="loading" loader-type="spinner">
-          <QRCode :code="code" :size="208" />
+        <BaseCard class="size-52 bg-primary-200 p-0" loader-type="spinner">
+          <QRCode :code="qrCode" :size="208" />
         </BaseCard>
       </div>
     </template>

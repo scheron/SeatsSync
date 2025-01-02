@@ -9,7 +9,6 @@ export function createWebSocket() {
       next: () => {
         console.log("WebSocket connection established")
 
-        // Отправляем токен сразу после установки соединения
         // const token = authToken.value
         // if (token) {
         //   socket$.next({type: "auth.authenticate", data: {token}})
