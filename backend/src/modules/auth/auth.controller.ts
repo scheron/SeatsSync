@@ -1,7 +1,8 @@
-import {Request, Response} from "express"
 import jwt from "jsonwebtoken"
 import {earlyResponse} from "@/shared/earlyReturn"
 import {formatError, formatSuccess} from "@/shared/messages/formatters"
+
+import type {Request, Response} from "express"
 
 const JWT_SECRET = process.env.JWT_SECRET as string
 
@@ -28,7 +29,7 @@ export async function handshake(req: Request<{}, {}, {}>, res: Response) {
   }
 }
 
-export async function wink(req: Request, res: Response) {
+export async function wink(req: Request<{}, {}, {username: string; token: string}>, res: any) {
   const {username, token} = req.body
 
   try {
@@ -47,8 +48,8 @@ export async function wink(req: Request, res: Response) {
       maxAge: 5 * 24 * 60 * 60 * 1000,
     })
 
-    res.json({message: "Session established"})
+    res.json(formatSuccess({type: "wink", status: "success", data: {}}))
   } catch (error) {
-    res.status(401).json({message: "Invalid or expired token"})
+    res.status(401).json(formatError({type: "wink", error: error.message, code: 401}))
   }
 }
