@@ -65,6 +65,15 @@ export class WebSocketService {
       .subscribe()
   }
 
+  private sendPing() {
+    if (!this.socket$) {
+      console.log("WebSocket is not connected. Ping not sent.")
+      return
+    }
+
+    this.socket$.next(1)
+  }
+
   send<T = any>(message: RequestMessage<T> | PingMessage) {
     if (!this.socket$) {
       console.log("WebSocket is not connected. Message not sent:", message)
@@ -76,15 +85,6 @@ export class WebSocketService {
     }
 
     this.socket$.next(message as WebSocketMessage<T>)
-  }
-
-  sendPing() {
-    if (!this.socket$) {
-      console.log("WebSocket is not connected. Ping not sent.")
-      return
-    }
-
-    this.socket$.next(1)
   }
 
   on<T = any>(type?: string, status?: ResponseStatus) {
@@ -113,7 +113,7 @@ export class WebSocketService {
     this.socket$ = null
   }
 
-  generateEid(): string {
+  generateEid() {
     return randomUUID()
   }
 }
