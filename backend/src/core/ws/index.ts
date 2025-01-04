@@ -1,1 +1,2 @@
-export {WebSocketClient, type WebSocketClientOptions} from "./ws"
+export {WebSocketClient} from "./wsClient"
+export type {WebSocketClientOptions} from "./types"

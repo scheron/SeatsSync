@@ -6,4 +6,4 @@ export type User = {
   recovery_phrase?: string
 }
 
-export type AuthMessageType = "auth.start" | "auth.register" | "auth.login" | "auth.update_user"
+export type AuthMessageType = "auth.status"

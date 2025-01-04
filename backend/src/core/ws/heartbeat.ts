@@ -6,6 +6,7 @@ type HeartbeatOptions = {
   autoCloseTimeout: number
   onPingTimeout: (ws: WebSocket) => void
   onSend: (ws: WebSocket, message: string) => void
+  validateToken?: (token: string) => boolean
 }
 
 export class Heartbeat {
@@ -13,8 +14,9 @@ export class Heartbeat {
   private pingInterval: number
   private autoCloseTimeout: number
   private intervalId: NodeJS.Timeout | null = null
+  private validateToken?: (token: string) => boolean
 
-  private clients: Map<WebSocket, {lastPingTime: number}> = new Map()
+  private clients: Map<WebSocket, {lastPingTime: number; token: string | null}> = new Map()
 
   private onPingTimeout: (ws: WebSocket) => void
   private onSend: (ws: WebSocket, message: string) => void
@@ -25,12 +27,13 @@ export class Heartbeat {
     this.autoCloseTimeout = options.autoCloseTimeout ?? 10_000
     this.onPingTimeout = options.onPingTimeout
     this.onSend = options.onSend
+    this.validateToken = options.validateToken ?? (() => true)
   }
 
-  addClient(ws: WebSocket) {
+  addClient(ws: WebSocket, token?: string) {
     if (!this.enablePingPong) return
 
-    this.clients.set(ws, {lastPingTime: Date.now()})
+    this.clients.set(ws, {lastPingTime: Date.now(), token: token ?? null})
   }
 
   removeClient(ws: WebSocket) {
@@ -39,7 +42,7 @@ export class Heartbeat {
     this.clients.delete(ws)
   }
 
-  onUserMessage(ws: WebSocket, message: RawData): boolean {
+  onMessage(ws: WebSocket, message: RawData): boolean {
     if (!this.enablePingPong) return false
 
     const client = this.clients.get(ws)
@@ -69,11 +72,17 @@ export class Heartbeat {
   }
 
   private checkClients() {
-    if (!this.enablePingPong) return
-
     const now = Date.now()
 
     this.clients.forEach((data, ws) => {
+      if (!this.validateToken(data.token)) {
+        ws.terminate()
+        this.clients.delete(ws)
+        return
+      }
+
+      if (!this.enablePingPong) return
+
       if (now - data.lastPingTime > this.autoCloseTimeout) {
         ws.terminate()
         this.clients.delete(ws)

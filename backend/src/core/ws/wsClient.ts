@@ -1,24 +1,28 @@
-import {Server} from "http"
+import {IncomingMessage, Server} from "http"
+import dotenv from "dotenv"
+import jwt from "jsonwebtoken"
 import {RawData, WebSocket, WebSocketServer} from "ws"
 import {logger} from "@/shared/logger"
 import {formatRequest} from "@/shared/messages/formatters"
-import {MessageRequest} from "@/shared/messages/types"
 import {Heartbeat} from "./heartbeat"
 
-type WebSocketCallbacks = {
-  onConnect?: (ws: WebSocket) => void
-  onDisconnect?: (ws: WebSocket) => void
-  onDestroy?: () => void
-  onMessage?: (ws: WebSocket, message: MessageRequest<any, any>) => void
-  onSend?: (ws: WebSocket, message: string) => void
-}
+import type {WebSocketCallbacks, WebSocketClientOptions} from "./types"
 
-export type WebSocketClientOptions = {
-  pingMsg?: string | number
-  pingInterval?: number
-  autoCloseTimeout?: number
-  enablePingPong?: boolean
-} & WebSocketCallbacks
+dotenv.config()
+const JWT_SECRET = process.env.JWT_SECRET as string
+
+function validateToken(token: string | null): boolean {
+  if (!token) return false
+
+  try {
+    jwt.verify(token, JWT_SECRET)
+
+    return true
+  } catch (e) {
+    console.log("Invalid token", e)
+    return false
+  }
+}
 
 export class WebSocketClient {
   private ws: WebSocketServer
@@ -42,11 +46,12 @@ export class WebSocketClient {
       autoCloseTimeout: options.autoCloseTimeout ?? 10_000,
       onPingTimeout: (ws) => this.callbacks.onDisconnect?.(ws),
       onSend: (ws, msg) => this.callbacks.onSend?.(ws, msg),
+      validateToken,
     })
 
     this.heartbeat?.start()
 
-    this.ws.on("connection", (ws) => this.handleConnection(ws))
+    this.ws.on("connection", (ws, req) => this.handleConnection(ws, req))
   }
 
   send(message: string, filter?: (ws: WebSocket) => boolean) {
@@ -68,19 +73,28 @@ export class WebSocketClient {
     logger.info("WebSocket server destroyed")
   }
 
-  private handleConnection(ws: WebSocket) {
+  private handleConnection(ws: WebSocket, req: IncomingMessage) {
     logger.info("New client connected")
 
-    this.callbacks.onConnect?.(ws)
-    this.heartbeat?.addClient(ws)
+    const cookies = req.headers.cookie ?? ""
+    const token =
+      cookies
+        .split(";")
+        .find((cookie) => cookie.trim().startsWith("token="))
+        ?.split("=")[1] ?? null
 
-    ws.on("message", (message) => this.handleMessage(ws, message))
+    this.callbacks.onConnect?.(ws)
+    this.heartbeat?.addClient(ws, token)
+
+    ws.context = {token, isAuthenticated: () => validateToken(token)}
+
+    ws.on("message", (message) => this.handleMessage(ws, message, token))
     ws.on("error", (error) => this.handleError(ws, error))
     ws.on("close", () => this.handleDisconnect?.(ws))
   }
 
-  private handleMessage(ws: WebSocket, message: RawData) {
-    const isHeartbeat = this.heartbeat?.onUserMessage(ws, message) ?? false
+  private handleMessage(ws: WebSocket, message: RawData, token?: string) {
+    const isHeartbeat = this.heartbeat?.onMessage(ws, message) ?? false
     if (isHeartbeat) return
 
     try {
@@ -91,14 +105,11 @@ export class WebSocketClient {
         return
       }
 
-      const request = formatRequest(parsedMessage)
+      const requestMessage = formatRequest(parsedMessage)
 
-      if (!request) {
-        throw Error(JSON.stringify({message}))
-        return
-      }
+      if (!requestMessage) throw Error(JSON.stringify({message}))
 
-      this.callbacks.onMessage?.(ws, request)
+      this.callbacks.onMessage?.(ws, requestMessage)
     } catch (error) {
       logger.error("Invalid message format: ", {error: error.message})
       ws.send(JSON.stringify({error: "Invalid message format"}))

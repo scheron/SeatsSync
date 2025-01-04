@@ -3,10 +3,10 @@ import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import express from "express"
 import {WebSocketClient} from "@/core/ws"
-import {handshake, wink} from "@/modules/auth/auth.controller"
+import {initAuthRoutes} from "@/modules/auth/auth.routes"
 import {handleAuthMessages} from "@/modules/auth/auth.socket"
 import {handleCinemaMessages} from "@/modules/cinema/cinema.socket"
-import {formatError} from "@/shared/messages/formatters"
+import {formatError, formatSuccess} from "@/shared/messages/formatters"
 
 import type {Namespace} from "@/shared/types"
 
@@ -20,8 +20,7 @@ const server = createServer(app)
 app.use(express.json())
 app.use(cookieParser())
 
-app.post("/auth/handshake", handshake)
-app.post("/auth/wink", wink)
+initAuthRoutes(app)
 
 const map: Record<Namespace, Function> = {
   auth: handleAuthMessages,

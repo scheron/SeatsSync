@@ -1,55 +1,101 @@
 import jwt from "jsonwebtoken"
 import {earlyResponse} from "@/shared/earlyReturn"
-import {formatError, formatSuccess} from "@/shared/messages/formatters"
+import {createCandidate, findUser, loginUser, registerCandidate, updateUser} from "./auth.model"
 
 import type {Request, Response} from "express"
 
 const JWT_SECRET = process.env.JWT_SECRET as string
 
-export async function handshake(req: Request<{}, {}, {}>, res: Response) {
-  const token = req.cookies?.token
+const CANDIDATE_TIMEOUT = 5 * 60 * 1000
+const candidates = new Map<string, {username: string; secret: string; qr_url: string; createdAt: number}>()
 
-  if (await earlyResponse(res, !token, 401, {error: "Unauthorized"})) return
+function scheduleCandidateRemoval(username: string) {
+  setTimeout(() => {
+    if (candidates.has(username)) {
+      candidates.delete(username)
+      console.log(`Candidate ${username} removed due to timeout.`)
+    }
+  }, CANDIDATE_TIMEOUT)
+}
+
+export async function start(req: Request<{}, {}, {username: string}>, res: Response) {
+  const {username} = req.body
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as {username: string}
+    const user = await findUser({username})
 
-    const newToken = jwt.sign({username: payload.username}, JWT_SECRET, {expiresIn: "5d"})
+    res.json({username: user.username, status: "user"})
+  } catch {
+    if (await earlyResponse(res, candidates.has(username), 405, "Registration already in progress")) return
 
-    res.cookie("refresh_token", newToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 5 * 24 * 60 * 60 * 1000,
-    })
+    const candidate = createCandidate(username)
 
-    res.json(formatSuccess({type: "handshake", status: "success", data: {username: payload.username}}))
-  } catch (error) {
-    res.status(401).json(formatError({type: "handshake", error: error.message, code: 401}))
+    candidates.set(username, candidate)
+    scheduleCandidateRemoval(username)
+
+    res.json({qr_url: candidate.qr_url, username, status: "candidate"})
   }
 }
 
-export async function wink(req: Request<{}, {}, {username: string; token: string}>, res: any) {
-  const {username, token} = req.body
+export async function login(req: Request<{}, {}, {username: string; code: string}>, res: Response) {
+  const {username, code} = req.body
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as {username: string; purpose: "wink"}
+    const user = await loginUser(username, code)
+    if (await earlyResponse(res, !user, 401, "Invalid code")) return
 
-    if (payload.purpose !== "wink" || payload.username !== username) {
-      return res.status(401).json({message: "Invalid token"})
-    }
+    const newToken = jwt.sign({username}, JWT_SECRET, {expiresIn: "5d"})
 
-    const refreshToken = jwt.sign({username}, JWT_SECRET, {expiresIn: "5d"})
+    res
+      .cookie("token", newToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 5 * 24 * 60 * 60 * 1000,
+      })
+      .sendStatus(201)
+  } catch (e) {
+    res.status(401).json(e.message)
+  }
+}
 
-    res.cookie("refresh_token", refreshToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      maxAge: 5 * 24 * 60 * 60 * 1000,
-    })
+export async function register(req: Request<{}, {}, {username: string; code: string}>, res: Response) {
+  const {username, code} = req.body
 
-    res.json(formatSuccess({type: "wink", status: "success", data: {}}))
+  try {
+    const candidate = candidates.get(username)
+    if (await earlyResponse(res, !candidate, 401, "Registration not in progress")) return
+
+    const isRegistered = await registerCandidate({...candidate, code})
+    if (await earlyResponse(res, !isRegistered, 401, "Invalid code")) return
+
+    candidates.delete(username)
+
+    const newToken = jwt.sign({username}, JWT_SECRET, {expiresIn: "5d"})
+
+    res
+      .cookie("token", newToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 5 * 24 * 60 * 60 * 1000,
+      })
+      .sendStatus(201)
+  } catch (e) {
+    res.status(401).json(e.message)
+  }
+}
+
+export async function saveRecoveryPhrase(req: Request<{}, {}, {username: string; recovery_phrase: string}>, res: Response) {
+  try {
+    const {username, recovery_phrase} = req.body
+
+    const user = await findUser({username})
+    if (await earlyResponse(res, !user, 404, "User not found")) return
+
+    await updateUser({username, recovery_phrase})
+    res.sendStatus(201)
   } catch (error) {
-    res.status(401).json(formatError({type: "wink", error: error.message, code: 401}))
+    res.status(401).json(error.message)
   }
 }

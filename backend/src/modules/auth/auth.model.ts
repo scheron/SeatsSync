@@ -17,15 +17,37 @@ export async function createUser(user: User): Promise<User> {
   return result.data!
 }
 
+export async function updateUser(userData: Partial<User>) {
+  const user = await findUser({username: userData.username})
+  if (!user) return null
+
+  const result = await db.update<typeof userData, User>(user.id, userData)
+
+  if (!result.success) {
+    logger.error({message: `Failed to update user ${userData.username}`, error: result.error})
+    throw new Error(`Failed to update user ${userData.username}`)
+  }
+
+  return result.data!
+}
+
 export async function findUser({username}: {username: User["username"]}): Promise<User> {
   const result = await db.findOne<User>({username})
 
   if (!result.success) {
-    logger.error({message: `Failed to find user ${username}`, error: result.error})
+    logger.error(`Failed to find user ${username}`)
     throw new Error(`User ${username} not found`)
   }
 
   return result.data!
+}
+
+export async function loginUser(username: string, code: string) {
+  const user = await findUser({username})
+  if (!user) return null
+
+  const isValid = speakeasy.totp.verify({secret: user.secret, encoding: "base32", token: code})
+  return isValid ? user : null
 }
 
 export function createCandidate(username: string) {
@@ -47,26 +69,4 @@ export async function registerCandidate({username, secret, code}: {username: str
   await createUser({username, secret})
 
   return true
-}
-
-export async function loginUser(username: string, code: string) {
-  const user = await findUser({username})
-  if (!user) return null
-
-  const isValid = speakeasy.totp.verify({secret: user.secret, encoding: "base32", token: code})
-  return isValid ? user : null
-}
-
-export async function updateUser(userData: Partial<User>) {
-  const user = await findUser({username: userData.username})
-  if (!user) return null
-
-  const result = await db.update<typeof userData, User>(user.id, userData)
-
-  if (!result.success) {
-    logger.error({message: `Failed to update user ${userData.username}`, error: result.error})
-    throw new Error(`Failed to update user ${userData.username}`)
-  }
-
-  return result.data!
 }
