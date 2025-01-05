@@ -43,7 +43,7 @@ export class Heartbeat {
   }
 
   onMessage(ws: WebSocket, message: RawData): boolean {
-    if (!this.enablePingPong) return false
+    if (!this.enablePingPong && message.toString() === "1") return true
 
     const client = this.clients.get(ws)
     if (!client) return false
