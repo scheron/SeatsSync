@@ -15,7 +15,5 @@ export function randomUUID(length = 8): string {
   if (randomUUID?.idCounter === undefined) randomUUID.idCounter = 0
 
   // @ts-ignore
-  const newID = (randomUUID.idCounter += 1)
-
-  return generateRandomString(length).concat("-", String(newID))
+  return generateRandomString(length).concat("-", String(randomUUID.idCounter++))
 }
