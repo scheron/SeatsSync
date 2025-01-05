@@ -1,6 +1,6 @@
 import {WebSocketContext} from "@/core/ws/types"
-import {verifyToken} from "@/shared/jwt"
-import {findUser} from "../model"
+import {verifyJWT} from "@/shared/jwt"
+import {getUser} from "../services/user"
 import {AuthMessageType} from "../types"
 
 export const handlers: Record<AuthMessageType, (data: any, context: WebSocketContext) => Promise<any>> = {
@@ -10,8 +10,8 @@ export const handlers: Record<AuthMessageType, (data: any, context: WebSocketCon
       if (!context?.isAuthenticated()) return {status: "guest", data: null}
 
       const token = context?.token
-      const payload = verifyToken(token)
-      const user = await findUser({username: payload.username})
+      const payload = verifyJWT(token)
+      const user = await getUser(payload.username)
 
       return {data: {username: user.username, id: user.id}, status: "user"}
     } catch {

@@ -1,6 +1,6 @@
 import {IncomingMessage, Server} from "http"
 import {RawData, WebSocket, WebSocketServer} from "ws"
-import {verifyToken} from "@/shared/jwt"
+import {verifyJWT} from "@/shared/jwt"
 import {logger} from "@/shared/logger"
 import {formatRequest} from "@/shared/messages/formatters"
 import {Heartbeat} from "./heartbeat"
@@ -29,7 +29,7 @@ export class WebSocketClient {
       autoCloseTimeout: options.autoCloseTimeout ?? 10_000,
       onPingTimeout: (ws) => this.callbacks.onDisconnect?.(ws),
       onSend: (ws, msg) => this.callbacks.onSend?.(ws, msg),
-      validateToken: (token) => !!verifyToken(token),
+      validateToken: (token) => !!verifyJWT(token),
     })
 
     this.heartbeat?.start()

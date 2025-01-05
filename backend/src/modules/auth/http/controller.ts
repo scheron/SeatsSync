@@ -1,7 +1,12 @@
+import {Errors} from "@/constants/errors"
 import {earlyResponse} from "@/shared/earlyReturn"
-import {generateToken} from "@/shared/jwt"
-import {candidateExists, createCandidate, deleteCandidate, getCandidate} from "../candidate"
-import {findUser, loginUser, registerCandidate, updateUser} from "../model"
+import {createJWT} from "@/shared/jwt"
+import {formatError, formatSuccess} from "@/shared/messages/formatters"
+import {sendError, sendSuccess} from "@/shared/messages/responses"
+import {candidateModel} from "../model/candidate"
+import {userModel} from "../model/user"
+import {createCandidate, deleteCandidate, validateCandidate} from "../services/candidate"
+import {createUser, getUser, updateUser} from "../services/user"
 
 import type {Request, Response} from "express"
 
@@ -9,15 +14,15 @@ export async function start(req: Request<{}, {}, {username: string}>, res: Respo
   const {username} = req.body
 
   try {
-    const user = await findUser({username})
-
-    res.json({username: user.username, status: "user"})
+    const user = await getUser(username)
+    if (user) return sendSuccess(res, {username: user.username, status: "user"})
   } catch {
-    if (await earlyResponse(res, candidateExists(username), 405, "Registration already in progress")) return
-
-    const candidate = createCandidate(username)
-
-    res.json({qr_url: candidate.qr_url, username, status: "candidate"})
+    try {
+      const candidate = createCandidate(username)
+      sendSuccess(res, {qr_url: candidate.qr_url, username, status: "candidate"})
+    } catch (e) {
+      sendError(res, e.message ?? Errors.InternalError, e.code)
+    }
   }
 }
 
@@ -25,21 +30,20 @@ export async function login(req: Request<{}, {}, {username: string; code: string
   const {username, code} = req.body
 
   try {
-    const user = await loginUser(username, code)
-    if (await earlyResponse(res, !user, 401, "Invalid code")) return
+    const user = await getUser(username)
+    validateCandidate(username, code)
 
-    const newToken = generateToken({username})
+    const newToken = createJWT({username})
 
-    res
-      .cookie("token", newToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        maxAge: 5 * 24 * 60 * 60 * 1000,
-      })
-      .sendStatus(201)
+    res.cookie("token", newToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 5 * 24 * 60 * 60 * 1000,
+    })
+    sendSuccess(res, {username: user.username})
   } catch (e) {
-    res.status(401).json(e.message)
+    sendError(res, e.message)
   }
 }
 
@@ -47,26 +51,22 @@ export async function register(req: Request<{}, {}, {username: string; code: str
   const {username, code} = req.body
 
   try {
-    const candidate = getCandidate(username)
-    if (await earlyResponse(res, !candidate, 401, "Registration not in progress")) return
+    const candidate = validateCandidate(username, code)
 
-    const isRegistered = await registerCandidate({...candidate, code})
-    if (await earlyResponse(res, !isRegistered, 401, "Invalid code")) return
-
+    await createUser(candidate.username, candidate.secret)
     deleteCandidate(username)
 
-    const newToken = generateToken({username})
+    const newToken = createJWT({username})
 
-    res
-      .cookie("token", newToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        maxAge: 5 * 24 * 60 * 60 * 1000,
-      })
-      .sendStatus(201)
+    res.cookie("token", newToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 5 * 24 * 60 * 60 * 1000,
+    })
+    sendSuccess(res, {username})
   } catch (e) {
-    res.status(401).json(e.message)
+    sendError(res, e.message)
   }
 }
 
@@ -74,12 +74,10 @@ export async function saveRecoveryPhrase(req: Request<{}, {}, {username: string;
   try {
     const {username, recovery_phrase} = req.body
 
-    const user = await findUser({username})
-    if (await earlyResponse(res, !user, 404, "User not found")) return
-
     await updateUser({username, recovery_phrase})
-    res.sendStatus(201)
+
+    sendSuccess(res, {username})
   } catch (error) {
-    res.status(401).json(error.message)
+    sendError(res, error.message)
   }
 }
