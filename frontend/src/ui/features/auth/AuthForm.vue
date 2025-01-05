@@ -16,7 +16,7 @@ const {snapshot, send} = useMachine(authMachine)
 
 wsClient.on<AuthStartMsg>("auth.start").subscribe((message) => {
   if (isErrorMessage(message)) {
-    toasts.show.error(Errors[message.error])
+    toasts.error(Errors[message.error])
     return
   }
 

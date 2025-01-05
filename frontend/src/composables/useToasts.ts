@@ -22,14 +22,13 @@ export function useToasts() {
   }
 
   return {
-    show: {
-      info: (title: string, options?: Options) => show("info", title, options),
-      error: (title: string, options?: Options) => show("error", title, options),
-      warning: (title: string, options?: Options) => show("warning", title, options),
-      success: (title: string, options?: Options) => show("success", title, options),
-      default: (title: string, options?: Options) => show("default", title, options),
-    },
-    hide,
-    destroy,
+    info: (title: string, options?: Options) => show("info", title, options),
+    error: (title: string, options?: Options) => show("error", title, options),
+    warning: (title: string, options?: Options) => show("warning", title, options),
+    success: (title: string, options?: Options) => show("success", title, options),
+    default: (title: string, options?: Options) => show("default", title, options),
+
+    hideToast: hide,
+    destroyToasts: destroy,
   }
 }
