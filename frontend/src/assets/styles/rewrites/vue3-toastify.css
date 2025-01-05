@@ -8,21 +8,23 @@
 }
 
 .Toastify__toast-theme--dark {
-  color: hsl(var(--color-text-1));
-  background-color: hsl(var(--color-bg-1));
+  color: hsl(var(--color-content));
+  background-color: hsl(var(--color-primary-100));
+  border: 1px solid hsl(var(--color-primary-600));
 }
 .Toastify__toast-theme--light {
-  color: hsl(var(--color-text-1));
-  background-color: hsl(var(--color-bg-1));
+  color: hsl(var(--color-content));
+  background-color: hsl(var(--color-primary-100));
+  border: 1px solid hsl(var(--color-primary-600));
 }
 
 .Toastify__close-button {
-  color: hsl(var(--color-text-1));
+  color: hsl(var(--color-content));
 }
 .Toastify__close-button > svg {
-  color: hsl(var(--color-text-1));
+  color: hsl(var(--color-content));
 }
 .Toastify__close-button:hover,
 .Toastify__close-button:focus {
-  color: hsl(var(--color-text-2));
+  color: hsl(var(--color-primary-800));
 }

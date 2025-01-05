@@ -5,6 +5,7 @@ import "vue3-toastify/dist/index.css"
 /* prettier-ignore */
 import "@/assets/styles/global.css";
 import "@/assets/styles/rewrites/floating-vue.css"
+import "@/assets/styles/rewrites/vue3-toastify.css"
 import "@/assets/styles/theme.css"
 /* prettier-ignore */
 import { createApp } from "vue";

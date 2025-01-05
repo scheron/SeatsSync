@@ -35,6 +35,7 @@
   --color-primary-900: var(--color-400);
 
   --color-content: var(--color-900);
+
 }
 
 .dark {
@@ -49,6 +50,7 @@
   --color-primary-900: var(--color-500);
 
   --color-content: var(--color-0);
+
 }
 
 .theme-transition {
