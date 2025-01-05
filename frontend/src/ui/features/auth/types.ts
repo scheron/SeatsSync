@@ -1,3 +1,3 @@
-export type AuthMode = "login" | "register" | "recovery"
-export type AuthStep = "username" | "login" | "register" | "recovery"
-export type UserStatus = "candidate" | "user"
+type UserStatus = "candidate" | "user"
+
+export type AuthStartMsg = {username: string; qr_url: string; status: UserStatus}
