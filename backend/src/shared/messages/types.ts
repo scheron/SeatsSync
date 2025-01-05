@@ -19,26 +19,21 @@ export type MessageSuccess<T extends string, D = unknown> = BaseMessage & {
   status: Extract<ResponseStatus, "success" | "snapshot" | "update">
   /** Message payload */
   data: D
+  /** No error */
+  error: null
   /** Message type */
   type: T
 }
-
-export type ErrorCode = number
 
 export type MessageError<T extends string> = BaseMessage & {
   /** Message response status */
   status: Extract<ResponseStatus, "error">
   /** Message type */
   type: T
-  /** Error details */
-  data: {
-    /** Error message */
-    message: string
-    /** Error code for client handling */
-    code: ErrorCode
-    /** Optional stack trace for development */
-    stack?: string
-  }
+  /** No data */
+  data: null
+  /** Error slug for client handling */
+  error: string
 }
 
 export type Message<T extends string, D = unknown> = MessageRequest<T, D> | MessageSuccess<T, D> | MessageError<T>

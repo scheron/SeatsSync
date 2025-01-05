@@ -1,3 +1,4 @@
+import {Errors} from "@/constants/errors"
 import {WebSocket} from "ws"
 import {formatError, formatSuccess} from "@/shared/messages/formatters"
 import {MessageRequest} from "@/shared/messages/types"
@@ -8,7 +9,7 @@ export async function onMessage(ws: WebSocket, {data, eid, type}: MessageRequest
   const handler = handlers[type]
 
   if (!handler) {
-    ws.send(formatError({eid, type, code: 404, error: "Unknown message type"}))
+    ws.send(formatError({eid, type, error: Errors.UnknownMessageType}))
     return
   }
 
@@ -16,6 +17,6 @@ export async function onMessage(ws: WebSocket, {data, eid, type}: MessageRequest
     const result = await handler(data, ws.context)
     ws.send(formatSuccess({eid, type, data: result, status: "success"}))
   } catch (error) {
-    ws.send(formatError({eid, type, error: error.message, code: 555}))
+    ws.send(formatError({eid, type, error: error.message}))
   }
 }

@@ -1,3 +1,4 @@
+import {Errors} from "@/constants/errors"
 import {createCinema, getAllCinemas, getCinemaById} from "@/modules/cinema/cinema.model"
 import {formatError, formatSuccess} from "@/shared/messages/formatters"
 import {MessageRequest} from "@/shared/messages/types"
@@ -15,7 +16,7 @@ export async function handleCinemaMessages(ws: WebSocket, {data = null, eid, typ
   try {
     console.log(data, methods, type)
     if (!methods[type]) {
-      ws.send(formatError({eid, type, code: 404, error: "Unknown message type"}))
+      ws.send(formatError({eid, type, error: Errors.UnknownMessageType}))
       return
     }
 
@@ -23,9 +24,9 @@ export async function handleCinemaMessages(ws: WebSocket, {data = null, eid, typ
       const result = await methods[type](data)
       ws.send(formatSuccess({eid, type, data: result, status: "success"}))
     } catch (error) {
-      ws.send(formatError({eid, type, error: error.message, code: 555}))
+      ws.send(formatError({eid, type, error: error.message}))
     }
   } catch (error) {
-    ws.send(formatError({eid: null, type: "unknown", error: "Internal Server Error", code: 500}))
+    ws.send(formatError({eid: null, type: "unknown", error: Errors.InternalError}))
   }
 }
