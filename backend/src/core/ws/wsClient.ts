@@ -1,28 +1,11 @@
 import {IncomingMessage, Server} from "http"
-import dotenv from "dotenv"
-import jwt from "jsonwebtoken"
 import {RawData, WebSocket, WebSocketServer} from "ws"
+import {verifyToken} from "@/shared/jwt"
 import {logger} from "@/shared/logger"
 import {formatRequest} from "@/shared/messages/formatters"
 import {Heartbeat} from "./heartbeat"
 
 import type {WebSocketCallbacks, WebSocketClientOptions} from "./types"
-
-dotenv.config()
-const JWT_SECRET = process.env.JWT_SECRET as string
-
-function validateToken(token: string | null): boolean {
-  if (!token) return false
-
-  try {
-    jwt.verify(token, JWT_SECRET)
-
-    return true
-  } catch (e) {
-    console.log("Invalid token", e)
-    return false
-  }
-}
 
 export class WebSocketClient {
   private ws: WebSocketServer
@@ -46,7 +29,7 @@ export class WebSocketClient {
       autoCloseTimeout: options.autoCloseTimeout ?? 10_000,
       onPingTimeout: (ws) => this.callbacks.onDisconnect?.(ws),
       onSend: (ws, msg) => this.callbacks.onSend?.(ws, msg),
-      validateToken,
+      validateToken: (token) => !!verifyToken(token),
     })
 
     this.heartbeat?.start()
@@ -86,7 +69,7 @@ export class WebSocketClient {
     this.callbacks.onConnect?.(ws)
     this.heartbeat?.addClient(ws, token)
 
-    ws.context = {token, isAuthenticated: () => validateToken(token)}
+    ws.context = {token, isAuthenticated: () => !!verifyToken(token)}
 
     ws.on("message", (message) => this.handleMessage(ws, message, token))
     ws.on("error", (error) => this.handleError(ws, error))

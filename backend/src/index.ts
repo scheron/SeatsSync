@@ -3,10 +3,10 @@ import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import express from "express"
 import {WebSocketClient} from "@/core/ws"
-import {initAuthRoutes} from "@/modules/auth/auth.routes"
-import {handleAuthMessages} from "@/modules/auth/auth.socket"
+import {wsAuth} from "@/modules/auth"
+import {initAuthRoutes} from "@/modules/auth/http/routes"
 import {handleCinemaMessages} from "@/modules/cinema/cinema.socket"
-import {formatError, formatSuccess} from "@/shared/messages/formatters"
+import {formatError} from "@/shared/messages/formatters"
 
 import type {Namespace} from "@/shared/types"
 
@@ -23,7 +23,7 @@ app.use(cookieParser())
 initAuthRoutes(app)
 
 const map: Record<Namespace, Function> = {
-  auth: handleAuthMessages,
+  auth: wsAuth.onMessage,
   cinema: handleCinemaMessages,
   hall: () => {},
   seat: () => {},

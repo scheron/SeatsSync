@@ -1,22 +1,9 @@
-import jwt from "jsonwebtoken"
 import {earlyResponse} from "@/shared/earlyReturn"
-import {createCandidate, findUser, loginUser, registerCandidate, updateUser} from "./auth.model"
+import {generateToken} from "@/shared/jwt"
+import {candidateExists, createCandidate, deleteCandidate, getCandidate} from "../candidate"
+import {findUser, loginUser, registerCandidate, updateUser} from "../model"
 
 import type {Request, Response} from "express"
-
-const JWT_SECRET = process.env.JWT_SECRET as string
-
-const CANDIDATE_TIMEOUT = 5 * 60 * 1000
-const candidates = new Map<string, {username: string; secret: string; qr_url: string; createdAt: number}>()
-
-function scheduleCandidateRemoval(username: string) {
-  setTimeout(() => {
-    if (candidates.has(username)) {
-      candidates.delete(username)
-      console.log(`Candidate ${username} removed due to timeout.`)
-    }
-  }, CANDIDATE_TIMEOUT)
-}
 
 export async function start(req: Request<{}, {}, {username: string}>, res: Response) {
   const {username} = req.body
@@ -26,12 +13,9 @@ export async function start(req: Request<{}, {}, {username: string}>, res: Respo
 
     res.json({username: user.username, status: "user"})
   } catch {
-    if (await earlyResponse(res, candidates.has(username), 405, "Registration already in progress")) return
+    if (await earlyResponse(res, candidateExists(username), 405, "Registration already in progress")) return
 
     const candidate = createCandidate(username)
-
-    candidates.set(username, candidate)
-    scheduleCandidateRemoval(username)
 
     res.json({qr_url: candidate.qr_url, username, status: "candidate"})
   }
@@ -44,7 +28,7 @@ export async function login(req: Request<{}, {}, {username: string; code: string
     const user = await loginUser(username, code)
     if (await earlyResponse(res, !user, 401, "Invalid code")) return
 
-    const newToken = jwt.sign({username}, JWT_SECRET, {expiresIn: "5d"})
+    const newToken = generateToken({username})
 
     res
       .cookie("token", newToken, {
@@ -63,15 +47,15 @@ export async function register(req: Request<{}, {}, {username: string; code: str
   const {username, code} = req.body
 
   try {
-    const candidate = candidates.get(username)
+    const candidate = getCandidate(username)
     if (await earlyResponse(res, !candidate, 401, "Registration not in progress")) return
 
     const isRegistered = await registerCandidate({...candidate, code})
     if (await earlyResponse(res, !isRegistered, 401, "Invalid code")) return
 
-    candidates.delete(username)
+    deleteCandidate(username)
 
-    const newToken = jwt.sign({username}, JWT_SECRET, {expiresIn: "5d"})
+    const newToken = generateToken({username})
 
     res
       .cookie("token", newToken, {

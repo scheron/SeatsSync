@@ -2,7 +2,7 @@ import speakeasy from "speakeasy"
 import {DB} from "@/core/db"
 import {logger} from "@/shared/logger"
 
-import type {User} from "./auth.types"
+import type {User} from "./types"
 
 const db = new DB("user")
 

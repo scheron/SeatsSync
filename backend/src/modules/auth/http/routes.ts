@@ -1,4 +1,4 @@
-import {login, register, saveRecoveryPhrase, start} from "./auth.controller"
+import {login, register, saveRecoveryPhrase, start} from "./controller"
 
 import type {Express} from "express"
 
