@@ -1,23 +1,18 @@
 import {randomUUID} from "@/utils/random"
-import {catchError, EMPTY, filter, interval, Subject, takeUntil, tap} from "rxjs"
+import {catchError, EMPTY, filter, interval, Observable, Subject, takeUntil, tap} from "rxjs"
 import {webSocket, WebSocketSubject} from "rxjs/webSocket"
 
-export type ResponseStatus = "success" | "error" | "snapshot" | "update"
+import type {
+  MessageType,
+  RequestMessage,
+  ResponseMessage,
+  ResponseMessageError,
+  ResponseMessageSuccess,
+  ResponseStatus,
+  WebSocketMessage,
+} from "./types"
 
-export interface RequestMessage<T = any> {
-  type: string
-  data: T
-  eid?: string
-}
-
-export interface ResponseMessage<T> extends RequestMessage<T> {
-  status: ResponseStatus
-}
-
-export type PingMessage = 1
-export type WebSocketMessage<T> = ResponseMessage<T> | PingMessage
-
-export class WebSocketService {
+export class WebSocketClient {
   private socket$: WebSocketSubject<WebSocketMessage<any>> | null = null
   private readonly url: string
   private readonly reconnectInterval = 5000
@@ -74,20 +69,21 @@ export class WebSocketService {
     this.socket$.next(1)
   }
 
-  send<T = any>(message: RequestMessage<T> | PingMessage) {
+  send<T = any>(message: RequestMessage<T>) {
     if (!this.socket$) {
       console.log("WebSocket is not connected. Message not sent:", message)
       return
     }
 
-    if (typeof message !== "number") {
-      message.eid = message.eid ?? this.generateEid()
-    }
+    message.eid = message.eid ?? randomUUID()
 
     this.socket$.next(message as WebSocketMessage<T>)
   }
 
-  on<T = any>(type?: string, status?: ResponseStatus) {
+  on(type: MessageType, status: "error"): Observable<ResponseMessageError>
+  on<T = any>(type: MessageType, status: Exclude<ResponseStatus, "error">): Observable<ResponseMessageSuccess<T>>
+  on<T = any>(type: MessageType): Observable<ResponseMessage<T>>
+  on<T = any>(type?: MessageType, status?: ResponseStatus): Observable<ResponseMessage<T>> {
     if (!this.socket$) {
       console.log("WebSocket is not initialized.")
       return EMPTY
@@ -112,10 +108,4 @@ export class WebSocketService {
     this.socket$?.complete()
     this.socket$ = null
   }
-
-  generateEid() {
-    return randomUUID()
-  }
 }
-
-export const ws = new WebSocketService("ws://localhost:3001")
