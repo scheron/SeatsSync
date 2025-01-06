@@ -69,7 +69,7 @@ export class WebSocketClient {
     this.callbacks.onConnect?.(ws)
     this.heartbeat?.addClient(ws, token)
 
-    ws.context = {token, isAuthenticated: () => !!verifyToken(token)}
+    ws.context = {token, isAuthenticated: () => !!verifyJWT(token)}
 
     ws.on("message", (message) => this.handleMessage(ws, message, token))
     ws.on("error", (error) => this.handleError(ws, error))
