@@ -23,6 +23,7 @@
       "@/*": ["*"],
       "@core/*": ["core/*"],
       "@modules/*": ["modules/*"],
+      "@constants/*": ["constants/*"],
       "@shared/*": ["shared/*"]
 
     }
