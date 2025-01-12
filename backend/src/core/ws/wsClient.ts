@@ -5,7 +5,6 @@ import {ApiError} from "@/shared/errors/ApiError"
 import {verifyJWT} from "@/shared/jwt"
 import {logger, LogMessageType} from "@/shared/logger"
 import {formatError, formatRequest} from "@/shared/messages/formatters"
-import {RateLimiter} from "@/shared/rateLimiter"
 import {Heartbeat} from "./heartbeat"
 
 import type {RawData} from "ws"
@@ -13,14 +12,11 @@ import type {WebSocketCallbacks, WebSocketClientOptions} from "./types"
 
 const MAX_MESSAGE_SIZE = 1024 * 1024
 const MAX_CONNECTIONS = 2
-const RATE_LIMIT_WINDOW = 10_000
-const RATE_LIMIT_MAX_REQUESTS = 10
 
 export class WebSocketClient {
   private ws: WebSocketServer
   private callbacks: WebSocketCallbacks
   private heartbeat?: Heartbeat
-  private rateLimiter: RateLimiter
   private maxConnectionsIntervalId: NodeJS.Timeout | null = null
 
   constructor(server: Server, options: WebSocketClientOptions) {
@@ -38,8 +34,6 @@ export class WebSocketClient {
       onMessage: options.onMessage ?? (() => {}),
       onSend: options.onSend ?? (() => {}),
     }
-
-    this.rateLimiter = new RateLimiter(RATE_LIMIT_MAX_REQUESTS, RATE_LIMIT_WINDOW)
 
     this.heartbeat = new Heartbeat({
       enablePingPong: options.enablePingPong ?? true,
@@ -117,12 +111,6 @@ export class WebSocketClient {
       return
     }
 
-    const ip = req.socket.remoteAddress
-    if (this.rateLimiter.isRateLimited(ip)) {
-      ws.close(1008, Errors.TooManyRequests)
-      return
-    }
-
     logger.info("", {
       type: LogMessageType.WS_CONNECT,
       data: {
@@ -132,31 +120,20 @@ export class WebSocketClient {
 
     const token = this.extractToken(req)
 
-    ws.context = {
-      token,
-      ip,
-      isAuthenticated: () => this.validateToken(token),
-    }
+    ws.context = {token, isAuthenticated: () => this.validateToken(token)}
 
-    this.setupClientHandlers(ws, token)
+    this.setupClientHandlers(ws)
     this.callbacks.onConnect?.(ws)
     this.heartbeat?.addClient(ws, token)
   }
 
-  private setupClientHandlers(ws: WebSocket, token: string | null) {
-    ws.on("message", (message) => this.handleMessage(ws, message, token))
+  private setupClientHandlers(ws: WebSocket) {
+    ws.on("message", (message) => this.handleMessage(ws, message))
     ws.on("error", (error) => this.handleError(ws, error))
     ws.on("close", () => this.handleDisconnect(ws))
   }
 
-  private async handleMessage(ws: WebSocket, message: RawData, token?: string) {
-    const ip = ws.context?.ip
-
-    if (this.rateLimiter.isRateLimited(ip)) {
-      ws.send(formatError({error: Errors.RateLimitExceeded}))
-      return
-    }
-
+  private async handleMessage(ws: WebSocket, message: RawData) {
     const isHeartbeat = this.heartbeat?.onMessage(ws, message) ?? false
     if (isHeartbeat) return
 
@@ -183,7 +160,7 @@ export class WebSocketClient {
           messageId: parsedMessage.eid,
           messageType: parsedMessage.type,
           length,
-          payload: JSON.stringify(parsedMessage).slice(0, 200),
+          payload: JSON.stringify(parsedMessage?.data).slice(0, 200),
         },
       })
 
@@ -193,7 +170,6 @@ export class WebSocketClient {
         throw new ApiError(Errors.UnknownMessageType)
       }
 
-      this.rateLimiter.increment(ip)
       this.callbacks.onMessage?.(ws, requestMessage)
     } catch (error) {
       this.handleError(ws, error as Error)
@@ -205,7 +181,6 @@ export class WebSocketClient {
       type: LogMessageType.WS_ERROR,
       data: {
         error: error.message,
-        ip: ws.context?.ip,
         isAuthenticated: ws.context?.isAuthenticated(),
       },
     })
@@ -223,7 +198,7 @@ export class WebSocketClient {
   }
 
   private handleDisconnect(ws: WebSocket) {
-    logger.info("", {type: LogMessageType.WS_DISCONNECT, data: {ip: ws.context?.ip}})
+    logger.info("", {type: LogMessageType.WS_DISCONNECT, data: {}})
 
     this.heartbeat?.removeClient(ws)
     this.callbacks.onDisconnect?.(ws)

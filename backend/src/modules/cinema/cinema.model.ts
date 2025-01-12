@@ -1,15 +1,38 @@
 import {Errors} from "@/constants/errors"
 import {DB} from "@/core/db"
 import {ApiError} from "@/shared/errors/ApiError"
-import {logger} from "@/shared/logger"
-import {Cinema} from "./cinema.types"
+
+import type {Cinema} from "./cinema.types"
 
 const db = new DB("cinema")
 
 export async function getAllCinemas(): Promise<Cinema[]> {
   try {
-    const result = await db.findAll<Cinema>()
-    return result.data!
+    const result = await db.findAll<Cinema>({
+      include: {
+        halls: {
+          include: {
+            seats: true,
+          },
+        },
+      },
+    })
+
+    if (!result.success) {
+      throw new ApiError(Errors.CinemaFetchFailed)
+    }
+
+    // Transform the data to include seatsCount
+    return result.data!.map((cinema) => ({
+      id: cinema.id,
+      name: cinema.name,
+      color: cinema.color,
+      halls: cinema.halls.map((hall) => ({
+        id: hall.id,
+        name: hall.name,
+        seatsCount: hall.seats.length,
+      })),
+    }))
   } catch (error) {
     throw new ApiError(Errors.CinemaFetchFailed)
   }

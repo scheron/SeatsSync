@@ -21,16 +21,12 @@ export async function start(req: Request<{}, {}, {username: string}>, res: Respo
   try {
     const user = await getUser(username)
     if (user) return sendSuccess(res, {username: user.username, status: "user"})
-  } catch (error) {
-    logger.error("Failed to get user", {error: (error as Error).message, username})
 
-    try {
-      const candidate = createCandidate(username)
-      sendSuccess(res, {qr_url: candidate.qr_url, username, status: "candidate"})
-    } catch (error) {
-      logger.error("Failed to create candidate", {error: (error as Error).message, username})
-      sendError(res, error.message ?? Errors.InternalServerError, error.code ?? 500)
-    }
+    const candidate = createCandidate(username)
+    sendSuccess(res, {qr_url: candidate.qr_url, username, status: "candidate"})
+  } catch (error) {
+    logger.error("Failed to auth start", {error: (error as Error).message, username})
+    sendError(res, error.message ?? Errors.InternalServerError, error.message ? 400 : 500)
   }
 }
 

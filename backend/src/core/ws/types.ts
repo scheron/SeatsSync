@@ -25,6 +25,5 @@ export type WebSocketCallbacks = {
 
 export type WebSocketContext = {
   token: string | null
-  ip: string | undefined
   isAuthenticated: () => boolean
 }

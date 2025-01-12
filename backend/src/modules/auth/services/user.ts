@@ -14,25 +14,18 @@ const LOGIN_ATTEMPTS_WINDOW = 15 * 60 * 1000 // 15 minutes
 const loginAttempts = new Map<string, {count: number; resetAt: number}>()
 
 export async function getUser(username: string) {
-  if (!USERNAME_REGEX.test(username)) {
-    throw new ApiError(Errors.InvalidUsername)
-  }
+  if (!USERNAME_REGEX.test(username)) throw new ApiError(Errors.InvalidUsername)
 
   try {
-    const user = await userModel.get(username)
-    if (!user) throw new ApiError(Errors.UserNotFound)
-    return user
+    return await userModel.get(username)
   } catch (error) {
     if (error instanceof ApiError) throw error
-    logger.error("Failed to get user", {error: error.message, username})
     throw new ApiError(Errors.InternalServerError)
   }
 }
 
 export async function createUser(username: string, secret: string) {
-  if (!USERNAME_REGEX.test(username)) {
-    throw new ApiError(Errors.InvalidUsername)
-  }
+  if (!USERNAME_REGEX.test(username)) throw new ApiError(Errors.InvalidUsername)
 
   try {
     const existingUser = await userModel.get(username)

@@ -34,12 +34,7 @@ class UserModel {
   async get(username: User["username"]): Promise<User> {
     const result = await this.db.findOne<User>({username})
 
-    if (!result.success) {
-      logger.error(`Failed to find user ${username}`)
-      return null
-    }
-
-    return result.data!
+    return result.success ? result.data! : null
   }
 }
 

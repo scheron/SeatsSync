@@ -37,3 +37,17 @@ export type MessageError<T extends string> = BaseMessage & {
 }
 
 export type Message<T extends string, D = unknown> = MessageRequest<T, D> | MessageSuccess<T, D> | MessageError<T>
+
+export type MessageHandler<TRequest = unknown, TResponse = unknown> = (
+  data: TRequest,
+  meta: {
+    eid: string
+    ts: number
+  },
+) => Promise<TResponse>
+
+export type MessageHandlers<T extends string> = {
+  [K in T]: MessageHandler<any, any>
+}
+
+export type MessageValidator<T> = (data: unknown) => T
