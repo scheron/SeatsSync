@@ -9,7 +9,7 @@ import {RateLimiter} from "@/shared/rateLimiter"
 import {Heartbeat} from "./heartbeat"
 
 import type {RawData} from "ws"
-import type {WebSocketCallbacks, WebSocketClientOptions, WebSocketContext} from "./types"
+import type {WebSocketCallbacks, WebSocketClientOptions} from "./types"
 
 const MAX_MESSAGE_SIZE = 1024 * 1024
 const MAX_CONNECTIONS = 2
@@ -77,18 +77,13 @@ export class WebSocketClient {
       if (ws.readyState !== WebSocket.OPEN) return
 
       try {
-        logger.info("", {
-          type: LogMessageType.WS_OUTGOING,
-          data: {
-            messageLength: message.length,
-          },
-        })
+        logger.info("", {type: LogMessageType.WS_OUTGOING, data: {messageLength: message.length}})
+
         ws.send(message)
         this.callbacks.onSend?.(ws, message)
       } catch (error) {
-        logger.error("Failed to send WS message", {
-          error: error instanceof Error ? error.message : String(error),
-        })
+        logger.error("Failed to send WS message", {error: error instanceof Error ? error.message : String(error)})
+
         this.handleError(ws, error as Error)
       }
     })
@@ -100,14 +95,14 @@ export class WebSocketClient {
 
     this.ws.close(() => {
       this.callbacks.onDestroy?.()
-      logger.info("", {
-        type: LogMessageType.WS_DISCONNECT,
-      })
+
+      logger.info("", {type: LogMessageType.WS_DISCONNECT})
     })
   }
 
   private validateToken(token: string | null): boolean {
     if (!token) return false
+
     try {
       verifyJWT(token)
       return true
@@ -167,6 +162,7 @@ export class WebSocketClient {
 
     try {
       let length: number
+
       if (message instanceof ArrayBuffer) {
         length = message.byteLength
       } else if (typeof message === "string" || Buffer.isBuffer(message)) {
@@ -184,12 +180,9 @@ export class WebSocketClient {
       logger.info("", {
         type: LogMessageType.WS_INCOMING,
         data: {
-          userId: token,
           messageId: parsedMessage.eid,
-          namespace: parsedMessage.namespace,
           messageType: parsedMessage.type,
           length,
-          isHeartbeat,
           payload: JSON.stringify(parsedMessage).slice(0, 200),
         },
       })
@@ -212,7 +205,7 @@ export class WebSocketClient {
       type: LogMessageType.WS_ERROR,
       data: {
         error: error.message,
-        userId: ws.context?.token,
+        ip: ws.context?.ip,
         isAuthenticated: ws.context?.isAuthenticated(),
       },
     })
@@ -226,21 +219,12 @@ export class WebSocketClient {
   }
 
   private handleServerError(error: Error) {
-    logger.error("", {
-      type: LogMessageType.WS_SERVER_ERROR,
-      data: {
-        error: error.message,
-      },
-    })
+    logger.error("", {type: LogMessageType.WS_SERVER_ERROR, data: {error: error.message}})
   }
 
   private handleDisconnect(ws: WebSocket) {
-    logger.info("", {
-      type: LogMessageType.WS_DISCONNECT,
-      data: {
-        userId: ws.context?.token,
-      },
-    })
+    logger.info("", {type: LogMessageType.WS_DISCONNECT, data: {ip: ws.context?.ip}})
+
     this.heartbeat?.removeClient(ws)
     this.callbacks.onDisconnect?.(ws)
   }

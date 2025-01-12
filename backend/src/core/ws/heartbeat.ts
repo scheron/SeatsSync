@@ -14,7 +14,6 @@ export class Heartbeat {
   private pingInterval: number
   private autoCloseTimeout: number
   private intervalId: NodeJS.Timeout | null = null
-  private validateToken?: (token: string) => boolean
 
   private clients: Map<WebSocket, {lastPingTime: number; token: string | null}> = new Map()
 
@@ -27,7 +26,6 @@ export class Heartbeat {
     this.autoCloseTimeout = options.autoCloseTimeout ?? 10_000
     this.onPingTimeout = options.onPingTimeout
     this.onSend = options.onSend
-    this.validateToken = options.validateToken ?? (() => true)
   }
 
   addClient(ws: WebSocket, token?: string) {

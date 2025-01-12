@@ -41,9 +41,8 @@ export class DB implements IDB {
     }
 
     try {
-      const result = await prisma[this.tableName].findMany({
-        ...options,
-      })
+      const result = await prisma[this.tableName].findMany({...options})
+
       this.cache.set(cacheKey, result, CACHE_TTL)
 
       logger.info({message: `Retrieved new records from ${this.tableName}`, data: result})
