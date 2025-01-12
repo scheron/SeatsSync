@@ -1,3 +1,4 @@
+import {Errors} from "@/constants/errors"
 import {PrismaClient} from "@prisma/client"
 import {logger} from "@/shared/logger"
 import {LRU} from "@/shared/lru"
@@ -9,9 +10,15 @@ export const prisma = new PrismaClient()
 
 type DBResponse<T> = {success: boolean; data: T | null; error?: string}
 
+type QueryOptions = {
+  include?: Record<string, boolean | QueryOptions>
+  select?: Record<string, boolean | QueryOptions>
+  where?: Record<string, unknown>
+}
+
 export interface IDB {
-  findAll<T>(): Promise<DBResponse<T[]>>
-  findOne<R>(where: Record<string, unknown>): Promise<DBResponse<R>>
+  findAll<T>(options?: QueryOptions): Promise<DBResponse<T[]>>
+  findOne<R>(where: Record<string, unknown>, options?: QueryOptions): Promise<DBResponse<R>>
   create<T, R>(data: T): Promise<DBResponse<R>>
   update<T, R>(id: number, data: T): Promise<DBResponse<R>>
   delete(id: number): Promise<DBResponse<null>>
@@ -24,8 +31,8 @@ export class DB implements IDB {
     this.cache = new LRU<string, unknown>(CACHE_MAX_SIZE)
   }
 
-  async findAll<R>(): Promise<DBResponse<R[]>> {
-    const cacheKey = this.getCacheKey("all")
+  async findAll<R>(options?: QueryOptions): Promise<DBResponse<R[]>> {
+    const cacheKey = this.getCacheKey("all", JSON.stringify(options))
     const cached = this.cache.get(cacheKey)
 
     if (cached) {
@@ -34,7 +41,9 @@ export class DB implements IDB {
     }
 
     try {
-      const result = await prisma[this.tableName].findMany()
+      const result = await prisma[this.tableName].findMany({
+        ...options,
+      })
       this.cache.set(cacheKey, result, CACHE_TTL)
 
       logger.info({message: `Retrieved new records from ${this.tableName}`, data: result})
@@ -42,12 +51,12 @@ export class DB implements IDB {
       return {success: true, data: result}
     } catch (error: any) {
       logger.error({message: `Failed to fetch all records from ${this.tableName}`, error: error.message})
-      return {success: false, data: null, error: "Database error"}
+      return {success: false, data: null, error: Errors.InternalServerError}
     }
   }
 
-  async findOne<R>(where: Record<string, any>): Promise<DBResponse<R>> {
-    const cacheKey = this.getCacheKey("find", JSON.stringify(where))
+  async findOne<R>(where: Record<string, unknown>, options?: QueryOptions): Promise<DBResponse<R>> {
+    const cacheKey = this.getCacheKey("find", JSON.stringify({where, ...options}))
     const cached = this.cache.get(cacheKey)
 
     if (cached) {
@@ -56,11 +65,14 @@ export class DB implements IDB {
     }
 
     try {
-      const result = await prisma[this.tableName].findUnique({where})
+      const result = await prisma[this.tableName].findUnique({
+        where,
+        ...options,
+      })
 
       if (!result) {
         logger.info({message: `Record not found in ${this.tableName} for query ${JSON.stringify(where)}`})
-        return {success: false, data: null, error: "Record not found"}
+        return {success: false, data: null, error: `${this.tableName.toUpperCase()}_NOT_FOUND`}
       }
 
       this.cache.set(cacheKey, result, CACHE_TTL)
@@ -72,7 +84,7 @@ export class DB implements IDB {
         message: `Failed to fetch record from ${this.tableName} for query ${JSON.stringify(where)}`,
         error: error.message,
       })
-      return {success: false, data: null, error: "Database error"}
+      return {success: false, data: null, error: Errors.InternalServerError}
     }
   }
 
@@ -81,13 +93,12 @@ export class DB implements IDB {
       const result = await prisma[this.tableName].create({data})
 
       this.invalidateCache()
-
       logger.info({message: `Created new record in ${this.tableName}`, data})
 
       return {success: true, data: result}
     } catch (error: any) {
       logger.error({message: `Failed to create record in ${this.tableName}`, error: error.message})
-      return {success: false, data: null, error: "Database error"}
+      return {success: false, data: null, error: `${this.tableName.toUpperCase()}_CREATE_FAILED`}
     }
   }
 
@@ -96,22 +107,18 @@ export class DB implements IDB {
       const existing = await this.findOne<R>({id})
 
       if (!existing.success || !existing.data) {
-        return {success: false, data: null, error: `Record not found`}
+        return {success: false, data: null, error: `${this.tableName.toUpperCase()}_NOT_FOUND`}
       }
 
       const result = await prisma[this.tableName].update({where: {id}, data})
 
-      this.invalidateCacheById(id)
-
-      const cacheKey = this.getCacheKey("find", JSON.stringify({id}))
-      this.cache.set(cacheKey, result, CACHE_TTL)
-
+      this.invalidateCache()
       logger.info({message: `Updated record in ${this.tableName} with id ${id}`, data})
 
       return {success: true, data: result}
     } catch (error: any) {
       logger.error({message: `Failed to update record in ${this.tableName} with id ${id}`, error: error.message})
-      return {success: false, data: null, error: "Database error"}
+      return {success: false, data: null, error: `${this.tableName.toUpperCase()}_UPDATE_FAILED`}
     }
   }
 
@@ -120,38 +127,29 @@ export class DB implements IDB {
       const existing = await this.findOne({id})
 
       if (!existing.success || !existing.data) {
-        return {success: false, data: null, error: `Record not found`}
+        return {success: false, data: null, error: `${this.tableName.toUpperCase()}_NOT_FOUND`}
       }
 
       await prisma[this.tableName].delete({where: {id}})
 
-      this.invalidateCacheById(id)
-
-      const cacheKey = this.getCacheKey("find", JSON.stringify({id}))
-      this.cache.delete(cacheKey)
-
+      this.invalidateCache()
       logger.info({message: `Deleted record from ${this.tableName} with id ${id}`})
 
       return {success: true, data: null}
     } catch (error: any) {
       logger.error({message: `Failed to delete record from ${this.tableName} with id ${id}`, error: error.message})
-      return {success: false, data: null, error: "Database error"}
+      return {success: false, data: null, error: `${this.tableName.toUpperCase()}_DELETE_FAILED`}
     }
   }
 
   private invalidateCache() {
-    const cacheKey = `${this.tableName}:all`
-
-    this.cache.delete(cacheKey)
-
-    logger.info({message: `Invalidated cache for ${cacheKey}`})
-  }
-
-  private invalidateCacheById(id: string | number) {
-    const cacheKey = this.getCacheKey("find", JSON.stringify({id}))
-    this.cache.delete(cacheKey)
-
-    logger.info({message: `Invalidated cache for ${cacheKey}`})
+    const keys = this.cache.keys()
+    keys.forEach((key) => {
+      if (key.startsWith(this.tableName)) {
+        this.cache.delete(key)
+        logger.info({message: `Invalidated cache for ${key}`})
+      }
+    })
   }
 
   private getCacheKey(suffix: string, postfix?: string) {

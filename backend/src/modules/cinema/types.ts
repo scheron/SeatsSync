@@ -1,17 +1,4 @@
-import {Namespace} from "@/constants/namespaces"
-
-export type Namespace = (typeof Namespace)[keyof typeof Namespace]
-
-export type ErrorType = {
-  namespace: Namespace
-  code: string
-}
-
-export type User = {
-  sub: string
-  username: string
-  roles?: string[]
-}
+import type {Hall} from "../hall/types"
 
 export type Cinema = {
   id: number
@@ -20,19 +7,15 @@ export type Cinema = {
   halls: Hall[]
 }
 
-export type Hall = {
-  id: number
-  name: string
-  seatsCount: number
-}
-
 export type HallPlan = {
   id: number
   name: string
+  canvas: {
+    width: number
+    height: number
+  }
   rows: number
   places: number
-  width: number
-  height: number
   seats: Seat[]
 }
 
@@ -46,7 +29,7 @@ export type Seat = {
   width: number
   height: number
   rotation: number
-  status: "free" | "occupied"
+  status: SeatStatus
 }
 
 export type SeatType = {
@@ -60,3 +43,5 @@ export type TicketType = {
   name: string
   price: number
 }
+
+export type SeatStatus = "free" | "reserved" | "occupied"

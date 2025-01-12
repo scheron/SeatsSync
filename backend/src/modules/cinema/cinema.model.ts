@@ -1,58 +1,52 @@
+import {Errors} from "@/constants/errors"
 import {DB} from "@/core/db"
+import {ApiError} from "@/shared/errors/ApiError"
 import {logger} from "@/shared/logger"
 import {Cinema} from "./cinema.types"
 
 const db = new DB("cinema")
 
 export async function getAllCinemas(): Promise<Cinema[]> {
-  const result = await db.findAll<Cinema>()
-
-  if (!result.success) {
-    logger.error({message: "Failed to fetch cinemas", error: result.error})
-    throw new Error("Failed to fetch cinemas")
+  try {
+    const result = await db.findAll<Cinema>()
+    return result.data!
+  } catch (error) {
+    throw new ApiError(500, Errors.CinemaFetchFailed)
   }
-
-  return result.data!
 }
 
 export async function getCinemaById(id: number): Promise<Cinema> {
-  const result = await db.findOne<Cinema>({id})
+  const cinema = await db.findOne<Cinema>({id})
 
-  if (!result.success) {
-    logger.error({message: `Failed to fetch cinema with id ${id}`})
-    throw new Error(`Cinema with id ${id} not found`)
+  if (!cinema) {
+    throw new ApiError(404, Errors.CinemaNotFound)
   }
 
-  return result.data!
+  return cinema.data!
 }
 
 export async function createCinema(data: {name: string; color: string}): Promise<Cinema> {
-  const result = await db.create<typeof data, Cinema>(data)
-
-  if (!result.success) {
-    logger.error({message: "Failed to create cinema", error: result.error})
-    throw new Error("Failed to create cinema")
+  try {
+    const result = await db.create<typeof data, Cinema>(data)
+    return result.data!
+  } catch (error) {
+    throw new ApiError(500, Errors.CinemaCreateFailed)
   }
-
-  return result.data!
 }
 
 export async function updateCinema(id: number, data: {name?: string; color?: string}): Promise<Cinema> {
-  const result = await db.update<typeof data, Cinema>(id, data)
-
-  if (!result.success) {
-    logger.error({message: `Failed to update cinema with id ${id}`, error: result.error})
-    throw new Error(`Failed to update cinema with id ${id}`)
+  try {
+    const result = await db.update<typeof data, Cinema>(id, data)
+    return result.data!
+  } catch (error) {
+    throw new ApiError(500, Errors.CinemaUpdateFailed)
   }
-
-  return result.data!
 }
 
 export async function deleteCinema(id: number): Promise<void> {
-  const result = await db.delete(id)
-
-  if (!result.success) {
-    logger.error({message: `Failed to delete cinema with id ${id}`, error: result.error})
-    throw new Error(`Failed to delete cinema with id ${id}`)
+  try {
+    await db.delete(id)
+  } catch (error) {
+    throw new ApiError(500, Errors.CinemaDeleteFailed)
   }
 }

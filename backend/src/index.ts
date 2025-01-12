@@ -1,4 +1,5 @@
 import {createServer} from "http"
+import {Errors} from "@/constants/errors"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import express from "express"
@@ -25,24 +26,35 @@ initAuthRoutes(app)
 const map: Record<Namespace, Function> = {
   auth: wsAuth.onMessage,
   cinema: handleCinemaMessages,
-  hall: () => {},
-  seat: () => {},
-  ticket: () => {},
+  hall: (ws, message) => {
+    ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
+  },
+  seat: (ws, message) => {
+    ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
+  },
+  ticket: (ws, message) => {
+    ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
+  },
 }
 
 const ws = new WebSocketClient(server, {
   pingInterval: 3_000,
   autoCloseTimeout: 10_000,
-  enablePingPong: false,
+  enablePingPong: true,
   onMessage: (ws, message) => {
     const [namespace] = message.type.split(".")
 
     if (!map[namespace]) {
-      ws.send(formatError({eid: message.eid, type: message.type, error: "Unknown message type", code: 404}))
+      ws.send(formatError({eid: message.eid, type: message.type, error: Errors.UnknownMessageType}))
       return
     }
 
-    map[namespace]?.(ws, message)
+    try {
+      map[namespace]?.(ws, message)
+    } catch (error) {
+      console.error(error)
+      ws.send(formatError({eid: message.eid, type: message.type, error: Errors.InternalServerError}))
+    }
   },
 })
 

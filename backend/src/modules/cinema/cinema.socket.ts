@@ -27,6 +27,6 @@ export async function handleCinemaMessages(ws: WebSocket, {data = null, eid, typ
       ws.send(formatError({eid, type, error: error.message}))
     }
   } catch (error) {
-    ws.send(formatError({eid: null, type: "unknown", error: Errors.InternalError}))
+    ws.send(formatError({eid: null, type: "unknown", error: Errors.InternalServerError}))
   }
 }

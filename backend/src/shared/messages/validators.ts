@@ -1,13 +1,29 @@
-import {Namespace} from "../types"
+import {Namespace} from "@/constants/namespaces"
 import {MessageRequest} from "./types"
 
-export function isMessageType(type: Namespace) {
-  return type.startsWith(type)
+const MAX_MESSAGE_SIZE = 1024 * 1024
+const MAX_DATA_SIZE = 100 * 1024
+
+export function isMessageType(type: string): type is keyof typeof Namespace {
+  return Object.values(Namespace).includes(type as Namespace)
 }
 
 export function validateMessage<T extends string, D>(message: unknown): message is MessageRequest<T, D> {
   if (!message || typeof message !== "object") return false
 
   const msg = message as Partial<MessageRequest<T, D>>
-  return typeof msg.type === "string" && (typeof msg.eid === "string" || typeof msg.eid === "number") && "data" in msg
+
+  if (typeof msg.type !== "string" || !msg.type) return false
+  if (!msg.eid || (typeof msg.eid !== "string" && typeof msg.eid !== "number")) return false
+  if (!("data" in msg)) return false
+
+  const messageSize = JSON.stringify(message).length
+  if (messageSize > MAX_MESSAGE_SIZE) return false
+
+  if (msg.data !== undefined) {
+    const dataSize = JSON.stringify(msg.data).length
+    if (dataSize > MAX_DATA_SIZE) return false
+  }
+
+  return true
 }

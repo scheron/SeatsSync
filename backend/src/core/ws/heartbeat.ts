@@ -72,16 +72,10 @@ export class Heartbeat {
   }
 
   private checkClients() {
-    const now = Date.now()
-
     this.clients.forEach((data, ws) => {
-      if (!this.validateToken(data.token)) {
-        ws.terminate()
-        this.clients.delete(ws)
-        return
-      }
-
       if (!this.enablePingPong) return
+
+      const now = Date.now()
 
       if (now - data.lastPingTime > this.autoCloseTimeout) {
         ws.terminate()
@@ -95,6 +89,7 @@ export class Heartbeat {
           ws.send("1")
           this.onSend(ws, "1")
         } catch (error) {
+          console.log("error", error)
           ws.terminate()
           this.clients.delete(ws)
           this.onPingTimeout(ws)

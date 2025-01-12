@@ -36,9 +36,10 @@
     "nodemon": "^3.1.7"
   },
   "_moduleAliases": {
+    "@": "dist",
     "@core": "dist/core",
     "@modules": "dist/modules",
-    "@contants": "dist/contants",
+    "@constants": "dist/constants",
     "@shared": "dist/shared"
   }
 }
