@@ -12,12 +12,12 @@ const validationAttempts = new Map<string, {count: number; resetAt: number}>()
 
 export function createCandidate(username: string) {
   if (!USERNAME_REGEX.test(username)) {
-    throw new ApiError(400, Errors.InvalidUsername)
+    throw new ApiError(Errors.InvalidUsername)
   }
 
   try {
     if (candidateModel.has(username)) {
-      throw new ApiError(403, Errors.RegistrationInProgress)
+      throw new ApiError(Errors.RegistrationInProgress)
     }
 
     const candidate = candidateModel.create(username)
@@ -28,17 +28,17 @@ export function createCandidate(username: string) {
   } catch (error) {
     if (error instanceof ApiError) throw error
     logger.error("Failed to create candidate", {error: error.message, username})
-    throw new ApiError(500, Errors.InternalServerError)
+    throw new ApiError(Errors.InternalServerError)
   }
 }
 
 export function validateCandidate(username: string, code: string) {
   if (!USERNAME_REGEX.test(username)) {
-    throw new ApiError(400, Errors.InvalidUsername)
+    throw new ApiError(Errors.InvalidUsername)
   }
 
   if (!CODE_REGEX.test(code)) {
-    throw new ApiError(400, Errors.InvalidCode)
+    throw new ApiError(Errors.InvalidCode)
   }
 
   const now = Date.now()
@@ -46,7 +46,7 @@ export function validateCandidate(username: string, code: string) {
 
   if (attempts && now < attempts.resetAt) {
     if (attempts.count >= MAX_VALIDATION_ATTEMPTS) {
-      throw new ApiError(429, Errors.TooManyValidationAttempts)
+      throw new ApiError(Errors.TooManyValidationAttempts)
     }
     attempts.count++
   } else {
@@ -59,18 +59,18 @@ export function validateCandidate(username: string, code: string) {
   try {
     const candidate = candidateModel.get(username)
     if (!candidate) {
-      throw new ApiError(403, Errors.RegistrationNotInProgress)
+      throw new ApiError(Errors.RegistrationNotInProgress)
     }
 
     if (now - candidate.createdAt > candidateModel.getCandidateTTL()) {
       candidateModel.delete(username)
-      throw new ApiError(403, Errors.RegistrationExpired)
+      throw new ApiError(Errors.RegistrationExpired)
     }
 
     const isValid = candidateModel.isValid(candidate.secret, code)
     if (!isValid) {
       logger.warn("Invalid validation code", {username})
-      throw new ApiError(403, Errors.InvalidCode)
+      throw new ApiError(Errors.InvalidCode)
     }
 
     validationAttempts.delete(username)
@@ -78,18 +78,18 @@ export function validateCandidate(username: string, code: string) {
   } catch (error) {
     if (error instanceof ApiError) throw error
     logger.error("Failed to validate candidate", {error: error.message, username})
-    throw new ApiError(500, Errors.InternalServerError)
+    throw new ApiError(Errors.InternalServerError)
   }
 }
 
 export function deleteCandidate(username: string) {
   if (!USERNAME_REGEX.test(username)) {
-    throw new ApiError(400, Errors.InvalidUsername)
+    throw new ApiError(Errors.InvalidUsername)
   }
 
   try {
     if (!candidateModel.has(username)) {
-      throw new ApiError(405, Errors.RegistrationNotInProgress)
+      throw new ApiError(Errors.RegistrationNotInProgress)
     }
 
     candidateModel.delete(username)
@@ -98,6 +98,6 @@ export function deleteCandidate(username: string) {
   } catch (error) {
     if (error instanceof ApiError) throw error
     logger.error("Failed to delete candidate", {error: error.message, username})
-    throw new ApiError(500, Errors.InternalServerError)
+    throw new ApiError(Errors.InternalServerError)
   }
 }

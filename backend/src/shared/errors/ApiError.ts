@@ -5,13 +5,11 @@ export type ErrorDetails = Record<string, unknown>
 
 export class ApiError extends Error {
   public readonly code: ErrorCode
-  public readonly statusCode: number
   public readonly details?: ErrorDetails
 
-  constructor(statusCode: number, code: ErrorCode, details?: ErrorDetails) {
+  constructor(code: ErrorCode, details?: ErrorDetails) {
     super(code)
     this.code = code
-    this.statusCode = statusCode
     this.details = details
 
     Object.setPrototypeOf(this, new.target.prototype)
@@ -24,18 +22,11 @@ export class ApiError extends Error {
   private logError(): void {
     const errorContext = {
       code: this.code,
-      statusCode: this.statusCode,
       details: this.details,
       stack: this.stack,
     }
 
-    if (this.statusCode >= 500) {
-      logger.error("Server error occurred", errorContext)
-    } else if (this.statusCode >= 400) {
-      logger.warn("Client error occurred", errorContext)
-    } else {
-      logger.info("Error occurred", errorContext)
-    }
+    logger.info("Error occurred", errorContext)
   }
 
   public toJSON(): object {
@@ -46,27 +37,27 @@ export class ApiError extends Error {
   }
 
   static badRequest(code: ErrorCode, details?: ErrorDetails): ApiError {
-    return new ApiError(400, code, details)
+    return new ApiError(code, details)
   }
 
   static unauthorized(code: ErrorCode = SystemErrors.Unauthorized, details?: ErrorDetails): ApiError {
-    return new ApiError(401, code, details)
+    return new ApiError(code, details)
   }
 
   static forbidden(code: ErrorCode = SystemErrors.Forbidden, details?: ErrorDetails): ApiError {
-    return new ApiError(403, code, details)
+    return new ApiError(code, details)
   }
 
   static notFound(code: ErrorCode, details?: ErrorDetails): ApiError {
-    return new ApiError(404, code, details)
+    return new ApiError(code, details)
   }
 
   static tooManyRequests(code: ErrorCode = SystemErrors.RateLimitExceeded, details?: ErrorDetails): ApiError {
-    return new ApiError(429, code, details)
+    return new ApiError(code, details)
   }
 
   static internal(code: ErrorCode = SystemErrors.InternalServerError, details?: ErrorDetails): ApiError {
-    return new ApiError(500, code, details)
+    return new ApiError(code, details)
   }
 
   static fromError(error: unknown): ApiError {

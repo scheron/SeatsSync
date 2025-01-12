@@ -12,7 +12,6 @@ class CandidateModel extends Map<string, Candidate> {
   private readonly candidateTTL: number
 
   constructor(candidateTTL = 5 * 60 * 1000) {
-    // 5 minutes default
     super()
     this.candidateTTL = candidateTTL
   }

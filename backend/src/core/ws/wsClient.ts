@@ -12,9 +12,9 @@ import type {RawData} from "ws"
 import type {WebSocketCallbacks, WebSocketClientOptions, WebSocketContext} from "./types"
 
 const MAX_MESSAGE_SIZE = 1024 * 1024
-const MAX_CONNECTIONS = 1000
-const RATE_LIMIT_WINDOW = 60_000
-const RATE_LIMIT_MAX_REQUESTS = 100
+const MAX_CONNECTIONS = 2
+const RATE_LIMIT_WINDOW = 10_000
+const RATE_LIMIT_MAX_REQUESTS = 10
 
 export class WebSocketClient {
   private ws: WebSocketServer
@@ -178,7 +178,7 @@ export class WebSocketClient {
       const parsedMessage = JSON.parse(message.toString())
 
       if (!parsedMessage.type) {
-        throw new ApiError(400, Errors.MessageTypeRequired)
+        throw new ApiError(Errors.MessageTypeRequired)
       }
 
       logger.info("", {
@@ -197,7 +197,7 @@ export class WebSocketClient {
       const requestMessage = formatRequest(parsedMessage)
 
       if (!requestMessage) {
-        throw new ApiError(400, Errors.UnknownMessageType)
+        throw new ApiError(Errors.UnknownMessageType)
       }
 
       this.rateLimiter.increment(ip)

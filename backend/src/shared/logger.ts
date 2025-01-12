@@ -1,5 +1,5 @@
-import {Namespace} from "@/constants/namespaces"
 import winston from "winston"
+import {Namespace} from "./types"
 
 export enum LogMessageType {
   WS_INCOMING = "WS_INCOMING",
@@ -75,7 +75,7 @@ const formatWSMessage = (params: LogParams): string => {
   return data.payload ? `${base}\n  ${truncatePayload(data.payload)}` : base
 }
 
-const logFormat = winston.format.printf((params: LogParams) => {
+const logFormat = winston.format.printf((params: any) => {
   try {
     const {timestamp, message, level, type, data, error, stack} = params
 

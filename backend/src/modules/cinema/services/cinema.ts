@@ -15,7 +15,7 @@ export class CinemaService {
   async getCinemas(): Promise<Cinema[]> {
     const result = await this.repository.findAllWithHalls()
     if (!result.success) {
-      throw new ApiError(500, Errors.CinemaFetchFailed)
+      throw new ApiError(Errors.CinemaFetchFailed)
     }
     return result.data!
   }
@@ -23,7 +23,7 @@ export class CinemaService {
   async getCinemaById(id: number): Promise<Cinema> {
     const result = await this.repository.findByIdWithHalls(id)
     if (!result.success) {
-      throw new ApiError(404, Errors.CinemaNotFound)
+      throw new ApiError(Errors.CinemaNotFound)
     }
     return result.data!
   }
@@ -31,7 +31,7 @@ export class CinemaService {
   async createCinema(data: Partial<Cinema>): Promise<Cinema> {
     const result = await this.repository.create(data)
     if (!result.success) {
-      throw new ApiError(500, Errors.CinemaCreateFailed)
+      throw new ApiError(Errors.CinemaCreateFailed)
     }
     return result.data!
   }
@@ -39,7 +39,7 @@ export class CinemaService {
   async updateCinema(id: number, data: Partial<Cinema>): Promise<Cinema> {
     const result = await this.repository.update(id, data)
     if (!result.success) {
-      throw new ApiError(404, Errors.CinemaNotFound)
+      throw new ApiError(Errors.CinemaNotFound)
     }
     return result.data!
   }
@@ -47,7 +47,7 @@ export class CinemaService {
   async deleteCinema(id: number): Promise<void> {
     const result = await this.repository.delete(id)
     if (!result.success) {
-      throw new ApiError(404, Errors.CinemaNotFound)
+      throw new ApiError(Errors.CinemaNotFound)
     }
   }
 }

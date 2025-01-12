@@ -1,12 +1,8 @@
 import {Errors} from "@/constants/errors"
-import {earlyResponse} from "@/shared/earlyReturn"
 import {ApiError} from "@/shared/errors/ApiError"
 import {createJWT, refreshJWT} from "@/shared/jwt"
 import {logger} from "@/shared/logger"
-import {formatError, formatSuccess} from "@/shared/messages/formatters"
 import {sendError, sendSuccess} from "@/shared/messages/responses"
-import {candidateModel} from "../model/candidate"
-import {userModel} from "../model/user"
 import {createCandidate, deleteCandidate, validateCandidate} from "../services/candidate"
 import {createUser, getUser, updateUser} from "../services/user"
 
@@ -44,7 +40,7 @@ export async function login(req: Request<{}, {}, {username: string; code: string
   try {
     const user = await getUser(username)
     if (!user) {
-      throw new ApiError(404, Errors.UserNotFound)
+      throw new ApiError(Errors.UserNotFound)
     }
 
     validateCandidate(username, code)

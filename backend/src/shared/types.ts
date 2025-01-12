@@ -1,12 +1,6 @@
-import {Namespace} from "@/constants/namespaces"
+import {Namespaces} from "@/constants/namespaces"
 
-export type Namespace = (typeof Namespace)[keyof typeof Namespace]
-
-export type ErrorType = {
-  namespace: Namespace
-  code: string
-}
-
+export type Namespace = (typeof Namespaces)[keyof typeof Namespaces]
 export type User = {
   sub: string
   username: string

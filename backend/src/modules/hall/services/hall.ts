@@ -11,7 +11,7 @@ class HallService {
   async getHallsByCinema(cinemaId: number): Promise<Hall[]> {
     const result = await this.repository.findByCinemaId(cinemaId)
     if (!result.success) {
-      throw new ApiError(500, Errors.HallFetchFailed)
+      throw new ApiError(Errors.HallFetchFailed)
     }
     return result.data!
   }
@@ -19,7 +19,7 @@ class HallService {
   async getHallPlan(hallId: number): Promise<HallPlan> {
     const result = await this.repository.findPlanById(hallId)
     if (!result.success) {
-      throw new ApiError(404, Errors.HallNotFound)
+      throw new ApiError(Errors.HallNotFound)
     }
     return result.data!
   }

@@ -11,7 +11,7 @@ export async function getAllCinemas(): Promise<Cinema[]> {
     const result = await db.findAll<Cinema>()
     return result.data!
   } catch (error) {
-    throw new ApiError(500, Errors.CinemaFetchFailed)
+    throw new ApiError(Errors.CinemaFetchFailed)
   }
 }
 
@@ -19,7 +19,7 @@ export async function getCinemaById(id: number): Promise<Cinema> {
   const cinema = await db.findOne<Cinema>({id})
 
   if (!cinema) {
-    throw new ApiError(404, Errors.CinemaNotFound)
+    throw new ApiError(Errors.CinemaNotFound)
   }
 
   return cinema.data!
@@ -30,7 +30,7 @@ export async function createCinema(data: {name: string; color: string}): Promise
     const result = await db.create<typeof data, Cinema>(data)
     return result.data!
   } catch (error) {
-    throw new ApiError(500, Errors.CinemaCreateFailed)
+    throw new ApiError(Errors.CinemaCreateFailed)
   }
 }
 
@@ -39,7 +39,7 @@ export async function updateCinema(id: number, data: {name?: string; color?: str
     const result = await db.update<typeof data, Cinema>(id, data)
     return result.data!
   } catch (error) {
-    throw new ApiError(500, Errors.CinemaUpdateFailed)
+    throw new ApiError(Errors.CinemaUpdateFailed)
   }
 }
 
@@ -47,6 +47,6 @@ export async function deleteCinema(id: number): Promise<void> {
   try {
     await db.delete(id)
   } catch (error) {
-    throw new ApiError(500, Errors.CinemaDeleteFailed)
+    throw new ApiError(Errors.CinemaDeleteFailed)
   }
 }

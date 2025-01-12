@@ -20,6 +20,6 @@ export async function getSeatTypes(): Promise<SeatType[]> {
 
     return seatTypes
   } catch (error) {
-    throw new ApiError(500, Errors.SeatTypesFetchFailed)
+    throw new ApiError(Errors.SeatTypesFetchFailed)
   }
 }

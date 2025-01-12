@@ -12,7 +12,7 @@ export async function hash(text: string): Promise<string> {
   try {
     const salt = randomBytes(SALT_LENGTH)
     const derivedKey = await scryptAsync(text, salt, KEY_LENGTH)
-    return `${salt.toString(ENCODING)}:${derivedKey.toString(ENCODING)}`
+    return `${salt.toString(ENCODING)}:${derivedKey.toString()}`
   } catch (error) {
     logger.error("Failed to hash text", {error: error.message})
     throw error

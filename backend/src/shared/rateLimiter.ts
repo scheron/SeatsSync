@@ -11,7 +11,7 @@ export class RateLimiter {
   constructor(
     private maxRequests: number,
     private windowMs: number,
-    private cleanupIntervalMs: number = 60_000, // Clean up every minute
+    private cleanupIntervalMs: number = 60_000,
   ) {
     this.entries = new Map()
     this.startCleanup()

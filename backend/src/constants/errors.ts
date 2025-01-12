@@ -34,6 +34,7 @@ export const AuthErrors = {
   TooManyLoginAttempts: "TooManyLoginAttempts",
   UserAlreadyExists: "UserAlreadyExists",
   InvalidRecoveryPhrase: "InvalidRecoveryPhrase",
+  RequiredUsername: "RequiredUsername",
 } as const
 
 export const CinemaErrors = {

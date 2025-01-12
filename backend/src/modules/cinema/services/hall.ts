@@ -18,7 +18,7 @@ export async function getHallPlan(hallId: number): Promise<HallPlan> {
     })
 
     if (!hall) {
-      throw new ApiError(404, Errors.HallNotFound)
+      throw new ApiError(Errors.HallNotFound)
     }
 
     return {
@@ -45,6 +45,6 @@ export async function getHallPlan(hallId: number): Promise<HallPlan> {
     }
   } catch (error) {
     if (error instanceof ApiError) throw error
-    throw new ApiError(500, Errors.InternalServerError)
+    throw new ApiError(Errors.InternalServerError)
   }
 }

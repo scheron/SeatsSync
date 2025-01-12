@@ -4,7 +4,7 @@ import {verifyJWT} from "@/shared/jwt"
 import {sendError} from "@/shared/messages/responses"
 import {RateLimiter} from "@/shared/rateLimiter"
 
-const authLimiter = new RateLimiter(100, 60_000) // 100 requests per minute
+const authLimiter = new RateLimiter(100, 60_000)
 
 export async function requireAuth(req: Request, res: Response, next: NextFunction) {
   try {

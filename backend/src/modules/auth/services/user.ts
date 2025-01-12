@@ -15,71 +15,71 @@ const loginAttempts = new Map<string, {count: number; resetAt: number}>()
 
 export async function getUser(username: string) {
   if (!USERNAME_REGEX.test(username)) {
-    throw new ApiError(400, Errors.InvalidUsername)
+    throw new ApiError(Errors.InvalidUsername)
   }
 
   try {
     const user = await userModel.get(username)
-    if (!user) throw new ApiError(404, Errors.UserNotFound)
+    if (!user) throw new ApiError(Errors.UserNotFound)
     return user
   } catch (error) {
     if (error instanceof ApiError) throw error
     logger.error("Failed to get user", {error: error.message, username})
-    throw new ApiError(500, Errors.InternalServerError)
+    throw new ApiError(Errors.InternalServerError)
   }
 }
 
 export async function createUser(username: string, secret: string) {
   if (!USERNAME_REGEX.test(username)) {
-    throw new ApiError(400, Errors.InvalidUsername)
+    throw new ApiError(Errors.InvalidUsername)
   }
 
   try {
     const existingUser = await userModel.get(username)
 
     if (existingUser) {
-      throw new ApiError(409, Errors.UserAlreadyExists)
+      throw new ApiError(Errors.UserAlreadyExists)
     }
 
     const hashedSecret = await hash(secret)
     const user = await userModel.create({username, secret: hashedSecret})
-    if (!user) throw new ApiError(500, Errors.InternalServerError)
+    if (!user) throw new ApiError(Errors.InternalServerError)
 
     logger.info("User created successfully", {username})
     return user
   } catch (error) {
     if (error instanceof ApiError) throw error
     logger.error("Failed to create user", {error: error.message, username})
-    throw new ApiError(500, Errors.InternalServerError)
+    throw new ApiError(Errors.InternalServerError)
   }
 }
 
 export async function updateUser(userData: Partial<User>) {
   if (!userData.username || !USERNAME_REGEX.test(userData.username)) {
-    throw new ApiError(400, Errors.InvalidUsername)
+    throw new ApiError(Errors.InvalidUsername)
   }
 
   if (userData.recovery_phrase && userData.recovery_phrase.length < RECOVERY_PHRASE_MIN_LENGTH) {
-    throw new ApiError(400, Errors.InvalidRecoveryPhrase)
+    throw new ApiError(Errors.InvalidRecoveryPhrase)
   }
 
   try {
     const user = await getUser(userData.username)
-    if (!user) throw new ApiError(404, Errors.UserNotFound)
+    if (!user) throw new ApiError(Errors.UserNotFound)
 
     if (userData.recovery_phrase) {
       userData.recovery_phrase = await hash(userData.recovery_phrase)
     }
 
     const updated = await userModel.update({...user, ...userData})
-    if (!updated) throw new ApiError(500, Errors.InternalServerError)
+    if (!updated) throw new ApiError(Errors.InternalServerError)
 
     logger.info("User updated successfully", {username: userData.username})
     return updated
   } catch (error) {
     if (error instanceof ApiError) throw error
     logger.error("Failed to update user", {error: error.message, username: userData.username})
-    throw new ApiError(500, Errors.InternalServerError)
+    throw new ApiError(Errors.InternalServerError)
   }
 }
 
@@ -89,7 +89,7 @@ export async function validateUserCredentials(username: string, secret: string):
 
   if (attempts && now < attempts.resetAt) {
     if (attempts.count >= MAX_LOGIN_ATTEMPTS) {
-      throw new ApiError(429, Errors.TooManyLoginAttempts)
+      throw new ApiError(Errors.TooManyLoginAttempts)
     }
 
     attempts.count++
@@ -114,6 +114,6 @@ export async function validateUserCredentials(username: string, secret: string):
   } catch (error) {
     if (error instanceof ApiError) throw error
     logger.error("Failed to validate user credentials", {error: error.message, username})
-    throw new ApiError(500, Errors.InternalServerError)
+    throw new ApiError(Errors.InternalServerError)
   }
 }
