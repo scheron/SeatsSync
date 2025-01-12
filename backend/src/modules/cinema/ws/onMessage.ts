@@ -6,7 +6,7 @@ import {getCinemas} from "../services/cinema"
 
 import type {Message} from "@/shared/types"
 
-export async function handleGetAllCinemas(ws: WebSocket, message: Message) {
+export async function handleGetAllCinemas(ws: IWebSocketClient, message: Message) {
   try {
     const cinemas = await getCinemas()
     ws.send(formatResponse({eid: message.eid, type: message.type, data: cinemas}))

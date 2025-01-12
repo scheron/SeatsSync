@@ -19,6 +19,6 @@ export async function earlyResponse<T>(res: Response, condition: T | (() => T | 
   return early(condition, () => res.status(status).json(data))
 }
 
-export function earlySocket<T>(ws: WebSocket, condition: T | (() => T | Promise<T>), message: any): Promise<boolean> {
+export function earlySocket<T>(ws: IWebSocketClient, condition: T | (() => T | Promise<T>), message: any): Promise<boolean> {
   return early(condition, () => ws.send(message))
 }

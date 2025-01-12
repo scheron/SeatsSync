@@ -49,7 +49,7 @@ export class WebSocketClient {
   }
 
   private setupServerHandlers() {
-    this.ws.on("connection", (ws: WebSocket, req: IncomingMessage) => {
+    this.ws.on("connection", (ws: IWebSocketClient, req: IncomingMessage) => {
       this.handleConnection(ws, req)
     })
 
@@ -65,7 +65,7 @@ export class WebSocketClient {
     }, 5000)
   }
 
-  public async send(message: string, filter?: (ws: WebSocket) => boolean) {
+  public async send(message: string, filter?: (ws: IWebSocketClient) => boolean) {
     this.ws.clients.forEach((ws) => {
       if (filter && !filter(ws)) return
       if (ws.readyState !== WebSocket.OPEN) return
@@ -105,7 +105,7 @@ export class WebSocketClient {
     }
   }
 
-  private handleConnection(ws: WebSocket, req: IncomingMessage) {
+  private handleConnection(ws: IWebSocketClient, req: IncomingMessage) {
     if (this.ws.clients.size > MAX_CONNECTIONS) {
       ws.close(1013, Errors.TooManyConnections)
       return
@@ -127,13 +127,13 @@ export class WebSocketClient {
     this.heartbeat?.addClient(ws, token)
   }
 
-  private setupClientHandlers(ws: WebSocket) {
+  private setupClientHandlers(ws: IWebSocketClient) {
     ws.on("message", (message) => this.handleMessage(ws, message))
     ws.on("error", (error) => this.handleError(ws, error))
     ws.on("close", () => this.handleDisconnect(ws))
   }
 
-  private async handleMessage(ws: WebSocket, message: RawData) {
+  private async handleMessage(ws: IWebSocketClient, message: RawData) {
     const isHeartbeat = this.heartbeat?.onMessage(ws, message) ?? false
     if (isHeartbeat) return
 
@@ -176,7 +176,7 @@ export class WebSocketClient {
     }
   }
 
-  private handleError(ws: WebSocket, error: Error) {
+  private handleError(ws: IWebSocketClient, error: Error) {
     logger.error("", {
       type: LogMessageType.WS_ERROR,
       data: {
@@ -197,7 +197,7 @@ export class WebSocketClient {
     logger.error("", {type: LogMessageType.WS_SERVER_ERROR, data: {error: error.message}})
   }
 
-  private handleDisconnect(ws: WebSocket) {
+  private handleDisconnect(ws: IWebSocketClient) {
     logger.info("", {type: LogMessageType.WS_DISCONNECT, data: {}})
 
     this.heartbeat?.removeClient(ws)

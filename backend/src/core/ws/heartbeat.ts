@@ -4,8 +4,8 @@ type HeartbeatOptions = {
   enablePingPong: boolean
   pingInterval: number
   autoCloseTimeout: number
-  onPingTimeout: (ws: WebSocket) => void
-  onSend: (ws: WebSocket, message: string) => void
+  onPingTimeout: (ws: IWebSocketClient) => void
+  onSend: (ws: IWebSocketClient, message: string) => void
   validateToken?: (token: string) => boolean
 }
 
@@ -17,8 +17,8 @@ export class Heartbeat {
 
   private clients: Map<WebSocket, {lastPingTime: number; token: string | null}> = new Map()
 
-  private onPingTimeout: (ws: WebSocket) => void
-  private onSend: (ws: WebSocket, message: string) => void
+  private onPingTimeout: (ws: IWebSocketClient) => void
+  private onSend: (ws: IWebSocketClient, message: string) => void
 
   constructor(options: HeartbeatOptions) {
     this.enablePingPong = options.enablePingPong
@@ -28,19 +28,19 @@ export class Heartbeat {
     this.onSend = options.onSend
   }
 
-  addClient(ws: WebSocket, token?: string) {
+  addClient(ws: IWebSocketClient, token?: string) {
     if (!this.enablePingPong) return
 
     this.clients.set(ws, {lastPingTime: Date.now(), token: token ?? null})
   }
 
-  removeClient(ws: WebSocket) {
+  removeClient(ws: IWebSocketClient) {
     if (!this.enablePingPong) return
 
     this.clients.delete(ws)
   }
 
-  onMessage(ws: WebSocket, message: RawData): boolean {
+  onMessage(ws: IWebSocketClient, message: RawData): boolean {
     if (!this.enablePingPong && message.toString() === "1") return true
 
     const client = this.clients.get(ws)

@@ -2,9 +2,8 @@ import {Namespaces} from "@/constants/namespaces"
 
 export type Namespace = (typeof Namespaces)[keyof typeof Namespaces]
 export type User = {
-  sub: string
   username: string
-  roles?: string[]
+  token: string
 }
 
 export type Cinema = {

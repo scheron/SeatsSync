@@ -9,7 +9,7 @@ export class SubscriptionManager {
   private events = new Events()
   private clientSubscriptions: Map<ClientId, Set<SubscriptionKey>> = new Map()
 
-  subscribe(key: SubscriptionKey, ws: WebSocket): void {
+  subscribe(key: SubscriptionKey, ws: IWebSocketClient): void {
     const clientId = (ws as any).id
 
     if (!this.clientSubscriptions.has(clientId)) {
@@ -30,7 +30,7 @@ export class SubscriptionManager {
     })
   }
 
-  unsubscribe(key: SubscriptionKey, ws: WebSocket): void {
+  unsubscribe(key: SubscriptionKey, ws: IWebSocketClient): void {
     const clientId = (ws as any).id
     const clientSubs = this.clientSubscriptions.get(clientId)
 
@@ -44,7 +44,7 @@ export class SubscriptionManager {
     this.events.off(key)
   }
 
-  unsubscribeAll(ws: WebSocket): void {
+  unsubscribeAll(ws: IWebSocketClient): void {
     const clientId = (ws as any).id
     const clientSubs = this.clientSubscriptions.get(clientId)
 

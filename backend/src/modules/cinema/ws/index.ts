@@ -5,13 +5,13 @@ import {handleGetAllCinemas, handleGetHallPlan, handleGetSeatTypes} from "./hand
 
 import type {Message} from "@/shared/types"
 
-const handlers: Record<string, (ws: WebSocket, message: Message) => Promise<void>> = {
+const handlers: Record<string, (ws: IWebSocketClient, message: Message) => Promise<void>> = {
   "cinemas.get_all": handleGetAllCinemas,
   "halls.get_hall_plan": handleGetHallPlan,
   "seat_types.get_all": handleGetSeatTypes,
 }
 
-export async function handleCinemaMessages(ws: WebSocket, message: Message) {
+export async function handleCinemaMessages(ws: IWebSocketClient, message: Message) {
   const handler = handlers[message.type]
 
   if (!handler) {

@@ -12,7 +12,7 @@ const methods: Partial<Record<CinemaMessageType, Function>> = {
   "cinema.create": async (data: {name: string; color: string}) => await createCinema(data),
 }
 
-export async function handleCinemaMessages(ws: WebSocket, {data = null, eid, type}: MessageRequest<CinemaMessageType, Cinema>) {
+export async function handleCinemaMessages(ws: IWebSocketClient, {data = null, eid, type}: MessageRequest<CinemaMessageType, Cinema>) {
   try {
     console.log(data, methods, type)
     if (!methods[type]) {

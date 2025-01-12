@@ -8,7 +8,7 @@ import {getSeatTypes} from "../services/seat"
 
 import type {Message} from "@/shared/types"
 
-export async function handleGetAllCinemas(ws: WebSocket, message: Message) {
+export async function handleGetAllCinemas(ws: IWebSocketClient, message: Message) {
   try {
     const cinemas = await getCinemas()
     ws.send(formatResponse({eid: message.eid, type: message.type, data: cinemas}))
@@ -18,7 +18,7 @@ export async function handleGetAllCinemas(ws: WebSocket, message: Message) {
   }
 }
 
-export async function handleGetHallPlan(ws: WebSocket, message: Message) {
+export async function handleGetHallPlan(ws: IWebSocketClient, message: Message) {
   try {
     const hallId = message.data?.hallId
     if (!hallId) {
@@ -34,7 +34,7 @@ export async function handleGetHallPlan(ws: WebSocket, message: Message) {
   }
 }
 
-export async function handleGetSeatTypes(ws: WebSocket, message: Message) {
+export async function handleGetSeatTypes(ws: IWebSocketClient, message: Message) {
   try {
     const seatTypes = await getSeatTypes()
     ws.send(formatResponse({eid: message.eid, type: message.type, data: seatTypes}))

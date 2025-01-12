@@ -3,7 +3,7 @@ import {Errors} from "@/constants/errors"
 import cookieParser from "cookie-parser"
 import dotenv from "dotenv"
 import express from "express"
-import {WebSocketClient} from "@/core/ws"
+import {WebSocketClient, WebSocketOnMessage} from "@/core/ws"
 import {wsAuth} from "@/modules/auth"
 import {initAuthRoutes} from "@/modules/auth/http/routes"
 import {handleCinemaMessages} from "@/modules/cinema/cinema.socket"
@@ -23,16 +23,19 @@ app.use(cookieParser())
 
 initAuthRoutes(app)
 
-const map: Record<Namespace, Function> = {
-  auth: wsAuth.onMessage,
-  cinema: handleCinemaMessages,
-  hall: (ws, message) => {
+const handlersMap: Partial<Record<Namespace, WebSocketOnMessage>> = {
+  Auth: wsAuth.onMessage,
+  Cinema: handleCinemaMessages,
+  Hall: (ws, message) => {
     ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
   },
-  seat: (ws, message) => {
+  Seat: (ws, message) => {
     ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
   },
-  ticket: (ws, message) => {
+  TicketType: (ws, message) => {
+    ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
+  },
+  SeatType: (ws, message) => {
     ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
   },
 }
@@ -44,13 +47,13 @@ const ws = new WebSocketClient(server, {
   onMessage: (ws, message) => {
     const [namespace] = message.type.split(".")
 
-    if (!map[namespace]) {
+    if (!handlersMap[namespace]) {
       ws.send(formatError({eid: message.eid, type: message.type, error: Errors.UnknownMessageType}))
       return
     }
 
     try {
-      map[namespace]?.(ws, message)
+      handlersMap[namespace]?.(ws, message)
     } catch (error) {
       console.error(error)
       ws.send(formatError({eid: message.eid, type: message.type, error: Errors.InternalServerError}))

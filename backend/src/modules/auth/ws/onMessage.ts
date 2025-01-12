@@ -1,11 +1,11 @@
 import {Errors} from "@/constants/errors"
-import {WebSocket} from "ws"
+import {IWebSocketClient} from "@/core/ws"
 import {formatError, formatSuccess} from "@/shared/messages/formatters"
 import {MessageRequest} from "@/shared/messages/types"
 import {AuthMessageType, User} from "../types"
 import {handlers} from "./handlers"
 
-export async function onMessage(ws: WebSocket, {data, eid, type}: MessageRequest<AuthMessageType, User>) {
+export async function onMessage(ws: IWebSocketClient, {data, eid, type}: MessageRequest<AuthMessageType, User>) {
   const handler = handlers[type]
 
   if (!handler) {

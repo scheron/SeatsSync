@@ -2,11 +2,9 @@ import {MessageRequest} from "@/shared/messages/types"
 
 import type {WebSocket} from "ws"
 
-declare module "ws" {
-  interface WebSocket {
-    context?: WebSocketContext
-  }
-}
+export type IWebSocketClient = WebSocket & {context?: WebSocketContext}
+
+export type WebSocketOnMessage = (ws: IWebSocketClient, message: MessageRequest<any, any>) => void
 
 export type WebSocketClientOptions = {
   pingMsg?: string | number
@@ -16,11 +14,11 @@ export type WebSocketClientOptions = {
 } & WebSocketCallbacks
 
 export type WebSocketCallbacks = {
-  onConnect?: (ws: WebSocket) => void
-  onDisconnect?: (ws: WebSocket) => void
+  onConnect?: (ws: IWebSocketClient) => void
+  onDisconnect?: (ws: IWebSocketClient) => void
   onDestroy?: () => void
-  onMessage?: (ws: WebSocket, message: MessageRequest<any, any>) => void
-  onSend?: (ws: WebSocket, message: string) => void
+  onMessage?: WebSocketOnMessage
+  onSend?: (ws: IWebSocketClient, message: string) => void
 }
 
 export type WebSocketContext = {

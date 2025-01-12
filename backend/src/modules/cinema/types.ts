@@ -4,7 +4,40 @@ export type Cinema = {
   id: number
   name: string
   color: string
-  halls: Hall[]
+  halls: {
+    id: number
+    name: string
+    seatsCount: number
+  }[]
+}
+
+export type GetAllCinemasResponse = Cinema[]
+
+export type GetOneCinemaRequest = {
+  id: number
+}
+export type GetOneCinemaResponse = Cinema
+
+export type CreateCinemaRequest = {
+  name: string
+  color: string
+}
+export type CreateCinemaResponse = Cinema
+
+export type UpdateCinemaRequest = {
+  id: number
+  name?: string
+  color?: string
+}
+export type UpdateCinemaResponse = Cinema
+
+export type CinemaSubscriptionData = {
+  type: "created" | "updated" | "deleted"
+  cinema: Cinema
+}
+
+export type CinemaSubscriptionRequest = {
+  cinemaId: number
 }
 
 export type HallPlan = {

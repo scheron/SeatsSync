@@ -5,7 +5,7 @@ import {formatError, formatSuccess} from "./formatters"
 import type {MessageHandlers, MessageRequest} from "./types"
 
 export function createMessageHandler<T extends string>(handlers: MessageHandlers<T>) {
-  return async function handleMessage(ws: WebSocket, message: MessageRequest<T>) {
+  return async function handleMessage(ws: IWebSocketClient, message: MessageRequest<T>) {
     const {data = null, eid, type, ts} = message
 
     try {
