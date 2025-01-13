@@ -65,10 +65,8 @@ const formatWSMessage = (params: LogParams): string => {
     data.namespace && `ns=${data.namespace}`,
     data.messageType && `type=${data.messageType}`,
     data.messageId && `id=${data.messageId}`,
-    data.userId && `user=${data.userId}`,
     data.length && `len=${data.length}b`,
     data.error && `error=${formatError(data.error)}`,
-    data.isHeartbeat && "[heartbeat]",
   ].filter(Boolean)
 
   const base = parts.join(" | ")
@@ -104,16 +102,9 @@ const createLogger = () => {
     levels: LOG_LEVELS,
     format: winston.format.combine(winston.format.timestamp({format: LOG_TIMESTAMP_FORMAT}), winston.format.errors({stack: true}), logFormat),
     transports: [
-      new winston.transports.Console({
-        format: winston.format.colorize({all: true}),
-      }),
-      new winston.transports.File({
-        filename: "logs/error.log",
-        level: "error",
-      }),
-      new winston.transports.File({
-        filename: "logs/app.log",
-      }),
+      new winston.transports.Console({format: winston.format.colorize({all: true})}),
+      new winston.transports.File({filename: "logs/error.log", level: "error"}),
+      new winston.transports.File({filename: "logs/app.log"}),
     ],
   }
 

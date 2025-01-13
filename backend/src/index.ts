@@ -43,17 +43,17 @@ const handlersMap: Partial<Record<Namespace, WebSocketOnMessage>> = {
 const ws = new WebSocketClient(server, {
   pingInterval: 3_000,
   autoCloseTimeout: 10_000,
-  enablePingPong: true,
+  enablePingPong: false,
   onMessage: (ws, message) => {
     const [namespace] = message.type.split(".")
 
-    if (!handlersMap[namespace]) {
+    if (!handlersMap[namespace?.toLowerCase?.()]) {
       ws.send(formatError({eid: message.eid, type: message.type, error: Errors.UnknownMessageType}))
       return
     }
 
     try {
-      handlersMap[namespace]?.(ws, message)
+      handlersMap[namespace?.toLowerCase?.()]?.(ws, message)
     } catch (error) {
       console.error(error)
       ws.send(formatError({eid: message.eid, type: message.type, error: Errors.InternalServerError}))

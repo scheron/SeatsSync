@@ -1,4 +1,5 @@
 import {WebSocket} from "ws"
+import {IWebSocketClient} from "@/core/ws"
 import {Events} from "../events"
 import {formatSuccess} from "../messages/formatters"
 

@@ -8,24 +8,17 @@ import {formatError, formatRequest} from "@/shared/messages/formatters"
 import {Heartbeat} from "./heartbeat"
 
 import type {RawData} from "ws"
-import type {WebSocketCallbacks, WebSocketClientOptions} from "./types"
+import type {IWebSocketClient, WebSocketCallbacks, WebSocketClientOptions} from "./types"
 
 const MAX_MESSAGE_SIZE = 1024 * 1024
-const MAX_CONNECTIONS = 2
 
 export class WebSocketClient {
   private ws: WebSocketServer
   private callbacks: WebSocketCallbacks
   private heartbeat?: Heartbeat
-  private maxConnectionsIntervalId: NodeJS.Timeout | null = null
 
   constructor(server: Server, options: WebSocketClientOptions) {
-    this.ws = new WebSocketServer({
-      server,
-      maxPayload: MAX_MESSAGE_SIZE,
-      clientTracking: true,
-      perMessageDeflate: true,
-    })
+    this.ws = new WebSocketServer({server, maxPayload: MAX_MESSAGE_SIZE, clientTracking: true})
 
     this.callbacks = {
       onConnect: options.onConnect ?? (() => {}),
@@ -56,13 +49,6 @@ export class WebSocketClient {
     this.ws.on("error", (error: Error) => {
       this.handleServerError(error)
     })
-
-    this.maxConnectionsIntervalId = setInterval(() => {
-      if (this.ws.clients.size > MAX_CONNECTIONS) {
-        logger.warn(`Max connections (${MAX_CONNECTIONS}) exceeded, refusing new connections`)
-        this.ws.close()
-      }
-    }, 5000)
   }
 
   public async send(message: string, filter?: (ws: IWebSocketClient) => boolean) {
@@ -85,11 +71,9 @@ export class WebSocketClient {
 
   public destroy() {
     this.heartbeat?.stop()
-    clearInterval(this.maxConnectionsIntervalId)
 
     this.ws.close(() => {
       this.callbacks.onDestroy?.()
-
       logger.info("", {type: LogMessageType.WS_DISCONNECT})
     })
   }
@@ -106,17 +90,7 @@ export class WebSocketClient {
   }
 
   private handleConnection(ws: IWebSocketClient, req: IncomingMessage) {
-    if (this.ws.clients.size > MAX_CONNECTIONS) {
-      ws.close(1013, Errors.TooManyConnections)
-      return
-    }
-
-    logger.info("", {
-      type: LogMessageType.WS_CONNECT,
-      data: {
-        userId: ws.context?.token,
-      },
-    })
+    logger.info("", {type: LogMessageType.WS_CONNECT, data: {}})
 
     const token = this.extractToken(req)
 
@@ -177,13 +151,7 @@ export class WebSocketClient {
   }
 
   private handleError(ws: IWebSocketClient, error: Error) {
-    logger.error("", {
-      type: LogMessageType.WS_ERROR,
-      data: {
-        error: error.message,
-        isAuthenticated: ws.context?.isAuthenticated(),
-      },
-    })
+    logger.error("", {type: LogMessageType.WS_ERROR, data: {error: error.message, isAuthenticated: ws.context?.isAuthenticated()}})
 
     if (error instanceof ApiError) {
       ws.send(formatError({error: error.code}))

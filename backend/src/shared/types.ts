@@ -1,6 +1,7 @@
 import {Namespaces} from "@/constants/namespaces"
 
 export type Namespace = (typeof Namespaces)[keyof typeof Namespaces]
+
 export type User = {
   username: string
   token: string

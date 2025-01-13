@@ -1,4 +1,5 @@
 import {RawData, WebSocket} from "ws"
+import {IWebSocketClient} from "./types"
 
 type HeartbeatOptions = {
   enablePingPong: boolean

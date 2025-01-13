@@ -1,4 +1,3 @@
-// Core types
 export type User = {
   id: number
   username: string
@@ -7,7 +6,6 @@ export type User = {
   recovery_phrase?: string
 }
 
-// Method types
 export type LoginRequest = {
   username: string
   secret: string
@@ -42,7 +40,6 @@ export type StatusResponse = {
   } | null
 }
 
-// Subscription types
 export type UserStatusSubscriptionData = {
   type: "login" | "logout"
   user: {
