@@ -1,21 +1,23 @@
-import * as controller from "./http/controller"
-import * as routes from "./http/routes"
-import {login} from "./methods/login"
-import {register} from "./methods/register"
-import {getStatus} from "./methods/status"
-import {subscribeToUserStatus, unsubscribeFromUserStatus} from "./subscriptions/onUserStatus"
+export * from './auth.controller';
+export * from './auth.service';
+export * from './auth.methods';
+export * from './auth.socket';
+export * from './auth.types';
+
+import { login, register, getStatus } from './auth.methods';
+import { handleMessage } from './auth.socket';
+import { AuthController } from './auth.controller';
 
 export const methods = {
   login,
   register,
   getStatus,
-}
+};
 
-export const subscriptions = {
-  subscribe: subscribeToUserStatus,
-  unsubscribe: unsubscribeFromUserStatus,
-}
+export const ws = {
+  handleMessage,
+};
 
-export const httpAuth = {...controller, routes}
-export * as wsAuth from "./ws/onMessage"
-export type * as typesAuth from "./types"
+export const http = {
+  controller: AuthController,
+};
