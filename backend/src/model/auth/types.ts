@@ -6,4 +6,9 @@ export type User = {
   recovery_phrase?: string
 }
 
-export type AuthMessageType = "auth.status" | "auth.login" | "auth.register" | "auth.logout"
+export type Candidate = {
+  username: string
+  secret: string
+  qr_url: string
+  createdAt: number
+}

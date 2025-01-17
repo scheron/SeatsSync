@@ -21,10 +21,12 @@
     "baseUrl": "./src/", 
     "paths": {
       "@/*": ["*"],
-      "@core/*": ["core/*"],
-      "@modules/*": ["modules/*"],
-      "@constants/*": ["constants/*"],
-      "@shared/*": ["shared/*"]
+      "@/core/*": ["core/*"],
+      "@/modules/*": ["modules/*"],
+      "@/methods/*": ["methods/*"],
+      "@/services/*": ["services/*"],
+      "@/constants/*": ["constants/*"],
+      "@/shared/*": ["shared/*"]
 
     }
   },

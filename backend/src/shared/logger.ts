@@ -10,7 +10,7 @@ export enum LogMessageType {
   WS_SERVER_ERROR = "WS_SERVER_ERROR",
 }
 
-export interface WSLogData {
+export type WSLogData = {
   userId?: string
   namespace?: Namespace
   messageType?: string
@@ -21,7 +21,7 @@ export interface WSLogData {
   error?: string
 }
 
-export interface LogParams {
+export type LogParams = {
   timestamp?: string
   message?: string
   level?: string
@@ -42,19 +42,19 @@ const MAX_PAYLOAD_LENGTH = 500
 const DEFAULT_LOG_LEVEL = "info"
 const LOG_TIMESTAMP_FORMAT = "YYYY-MM-DDTHH:mm:ss.SSSZ"
 
-const truncatePayload = (payload: string): string => {
+function truncatePayload(payload: string) {
   if (payload.length <= MAX_PAYLOAD_LENGTH) return payload
   return `${payload.slice(0, MAX_PAYLOAD_LENGTH)}... [truncated ${payload.length - MAX_PAYLOAD_LENGTH} chars]`
 }
 
-const formatError = (error: Error | string): string => {
+function formatError(error: Error | string) {
   if (error instanceof Error) {
     return `${error.name}: ${error.message}`
   }
   return String(error)
 }
 
-const formatWSMessage = (params: LogParams): string => {
+function formatWSMessage(params: LogParams) {
   const {timestamp, level, type, data} = params
   if (!data) return ""
 
@@ -96,7 +96,7 @@ const logFormat = winston.format.printf((params: any) => {
   }
 })
 
-const createLogger = () => {
+function createLogger() {
   const config: winston.LoggerOptions = {
     level: process.env.LOG_LEVEL || DEFAULT_LOG_LEVEL,
     levels: LOG_LEVELS,

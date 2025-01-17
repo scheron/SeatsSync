@@ -37,9 +37,11 @@
   },
   "_moduleAliases": {
     "@": "dist",
-    "@core": "dist/core",
-    "@modules": "dist/modules",
-    "@constants": "dist/constants",
-    "@shared": "dist/shared"
+    "@/core": "dist/core",
+    "@/modules": "dist/modules",
+    "@/constants": "dist/constants",
+    "@/shared": "dist/shared",
+    "@/services": "dist/services",
+    "@/methods": "dist/methods"
   }
 }

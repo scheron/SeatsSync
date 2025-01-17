@@ -1,7 +1,7 @@
 import {DB} from "@/core/db"
 import {logger} from "@/shared/logger"
 
-import type {User} from "../types"
+import type {User} from "./types"
 
 class UserModel {
   constructor(private db: DB) {}
@@ -31,7 +31,7 @@ class UserModel {
     return user
   }
 
-  async get(username: User["username"]): Promise<User> {
+  async get(username: User["username"]): Promise<User | null> {
     const result = await this.db.findOne<User>({username})
 
     return result.success ? result.data! : null

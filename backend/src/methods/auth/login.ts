@@ -1,26 +1,30 @@
-import { validateCandidate } from "@/services/auth/candidate";
-import { getUser } from "@/services/auth/user";
-import { createTokens } from "@/services/auth/token";
-import { logger } from "@/shared/logger";
-import type { LoginRequest, LoginResponse } from "@/types/auth";
+import {Errors} from "@/constants/errors"
+import {COOKIE_OPTIONS} from "@/model/auth"
+import {AuthService} from "@/services/auth"
+import {ApiError} from "@/shared/errors/ApiError"
+import {createJWT} from "@/shared/jwt"
+import {logger} from "@/shared/logger"
+import {sendError, sendSuccess} from "@/shared/messages/responses"
 
-export async function login({ username, code }: LoginRequest): Promise<LoginResponse> {
+import type {Request, Response} from "express"
+
+export async function login(req: Request<{}, {}, {username: string; code: string}>, res: Response) {
+  const {username, code} = req.body
+
   try {
-    // Validate the login code
-    await validateCandidate(username, code);
-    
-    // Get user data
-    const user = await getUser(username);
-    
-    // Create auth tokens
-    const tokens = await createTokens(user);
-    
-    return {
-      user,
-      tokens,
-    };
+    const user = await AuthService.getUser(username)
+    if (!user) throw new ApiError(Errors.UserNotFound)
+
+    const isValid = AuthService.isValidCode(user.secret, code)
+    if (!isValid) throw new ApiError(Errors.InvalidCode)
+
+    const newToken = createJWT({username, sub: user.id + ""})
+
+    res.cookie("token", newToken, COOKIE_OPTIONS)
+    sendSuccess(res, {username: user.username})
+    logger.info("User logged in", {username})
   } catch (error) {
-    logger.error(`Login failed for user ${username}:`, error);
-    throw error;
+    sendError(res, error.message ?? Errors.InternalServerError, error.message ? 400 : 500)
+    logger.error("Login failed", {error: (error as Error).message, username})
   }
 }
