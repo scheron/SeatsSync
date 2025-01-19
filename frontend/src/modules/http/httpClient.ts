@@ -1,16 +1,18 @@
+import {Methods} from "@/constants/messageTypes"
 import {Observable, throwError} from "rxjs"
 import {ajax} from "rxjs/ajax"
 import {catchError, map} from "rxjs/operators"
 
+import type {Method} from "@/constants/messageTypes"
 import type {ApiResponse} from "./types"
 
 export class HttpClient {
   constructor(private readonly baseUrl: string) {}
 
-  private createRequest<T, R = any>(endpoint: string, method: string, body?: R, headers: Record<string, string> = {}): Observable<T> {
+  private createRequest<T, B = any>(endpoint: Method, httpMethod: string, body?: B, headers: Record<string, string> = {}): Observable<T> {
     return ajax<ApiResponse<T>>({
-      url: `${this.baseUrl}${endpoint}`,
-      method,
+      url: `${this.baseUrl}/${Methods[endpoint]}`,
+      method: httpMethod,
       headers: {
         "Content-Type": "application/json",
         ...headers,
@@ -28,11 +30,11 @@ export class HttpClient {
     )
   }
 
-  post<T, R = any>(endpoint: string, body: R): Observable<T> {
-    return this.createRequest<T, R>(endpoint, "POST", body)
+  post<T, B = any>(endpoint: Method, body: B): Observable<T> {
+    return this.createRequest<T, B>(endpoint, "POST", body)
   }
 
-  get<T>(endpoint: string): Observable<T> {
+  get<T>(endpoint: Method): Observable<T> {
     return this.createRequest<T>(endpoint, "GET")
   }
 }

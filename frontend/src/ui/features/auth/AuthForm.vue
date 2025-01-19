@@ -3,6 +3,7 @@ import {useSubscription} from "@/composables/useSubscription"
 import {useToasts} from "@/composables/useToasts"
 import {Errors} from "@/constants/errors"
 import {useMachine} from "@xstate/vue"
+import {httpClient} from "@/modules/http"
 import {isErrorMessage, wsClient} from "@/modules/ws"
 import {authMachine} from "./auth.machine"
 import StepLogin from "./fragments/StepLogin.vue"
@@ -24,6 +25,17 @@ onError((error) => {
   console.log("Error in subscription:", error)
 })
 
+function onStart(username: string) {
+  httpClient.post<AuthStartMsg>("auth.start", {username}).subscribe({
+    next: (message) => {
+      console.log("Received message:", message)
+    },
+    error: (error) => {
+      console.log("Error in subscription:", error)
+    },
+  })
+}
+
 // wsClient.on<AuthStartMsg>("auth.start").subscribe((message) => {
 //   if (isErrorMessage(message)) {
 //     toasts.error(Errors[message.error])
@@ -40,7 +52,7 @@ onError((error) => {
 
 <template>
   <div>
-    <StepStart v-if="snapshot.matches('start')" @submit="wsClient.send({type: 'auth.start', data: {username: $event}})" />
+    <StepStart v-if="snapshot.matches('start')" @submit="onStart($event)" />
 
     <StepLogin v-if="snapshot.matches('login')" :username="snapshot.context.username" @back="send({type: 'BACK_TO_START'})" />
 

@@ -3,11 +3,10 @@ export const AuthSubscriptions = {
 } as const
 
 export const AuthMethods = {
-  "auth.start": "auth.start",
-  "auth.login": "auth.login",
-  "auth.register": "auth.register",
-  "auth.recovery": "auth.recovery",
-  "auth.save_recovery_phrase": "auth.save_recovery_phrase",
+  "auth.start": "auth/start",
+  "auth.login": "auth/login",
+  "auth.register": "auth/register",
+  "auth.save_recovery_phrase": "auth/save_recovery_phrase",
 } as const
 
 export const Subscriptions = {
