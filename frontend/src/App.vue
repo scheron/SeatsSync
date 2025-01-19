@@ -14,11 +14,18 @@ const isConnecting = ref(false)
 const id = 2
 
 onStateChange((state, prevState) => {
-  if (state === "connected") toast.success("Connected")
-
-  if (state === "connecting") {
+  if (state === "connecting" && prevState === "connected") {
     toast.info("Connecting...", {toastId: id, autoClose: false, isLoading: isConnecting.value})
+    return
   }
+
+  // console.log("state", state, prevState)
+  // if (state === "connected" && prevState === "connecting") {
+  //   toast.hideToast(id)
+  //   toast.success("Connected")
+  //   isConnecting.value = false
+  //   return
+  // }
 
   if (state === "disconnected" && prevState === "connecting") {
     toast.hideToast(id)

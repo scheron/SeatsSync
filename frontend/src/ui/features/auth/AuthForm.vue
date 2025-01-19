@@ -14,7 +14,7 @@ import type {AuthStartMsg} from "./types"
 
 const toasts = useToasts()
 const {snapshot, send} = useMachine(authMachine)
-const {onSnapshot, onError} = useSubscription<{status: "asd"}>("*")
+const {onSnapshot, onError} = useSubscription<{statuiasd: "asd"}>("*")
 
 onSnapshot((message) => {
   console.log("Received message:", message)
@@ -22,10 +22,6 @@ onSnapshot((message) => {
 
 onError((error) => {
   console.log("Error in subscription:", error)
-})
-
-wsClient.on("auth.status").subscribe((e) => {
-  console.log("error", e)
 })
 
 // wsClient.on<AuthStartMsg>("auth.start").subscribe((message) => {
