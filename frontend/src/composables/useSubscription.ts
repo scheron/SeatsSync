@@ -12,16 +12,17 @@ type SubscriptionOptions = {
 }
 
 type Handler<T> = (data: T) => void
+type HandlerWithPrevState<T> = (data: T, prevState: ConnectionState | null) => void
 type Unsubscribe = () => void
 
-export function useSubscription(type: MessageType, options: SubscriptionOptions = {}) {
+export function useSubscription<T>(type: MessageType, options: SubscriptionOptions = {}) {
   const subscriptions = new Set<Subscription>()
   const isSubscribed = ref(false)
 
-  const snapshot$ = new Subject<ResponseMessage<any>>()
-  const update$ = new Subject<ResponseMessage<any>>()
+  const snapshot$ = new Subject<ResponseMessage<T>>()
+  const update$ = new Subject<ResponseMessage<T>>()
   const error$ = new Subject<string>()
-  const success$ = new Subject<ResponseMessage<any>>()
+  const success$ = new Subject<ResponseMessage<T>>()
 
   function subscribe() {
     unsubscribe()
@@ -53,12 +54,18 @@ export function useSubscription(type: MessageType, options: SubscriptionOptions 
     subscribe()
   }
 
-  function send<T = any>(message: Omit<RequestMessage<T>, "type">) {
+  function send(message: Omit<RequestMessage<T>, "type">) {
     wsClient.send({...message, type})
   }
 
-  function addSubscription<T>(subject: Subject<T>, handler: Handler<T>): Unsubscribe {
+  function addSubscription<S>(subject: Subject<S>, handler: Handler<S>): Unsubscribe {
     const subscription = subject.subscribe(handler)
+    subscriptions.add(subscription)
+    return () => subscription.unsubscribe()
+  }
+
+  function onStateChange(handler: HandlerWithPrevState<ConnectionState>): Unsubscribe {
+    const subscription = wsClient.connectionState.subscribe(({state, prevState}) => handler(state, prevState))
     subscriptions.add(subscription)
     return () => subscription.unsubscribe()
   }
@@ -66,7 +73,7 @@ export function useSubscription(type: MessageType, options: SubscriptionOptions 
   if (options.immediate) subscribe()
 
   if (options.retryOnReconnect) {
-    const reconnectSub = wsClient.connectionState.subscribe((state) => {
+    const reconnectSub = wsClient.connectionState.subscribe(({state}) => {
       if (state === "connected") subscribe()
     })
 
@@ -82,15 +89,11 @@ export function useSubscription(type: MessageType, options: SubscriptionOptions 
   })
 
   return {
-    onSnapshot: (handler: Handler<ResponseMessage<any>>) => addSubscription(snapshot$, handler),
-    onUpdate: (handler: Handler<ResponseMessage<any>>) => addSubscription(update$, handler),
+    onSnapshot: (handler: Handler<ResponseMessage<T>>) => addSubscription(snapshot$, handler),
+    onUpdate: (handler: Handler<ResponseMessage<T>>) => addSubscription(update$, handler),
     onError: (handler: Handler<string>) => addSubscription(error$, handler),
-    onSuccess: (handler: Handler<ResponseMessage<any>>) => addSubscription(success$, handler),
-    onStateChange: (handler: Handler<ConnectionState>) => {
-      const subscription = wsClient.connectionState.subscribe(handler)
-      subscriptions.add(subscription)
-      return () => subscription.unsubscribe()
-    },
+    onSuccess: (handler: Handler<ResponseMessage<T>>) => addSubscription(success$, handler),
+    onStateChange,
     send,
     resubscribe,
   }

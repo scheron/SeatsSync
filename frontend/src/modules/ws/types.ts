@@ -39,4 +39,4 @@ export function isSuccessMessage<T>(message: ResponseMessage<T>): message is Res
   return message.status !== "error" && message.error === null
 }
 
-export type ConnectionState = "disconnected" | "connecting" | "connected" | "reconnecting"
+export type ConnectionState = "disconnected" | "connecting" | "connected"

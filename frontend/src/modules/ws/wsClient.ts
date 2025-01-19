@@ -15,27 +15,22 @@ import type {
 
 type State = {
   connectionState: ConnectionState
-  reconnectAttempts: number
-  error: string | null
+  connectAttempts: number
 }
 
 export class WebSocketClient {
   private socket$: WebSocketSubject<WebSocketMessage<any>> | null = null
-  private readonly baseReconnectInterval = 1000
   private readonly maxReconnectAttempts = 5
   private readonly pingInterval = 2000
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null
 
   private readonly disconnect$ = new Subject<void>()
-  private readonly state$ = new BehaviorSubject<State>({
-    connectionState: "disconnected",
-    reconnectAttempts: 0,
-    error: null,
-  })
+  private readonly state$ = new BehaviorSubject<State>({connectionState: "disconnected", connectAttempts: 0})
+  private prevState: State | null = null
 
   constructor(private readonly url: string) {
     this.startPing()
-    this.connect(true)
+    this.connect()
   }
 
   private startPing() {
@@ -49,45 +44,31 @@ export class WebSocketClient {
       .subscribe()
   }
 
-  private connect(isInitialConnection = false) {
-    if (["connecting", "reconnecting"].includes(this.state$.getValue().connectionState)) return
-
+  private connect() {
     if (this.socket$) {
       this.socket$.complete()
       this.socket$ = null
     }
 
-    this.updateState({connectionState: isInitialConnection ? "connecting" : "reconnecting"})
+    this.updateState({connectionState: "connecting"})
 
     this.socket$ = webSocket<WebSocketMessage<any>>({
       url: this.url,
       openObserver: {
         next: () => {
-          this.updateState({connectionState: "connected", reconnectAttempts: 0, error: null})
-        },
-      },
-      closeObserver: {
-        next: () => {
-          this.updateState({connectionState: "disconnected"})
-          this.reconnect()
+          this.updateState({connectionState: "connected", connectAttempts: 0})
         },
       },
     })
 
-    this.socket$.subscribe({
-      error: (error) => {
-        if (this.state$.getValue().connectionState === "reconnecting") return
-
-        this.updateState({connectionState: "disconnected", error: error?.message || "WebSocket error occurred"})
-        this.reconnect()
-      },
-    })
+    this.socket$.subscribe({error: () => this.reconnect()})
   }
 
   private updateState(patch: Partial<State>) {
     const currentState = this.state$.getValue()
     const newState = {...currentState, ...patch}
 
+    this.prevState = currentState
     this.state$.next(newState)
   }
 
@@ -97,17 +78,22 @@ export class WebSocketClient {
       this.reconnectTimer = null
     }
 
-    const {reconnectAttempts} = this.state$.getValue()
+    const {connectAttempts} = this.state$.getValue()
 
-    if (reconnectAttempts >= this.maxReconnectAttempts) {
-      this.updateState({connectionState: "disconnected", error: "Max reconnect attempts reached"})
+    const attempts = connectAttempts + 1
+
+    if (attempts >= this.maxReconnectAttempts) {
+      console.log("Max reconnect attempts reached")
+      this.updateState({connectionState: "disconnected"})
       return
     }
 
-    const nextAttempt = reconnectAttempts + 1
-    const delay = Math.min(this.baseReconnectInterval * Math.pow(2, nextAttempt - 1), 10000)
+    const minTimeout = 2_000
+    const maxTimeout = 20_000
+    const backoffFactor = 1.2
+    const delay = Math.trunc(Math.min(minTimeout * backoffFactor ** attempts, maxTimeout))
 
-    this.updateState({reconnectAttempts: nextAttempt})
+    this.updateState({connectAttempts: attempts})
 
     this.reconnectTimer = setTimeout(() => {
       this.reconnectTimer = null
@@ -140,17 +126,11 @@ export class WebSocketClient {
     )
   }
 
-  get connectionState(): Observable<ConnectionState> {
+  get connectionState(): Observable<{state: ConnectionState; prevState: ConnectionState | null}> {
     return this.state$.pipe(
       map((state) => state.connectionState),
       distinctUntilChanged(),
-    )
-  }
-
-  get error(): Observable<string | null> {
-    return this.state$.pipe(
-      map((state) => state.error),
-      distinctUntilChanged(),
+      map((state) => ({state, prevState: this.prevState?.connectionState ?? null})),
     )
   }
 
@@ -165,16 +145,12 @@ export class WebSocketClient {
       this.socket$ = null
     }
 
-    this.updateState({
-      connectionState: "disconnected",
-      reconnectAttempts: 0,
-      error: null,
-    })
+    this.updateState({connectionState: "disconnected", connectAttempts: 0})
 
     this.connect()
   }
 
-  disconnect() {
+  destroy() {
     if (this.reconnectTimer !== null) {
       clearTimeout(this.reconnectTimer)
       this.reconnectTimer = null
@@ -184,6 +160,6 @@ export class WebSocketClient {
     this.disconnect$.complete()
     this.socket$?.complete()
     this.socket$ = null
-    this.updateState({connectionState: "disconnected"})
+    this.updateState({connectionState: "disconnected", connectAttempts: 0})
   }
 }
