@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import {useSubscription} from "@/composables/useSubscription"
 import {useToasts} from "@/composables/useToasts"
 import {Errors} from "@/constants/errors"
 import {useMachine} from "@xstate/vue"
@@ -13,19 +14,32 @@ import type {AuthStartMsg} from "./types"
 
 const toasts = useToasts()
 const {snapshot, send} = useMachine(authMachine)
+const {onSnapshot, onError} = useSubscription<{status: "asd"}>("*")
 
-wsClient.on<AuthStartMsg>("auth.start").subscribe((message) => {
-  if (isErrorMessage(message)) {
-    toasts.error(Errors[message.error])
-    return
-  }
-
-  if (message.data.status === "candidate") {
-    send({type: "REGISTER", username: message.data.username, qrUrl: message.data.qr_url})
-  } else {
-    send({type: "LOGIN", username: message.data.username})
-  }
+onSnapshot((message) => {
+  console.log("Received message:", message)
 })
+
+onError((error) => {
+  console.log("Error in subscription:", error)
+})
+
+wsClient.on("auth.status").subscribe((e) => {
+  console.log("error", e)
+})
+
+// wsClient.on<AuthStartMsg>("auth.start").subscribe((message) => {
+//   if (isErrorMessage(message)) {
+//     toasts.error(Errors[message.error])
+//     return
+//   }
+
+//   if (message.data.status === "candidate") {
+//     send({type: "REGISTER", username: message.data.username, qrUrl: message.data.qr_url})
+//   } else {
+//     send({type: "LOGIN", username: message.data.username})
+//   }
+// })
 </script>
 
 <template>

@@ -1,6 +1,8 @@
 import type {Errors} from "@/constants/errors"
+import type {Subscription} from "@/constants/messageTypes"
 
-export type MessageType = "auth.start" | "auth.login" | "auth.register" | "auth.recovery_access" | "auth.save_recovery_phrase"
+export type MessageType = Subscription | "*"
+
 export type ResponseStatus = "success" | "error" | "snapshot" | "update"
 
 export type RequestMessage<T = any> = {
@@ -36,3 +38,5 @@ export function isErrorMessage<T>(message: ResponseMessage<T>): message is Respo
 export function isSuccessMessage<T>(message: ResponseMessage<T>): message is ResponseMessageSuccess<T> {
   return message.status !== "error" && message.error === null
 }
+
+export type ConnectionState = "disconnected" | "connecting" | "connected" | "reconnecting"

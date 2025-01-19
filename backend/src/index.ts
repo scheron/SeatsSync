@@ -43,26 +43,26 @@ const handlersMap: Partial<Record<Namespace, WebSocketOnMessage>> = {
   },
 }
 
-// const ws = new WebSocketClient(server, {
-//   pingInterval: 3_000,
-//   autoCloseTimeout: 10_000,
-//   enablePingPong: false,
-//   onMessage: (ws, message) => {
-//     const [namespace] = message.type.split(".")
+const ws = new WebSocketClient(server, {
+  pingInterval: 3_000,
+  autoCloseTimeout: 10_000,
+  enablePingPong: true,
+  onMessage: (ws, message) => {
+    const [namespace] = message.type.split(".")
 
-//     if (!handlersMap[namespace?.toLowerCase?.()]) {
-//       ws.send(formatError({eid: message.eid, type: message.type, error: Errors.UnknownMessageType}))
-//       return
-//     }
+    if (!handlersMap[namespace?.toLowerCase?.()]) {
+      ws.send(formatError({eid: message.eid, type: message.type, error: Errors.UnknownMessageType}))
+      return
+    }
 
-//     try {
-//       handlersMap[namespace?.toLowerCase?.()]?.(ws, message)
-//     } catch (error) {
-//       console.error(error)
-//       ws.send(formatError({eid: message.eid, type: message.type, error: Errors.InternalServerError}))
-//     }
-//   },
-// })
+    try {
+      handlersMap[namespace?.toLowerCase?.()]?.(ws, message)
+    } catch (error) {
+      console.error(error)
+      ws.send(formatError({eid: message.eid, type: message.type, error: Errors.InternalServerError}))
+    }
+  },
+})
 
 server.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
-// server.on("close", () => ws.destroy())
+server.on("close", () => ws.destroy())

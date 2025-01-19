@@ -5,6 +5,13 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Seats Sync</title>
+
+    <script>
+      ;(function () {
+        const userTheme = localStorage.getItem("seats-sync.dark")
+        if (userTheme === undefined || userTheme === "true") document.documentElement.classList.add("dark")
+      })()
+    </script>
   </head>
   <body>
     <div id="app"></div>
