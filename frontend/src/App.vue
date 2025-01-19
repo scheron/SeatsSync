@@ -1,25 +1,35 @@
 <script setup lang="ts">
-import {watch} from "vue"
-import {useObservable} from "@vueuse/rxjs"
+import {ref} from "vue"
 import {useSubscription} from "@/composables/useSubscription"
 import AppLayout from "@/ui/common/AppLayout.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
 import AuthForm from "@/ui/features/auth"
 import Header from "@/ui/sections/Header.vue"
 import {useToasts} from "./composables/useToasts"
-import {wsClient} from "./modules/ws"
 
 const toast = useToasts()
 
 const {onError, onStateChange} = useSubscription("*")
+const isConnecting = ref(false)
+const id = 2
 
-onStateChange((state) => {
-  console.log("state", state)
+onStateChange((state, prevState) => {
   if (state === "connected") toast.success("Connected")
+
+  if (state === "connecting") {
+    toast.info("Connecting...", {toastId: id, autoClose: false, isLoading: isConnecting.value})
+  }
+
+  if (state === "disconnected" && prevState === "connecting") {
+    toast.hideToast(id)
+    toast.error("Connection failed")
+    isConnecting.value = false
+  }
 })
 
 onError((value) => {
   if (!value) return
+  console.log("error", value)
   toast.error(value)
 })
 </script>
