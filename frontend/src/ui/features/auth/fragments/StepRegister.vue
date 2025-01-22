@@ -16,7 +16,7 @@ const form = reactive({
 </script>
 
 <template>
-  <AuthFormLayout desc="Scan QR code with authenticator application and enter 6 digits 2FA-Key" @submit="emit('submit', code)">
+  <AuthFormLayout desc="Scan QR code with authenticator application and enter 6 digits 2FA-Key" @submit="emit('submit', form.key)">
     <div class="mb-4 flex flex-col justify-between">
       <span class="text-sm text-content/60">Username</span>
       <span class="truncate text-content">{{ username }}</span>

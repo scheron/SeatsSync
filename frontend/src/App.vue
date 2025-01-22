@@ -6,26 +6,42 @@ import BaseCard from "@/ui/common/base/BaseCard.vue"
 import AuthForm from "@/ui/features/auth"
 import Header from "@/ui/sections/Header.vue"
 import {useToasts} from "./composables/useToasts"
+import {wsClient} from "./modules/ws"
 
 const toast = useToasts()
 
-const {onError, onStateChange} = useSubscription("*")
+const {onError, onConnectionStateChange} = useSubscription("*")
 const isConnecting = ref(false)
 const id = 2
 
-onStateChange((state, prevState) => {
+wsClient.on("user.subscribe").subscribe({
+  next: (message) => {
+    console.log("Received message:", message)
+  },
+  error: (error) => {
+    console.log("Error in subscription:", error)
+  },
+})
+
+onConnectionStateChange((state, prevState) => {
   if (state === "connecting" && prevState === "connected") {
     toast.info("Connecting...", {toastId: id, autoClose: false, isLoading: isConnecting.value})
     return
   }
 
   // console.log("state", state, prevState)
-  // if (state === "connected" && prevState === "connecting") {
-  //   toast.hideToast(id)
-  //   toast.success("Connected")
-  //   isConnecting.value = false
-  //   return
-  // }
+  if (state === "connected" && prevState === "connecting") {
+    //   toast.hideToast(id)
+    //   toast.success("Connected")
+    // isConnecting.value = false
+    wsClient.send({
+      type: "user.subscribe",
+      data: {},
+      eid: "123",
+    })
+
+    return
+  }
 
   if (state === "disconnected" && prevState === "connecting") {
     toast.hideToast(id)

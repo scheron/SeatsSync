@@ -37,7 +37,7 @@ export function useSubscription<T>(type: MessageType) {
     return () => subscription.unsubscribe()
   }
 
-  function onStateChange(handler: HandlerWithPrevState<ConnectionState>): Unsubscribe {
+  function onConnectionStateChange(handler: HandlerWithPrevState<ConnectionState>): Unsubscribe {
     const subscription = wsClient.connectionState.subscribe(({state, prevState}) => handler(state, prevState))
     subscriptions.add(subscription)
     return () => subscription.unsubscribe()
@@ -52,7 +52,7 @@ export function useSubscription<T>(type: MessageType) {
     onSuccess: (handler: Handler<T>) => addSubscription("success", handler),
     onUpdate: (handler: Handler<T>) => addSubscription("update", handler),
     onError: (handler: Handler<ErrorCode>) => addSubscription("error", handler),
-    onStateChange,
+    onConnectionStateChange,
     send,
   }
 }

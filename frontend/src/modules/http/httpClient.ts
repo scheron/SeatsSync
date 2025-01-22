@@ -1,7 +1,7 @@
+import {Errors} from "@/constants/errors"
 import {Methods} from "@/constants/messageTypes"
-import {Observable, throwError} from "rxjs"
-import {ajax} from "rxjs/ajax"
-import {catchError, map} from "rxjs/operators"
+import {from, map, Observable, throwError} from "rxjs"
+import {switchMap} from "rxjs/operators"
 
 import type {Method} from "@/constants/messageTypes"
 import type {ApiResponse} from "./types"
@@ -10,22 +10,21 @@ export class HttpClient {
   constructor(private readonly baseUrl: string) {}
 
   private createRequest<T, B = any>(endpoint: Method, httpMethod: string, body?: B, headers: Record<string, string> = {}): Observable<T> {
-    return ajax<ApiResponse<T>>({
-      url: `${this.baseUrl}/${Methods[endpoint]}`,
-      method: httpMethod,
-      headers: {
-        "Content-Type": "application/json",
-        ...headers,
-      },
-      body,
-    }).pipe(
-      map((response) => {
-        if (response.response.error) throw new Error(response.response.error)
-        return response.response.data
+    return from(
+      fetch(`${this.baseUrl}/${Methods[endpoint]}`, {
+        method: httpMethod,
+        headers: {
+          "Content-Type": "application/json",
+          ...headers,
+        },
+        body: body ? JSON.stringify(body) : undefined,
+        credentials: "include",
       }),
-      catchError((error) => {
-        if (error.response) return throwError(() => new Error(error.response.error || "Unknown error occurred"))
-        return throwError(() => error)
+    ).pipe(
+      switchMap((response) => from(response.json())),
+      map((response: ApiResponse<T>) => {
+        if (response.status === "error") throwError(() => response.error ?? Errors.InternalServerError)
+        return response.data
       }),
     )
   }
@@ -36,5 +35,9 @@ export class HttpClient {
 
   get<T>(endpoint: Method): Observable<T> {
     return this.createRequest<T>(endpoint, "GET")
+  }
+
+  delete<T>(endpoint: Method): Observable<T> {
+    return this.createRequest<T>(endpoint, "DELETE")
   }
 }

@@ -1,3 +1,3 @@
-type UserStatus = "candidate" | "user"
+export type UserStatus = "candidate" | "user"
 
-export type AuthStartMsg = {username: string; qr_url: string; status: UserStatus}
+export type UserAuthStartResponse = {username: string; qr_url: string; status: UserStatus}

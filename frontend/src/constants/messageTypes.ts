@@ -1,20 +1,22 @@
-export const AuthSubscriptions = {
-  "auth.status": "auth.status",
+export const UserSubscriptions = {
+  "user.subscribe": "user.subscribe",
 } as const
 
-export const AuthMethods = {
-  "auth.start": "auth/start",
-  "auth.login": "auth/login",
-  "auth.register": "auth/register",
-  "auth.save_recovery_phrase": "auth/save_recovery_phrase",
+export const UserMethods = {
+  "user.auth_start": "user/auth_start",
+  "user.auth_reset": "user/auth_reset",
+  "user.login": "user/login",
+  "user.register": "user/register",
+  "user.save_recovery_phrase": "user/save_recovery_phrase",
+  "user.logout": "user/logout",
 } as const
 
 export const Subscriptions = {
-  ...AuthSubscriptions,
+  ...UserSubscriptions,
 } as const
 
 export const Methods = {
-  ...AuthMethods,
+  ...UserMethods,
 }
 
 export type Method = keyof typeof Methods
