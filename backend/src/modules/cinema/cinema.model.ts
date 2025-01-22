@@ -1,5 +1,5 @@
-import {Errors} from "@/constants/errors"
 import {DB} from "@/core/db"
+import {Errors} from "@/constants/errors"
 import {ApiError} from "@/shared/errors/ApiError"
 
 import type {Cinema} from "./cinema.types"

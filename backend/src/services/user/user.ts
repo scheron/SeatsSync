@@ -1,10 +1,10 @@
+import {LOGIN_ATTEMPTS_WINDOW, MAX_LOGIN_ATTEMPTS, RECOVERY_PHRASE_MIN_LENGTH, userModel, USERNAME_REGEX} from "@/model/user"
 import {Errors} from "@/constants/errors"
-import {LOGIN_ATTEMPTS_WINDOW, MAX_LOGIN_ATTEMPTS, RECOVERY_PHRASE_MIN_LENGTH, userModel, USERNAME_REGEX} from "@/model/auth"
 import {hash, verify} from "@/shared/crypto"
 import {ApiError} from "@/shared/errors/ApiError"
 import {logger} from "@/shared/logger"
 
-import type {User} from "@/model/auth"
+import type {User} from "@/model/user"
 
 const loginAttempts = new Map<string, {count: number; resetAt: number}>()
 

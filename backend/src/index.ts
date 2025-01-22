@@ -1,14 +1,13 @@
 import {createServer} from "http"
-import {Errors} from "@/constants/errors"
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import dotenv from "dotenv"
 import express from "express"
 import {WebSocketClient, WebSocketOnMessage} from "@/core/ws"
-// import {wsAuth} from "@/modules/auth"
-import {handleCinemaMessages} from "@/modules/cinema/cinema.socket"
+import {initUserMethods} from "@/methods/user"
+import {handleUserMessages} from "@/subscriptions/user"
+import {Errors} from "@/constants/errors"
 import {formatError} from "@/shared/messages/formatters"
-import {initAuthMethods} from "./methods/auth"
 
 import type {Namespace} from "@/shared/types"
 
@@ -20,34 +19,34 @@ const app = express()
 const server = createServer(app)
 
 app.use(express.json())
-app.use(cookieParser())
+app.use(cookieParser(process.env.COOKIE_SECRET || ""))
 app.use(
   cors({
-    // origin: [/localhost/],
-    // methods: ["POST"],
-    // allowedHeaders: ["Content-Type", "Authorization"],
-    // credentials: true,
+    origin: [/localhost/],
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"],
+    exposedHeaders: ["Set-Cookie"],
+    credentials: true,
   }),
 )
 
-initAuthMethods(app)
+initUserMethods(app)
 
 const handlersMap: Partial<Record<Namespace, WebSocketOnMessage>> = {
-  // Auth: wsAuth.onMessage,
-  Auth: (ws, message) => {
+  user: handleUserMessages,
+  cinema: (ws, message) => {
     ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
   },
-  Cinema: handleCinemaMessages,
-  Hall: (ws, message) => {
+  hall: (ws, message) => {
     ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
   },
-  Seat: (ws, message) => {
+  seat: (ws, message) => {
     ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
   },
-  TicketType: (ws, message) => {
+  ticket_type: (ws, message) => {
     ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
   },
-  SeatType: (ws, message) => {
+  seat_type: (ws, message) => {
     ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
   },
 }
@@ -59,7 +58,7 @@ const ws = new WebSocketClient(server, {
   onMessage: (ws, message) => {
     const [namespace] = message.type.split(".")
 
-    if (!handlersMap[namespace?.toLowerCase?.()]) {
+    if (!handlersMap[namespace]) {
       ws.send(formatError({eid: message.eid, type: message.type, error: Errors.UnknownMessageType}))
       return
     }

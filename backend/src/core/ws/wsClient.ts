@@ -1,12 +1,15 @@
-import {IncomingMessage, Server} from "http"
-import {Errors} from "@/constants/errors"
+import {Heartbeat} from "./heartbeat"
+import cookie from "cookie"
+import cookieParser from "cookie-parser"
+import {TOKEN_NAME} from "model/user"
 import {WebSocket, WebSocketServer} from "ws"
+import {Errors} from "@/constants/errors"
 import {ApiError} from "@/shared/errors/ApiError"
 import {verifyJWT} from "@/shared/jwt"
 import {logger, LogMessageType} from "@/shared/logger"
 import {formatError, formatRequest} from "@/shared/messages/formatters"
-import {Heartbeat} from "./heartbeat"
 
+import type {IncomingMessage, Server} from "http"
 import type {RawData} from "ws"
 import type {IWebSocketClient, WebSocketCallbacks, WebSocketClientOptions} from "./types"
 
@@ -151,7 +154,7 @@ export class WebSocketClient {
   }
 
   private handleError(ws: IWebSocketClient, error: Error) {
-    logger.error("", {type: LogMessageType.WS_ERROR, data: {error: error.message, isAuthenticated: ws.context?.isAuthenticated()}})
+    logger.error("", {type: LogMessageType.WS_ERROR, data: {error: error.message}})
 
     if (error instanceof ApiError) {
       ws.send(formatError({error: error.code}))
@@ -173,7 +176,9 @@ export class WebSocketClient {
   }
 
   private extractToken(req: IncomingMessage): string | null {
-    const token = req.headers.authorization?.split(" ")[1]
-    return token || null
+    const parsedCookies = cookie.parse(req.headers.cookie || "")
+    const cookies = cookieParser.signedCookies(parsedCookies, process.env.COOKIE_SECRET || "")
+
+    return cookies[TOKEN_NAME] || null
   }
 }

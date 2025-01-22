@@ -1,5 +1,5 @@
-import {Errors} from "@/constants/errors"
 import {PrismaClient} from "@prisma/client"
+import {Errors} from "@/constants/errors"
 
 import type {DBResponse, IDB, QueryOptions} from "./types"
 

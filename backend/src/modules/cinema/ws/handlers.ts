@@ -1,10 +1,10 @@
-import {Errors} from "@/constants/errors"
-import {WebSocket} from "ws"
-import {logger} from "@/shared/logger"
-import {formatError, formatResponse} from "@/shared/messages/formatters"
 import {getCinemas} from "../services/cinema"
 import {getHallPlan} from "../services/hall"
 import {getSeatTypes} from "../services/seat"
+import {WebSocket} from "ws"
+import {Errors} from "@/constants/errors"
+import {logger} from "@/shared/logger"
+import {formatError, formatResponse} from "@/shared/messages/formatters"
 
 import type {Message} from "@/shared/types"
 

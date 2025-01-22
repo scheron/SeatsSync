@@ -1,7 +1,7 @@
-import {Errors} from "@/constants/errors"
-import {WebSocket} from "ws"
-import {formatError} from "@/shared/messages/formatters"
 import {handleGetAllCinemas, handleGetHallPlan, handleGetSeatTypes} from "./handlers"
+import {WebSocket} from "ws"
+import {Errors} from "@/constants/errors"
+import {formatError} from "@/shared/messages/formatters"
 
 import type {Message} from "@/shared/types"
 

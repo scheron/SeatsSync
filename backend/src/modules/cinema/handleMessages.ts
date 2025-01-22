@@ -8,7 +8,7 @@ handleMessages('cinema', ws, message, async () => {
       return { status: 'success', data: result, }
 })
 
-handleMessages('auth', ws, message, async () => {
+handleMessages('user', ws, message, async () => {
       const result = await methods[type](data)
       return { status: 'success', data: result, }
 })

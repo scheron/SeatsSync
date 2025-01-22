@@ -1,8 +1,8 @@
-import {Errors} from "@/constants/errors"
+import {getCinemas} from "../services/cinema"
 import {WebSocket} from "ws"
+import {Errors} from "@/constants/errors"
 import {logger} from "@/shared/logger"
 import {formatError, formatResponse} from "@/shared/messages/formatters"
-import {getCinemas} from "../services/cinema"
 
 import type {Message} from "@/shared/types"
 

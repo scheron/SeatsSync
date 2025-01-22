@@ -12,6 +12,7 @@ export const SystemErrors = {
   MessageTypeRequired: "MessageTypeRequired",
   TooManyRequests: "TooManyRequests",
   TooManyConnections: "TooManyConnections",
+  SubscriptionAlreadyExists: "SubscriptionAlreadyExists",
 } as const
 
 export const AuthErrors = {

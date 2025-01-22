@@ -1,8 +1,8 @@
-import {AuthErrors} from "@/constants/errors"
-import dotenv from "dotenv"
-import jwt from "jsonwebtoken"
 import {ApiError} from "./errors/ApiError"
 import {logger} from "./logger"
+import dotenv from "dotenv"
+import jwt from "jsonwebtoken"
+import {AuthErrors} from "@/constants/errors"
 
 dotenv.config()
 

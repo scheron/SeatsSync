@@ -1,6 +1,7 @@
+import {notifyUserStatusChange} from "@/subscriptions/user/main"
+import {UserService} from "@/services/user"
+import {COOKIE_OPTIONS, TOKEN_NAME} from "@/model/user"
 import {Errors} from "@/constants/errors"
-import {COOKIE_OPTIONS} from "@/model/auth"
-import {AuthService} from "@/services/auth"
 import {createJWT} from "@/shared/jwt"
 import {logger} from "@/shared/logger"
 import {sendError, sendSuccess} from "@/shared/messages/responses"
@@ -11,18 +12,19 @@ export async function register(req: Request<{}, {}, {username: string; code: str
   const {username, code} = req.body
 
   try {
-    const existingUser = await AuthService.getUser(username)
+    const existingUser = await UserService.getUser(username)
     if (existingUser) return sendError(res, Errors.UserAlreadyExists, 400)
 
-    const candidate = AuthService.validateCandidate(username, code)
-    const user = await AuthService.createUser(candidate.username, candidate.secret)
+    const candidate = UserService.validateCandidate(username, code)
+    const user = await UserService.createUser(candidate.username, candidate.secret)
 
-    AuthService.deleteCandidate(username)
+    UserService.deleteCandidate(username)
 
     const newToken = createJWT({username, sub: user.id + ""})
 
-    res.cookie("token", newToken, COOKIE_OPTIONS)
+    res.cookie(TOKEN_NAME, newToken, COOKIE_OPTIONS)
     sendSuccess(res, {username})
+    notifyUserStatusChange("user")
     logger.info("User registered", {username})
   } catch (error) {
     sendError(res, error.message ?? Errors.InternalServerError, error.message ? 400 : 500)

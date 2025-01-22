@@ -1,6 +1,6 @@
-import {Errors} from "@/constants/errors"
-import {candidateModel, CODE_REGEX, MAX_VALIDATION_ATTEMPTS, USERNAME_REGEX, VALIDATION_ATTEMPTS_WINDOW} from "@/model/auth"
 import speakeasy from "speakeasy"
+import {candidateModel, CODE_REGEX, MAX_VALIDATION_ATTEMPTS, USERNAME_REGEX, VALIDATION_ATTEMPTS_WINDOW} from "@/model/user"
+import {Errors} from "@/constants/errors"
 import {ApiError} from "@/shared/errors/ApiError"
 import {logger} from "@/shared/logger"
 

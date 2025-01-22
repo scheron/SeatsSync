@@ -12,3 +12,5 @@ export type Candidate = {
   qr_url: string
   createdAt: number
 }
+
+export type UserStatus = "guest" | "user"

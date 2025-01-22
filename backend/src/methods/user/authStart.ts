@@ -1,20 +1,19 @@
+import {UserService} from "@/services/user"
 import {Errors} from "@/constants/errors"
-import {AuthService} from "@/services/auth"
-import {createCandidate} from "@/services/auth/candidate"
 import {logger} from "@/shared/logger"
 import {sendError, sendSuccess} from "@/shared/messages/responses"
 
 import type {Request, Response} from "express"
 
-export async function start(req: Request<{}, {}, {username: string}>, res: Response) {
+export async function authStart(req: Request<{}, {}, {username: string}>, res: Response) {
   const {username} = req.body
 
   try {
-    const user = await AuthService.getUser(username)
+    const user = await UserService.getUser(username)
     if (user) return sendSuccess(res, {username: user.username, status: "user"})
 
     try {
-      const candidate = createCandidate(username)
+      const candidate = UserService.createCandidate(username)
       sendSuccess(res, {qr_url: candidate.qr_url, username, status: "candidate"})
     } catch (error) {
       sendError(res, error.message ?? Errors.InternalServerError, 500)

@@ -1,7 +1,7 @@
-import {Errors} from "@/constants/errors"
-import {ApiError} from "@/shared/errors/ApiError"
 import {HallRepository} from "../../hall/repository/hall.repository"
 import {CinemaRepository} from "../repository/cinema.repository"
+import {Errors} from "@/constants/errors"
+import {ApiError} from "@/shared/errors/ApiError"
 
 import type {Cinema} from "../types"
 

@@ -1,6 +1,6 @@
+import {Cinema} from "../types"
 import {DB} from "@/core/db"
 import {Result} from "@/core/repository/base.repository"
-import {Cinema} from "../types"
 
 export class CinemaRepository {
   private db: DB

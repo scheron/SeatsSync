@@ -1,6 +1,7 @@
+import {COOKIE_OPTIONS, TOKEN_NAME} from "model/user"
+import {notifyUserStatusChange} from "@/subscriptions/user"
+import {UserService} from "@/services/user"
 import {Errors} from "@/constants/errors"
-import {COOKIE_OPTIONS} from "@/model/auth"
-import {AuthService} from "@/services/auth"
 import {ApiError} from "@/shared/errors/ApiError"
 import {createJWT} from "@/shared/jwt"
 import {logger} from "@/shared/logger"
@@ -12,16 +13,23 @@ export async function login(req: Request<{}, {}, {username: string; code: string
   const {username, code} = req.body
 
   try {
-    const user = await AuthService.getUser(username)
+    const user = await UserService.getUser(username)
     if (!user) throw new ApiError(Errors.UserNotFound)
 
-    const isValid = AuthService.isValidCode(user.secret, code)
+    const isValid = UserService.isValidCode(user.secret, code)
     if (!isValid) throw new ApiError(Errors.InvalidCode)
 
     const newToken = createJWT({username, sub: user.id + ""})
 
-    res.cookie("token", newToken, COOKIE_OPTIONS)
+    res.cookie(TOKEN_NAME, newToken, COOKIE_OPTIONS)
+    logger.info("Setting cookie", {
+      name: TOKEN_NAME,
+      value: newToken,
+      options: COOKIE_OPTIONS,
+    })
+
     sendSuccess(res, {username: user.username})
+    notifyUserStatusChange("user")
     logger.info("User logged in", {username})
   } catch (error) {
     sendError(res, error.message ?? Errors.InternalServerError, error.message ? 400 : 500)

@@ -1,5 +1,6 @@
 import winston from "winston"
-import {Namespace} from "./types"
+
+import type {Namespace} from "./types"
 
 export enum LogMessageType {
   WS_INCOMING = "WS_INCOMING",
