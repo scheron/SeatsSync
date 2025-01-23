@@ -1,7 +1,9 @@
 import {randomUUID} from "@/utils/random"
-import {BehaviorSubject, catchError, distinctUntilChanged, EMPTY, filter, interval, map, Observable, Subject, takeUntil, tap} from "rxjs"
-import {webSocket, WebSocketSubject} from "rxjs/webSocket"
+import {BehaviorSubject, catchError, distinctUntilChanged, EMPTY, filter, interval, map, Subject, takeUntil, tap} from "rxjs"
+import {webSocket} from "rxjs/webSocket"
 
+import type {Observable} from "rxjs"
+import type {WebSocketSubject} from "rxjs/webSocket"
 import type {
   ConnectionState,
   MessageType,

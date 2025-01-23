@@ -1,10 +1,11 @@
 import {onUnmounted} from "vue"
-import {filter, map, Subscription} from "rxjs"
+import {filter, map} from "rxjs"
 import {wsClient} from "@/modules/ws"
 
 import type {ErrorCode} from "@/constants/errors"
 import type {ConnectionState} from "@/modules/ws"
 import type {MessageType, RequestMessage, ResponseStatus} from "@/modules/ws/types"
+import type {Subscription} from "rxjs"
 
 type Handler<T> = (data: T) => void
 type HandlerWithPrevState<T> = (data: T, prevState: ConnectionState | null) => void

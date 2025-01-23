@@ -1,7 +1,6 @@
-import {containerVariants, sizesVariants} from "./variants"
-
 import type {IconName} from "@/types/icons"
 import type {VariantProps} from "@/utils/tailwindcss"
+import type {containerVariants, sizesVariants} from "./variants"
 
 export type Props = {
   id?: string

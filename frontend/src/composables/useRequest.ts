@@ -1,9 +1,9 @@
 import {onUnmounted} from "vue"
-import {Observable, Subscription} from "rxjs"
 import {httpClient} from "@/modules/http"
 
 import type {ErrorCode} from "@/constants/errors"
 import type {Method} from "@/constants/messageTypes"
+import type {Observable, Subscription} from "rxjs"
 
 type Handler<T> = (data: T) => void
 type ErrorHandler = (error: ErrorCode) => void

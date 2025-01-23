@@ -1,9 +1,10 @@
 import {Errors} from "@/constants/errors"
 import {Methods} from "@/constants/messageTypes"
-import {from, map, Observable, throwError} from "rxjs"
+import {from, map, throwError} from "rxjs"
 import {switchMap} from "rxjs/operators"
 
 import type {Method} from "@/constants/messageTypes"
+import type {Observable} from "rxjs"
 import type {ApiResponse} from "./types"
 
 export class HttpClient {
