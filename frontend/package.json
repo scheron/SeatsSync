@@ -7,9 +7,13 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint . --fix --ignore-pattern .gitignore"
   },
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "7.2.0",
+    "@typescript-eslint/parser": "7.2.0",
+    "@typescript-eslint/typescript-estree": "^8.21.0",
     "@vueuse/core": "^12.4.0",
     "@vueuse/rxjs": "^12.4.0",
     "@xstate/vue": "^4.0.0",
@@ -39,7 +43,6 @@
     "@vue/eslint-config-typescript": "^12.0.0",
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.20",
-    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-node": "^11.1.0",
@@ -55,7 +58,7 @@
     "svgo": "^3.3.2",
     "svgo-loader": "^4.0.0",
     "tailwindcss": "^3.4.16",
-    "typescript": "~5.6.2",
+    "typescript": "5.3.3",
     "vite": "^5.4.10",
     "vue-tsc": "^2.1.8"
   }
