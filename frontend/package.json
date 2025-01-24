@@ -11,9 +11,6 @@
     "lint": "eslint . --fix --ignore-pattern .gitignore"
   },
   "dependencies": {
-    "@typescript-eslint/eslint-plugin": "7.2.0",
-    "@typescript-eslint/parser": "7.2.0",
-    "@typescript-eslint/typescript-estree": "^8.21.0",
     "@vueuse/core": "^12.4.0",
     "@vueuse/rxjs": "^12.4.0",
     "@xstate/vue": "^4.0.0",
@@ -25,7 +22,6 @@
     "rxjs": "^7.8.1",
     "svg-sprite": "^2.0.4",
     "tailwind-merge": "^2.5.5",
-    "vite-svg-loader": "^5.1.0",
     "vue": "^3.5.12",
     "vue3-carousel": "^0.10.0",
     "vue3-toastify": "^0.2.8",
@@ -33,6 +29,8 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
+    "@typescript-eslint/eslint-plugin": "7.2.0",
+    "@typescript-eslint/parser": "7.2.0",
     "@rushstack/eslint-patch": "^1.3.3",
     "@types/node": "^22.10.2",
     "@types/svg-sprite": "^0.0.39",
@@ -45,21 +43,18 @@
     "autoprefixer": "^10.4.20",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-standard": "^4.1.0",
     "eslint-plugin-tailwindcss": "^3.17.4",
     "eslint-plugin-unused-imports": "^3.2.0",
     "eslint-plugin-vue": "^9.23.0",
     "postcss": "^8.4.49",
     "prettier": "^3.3.3",
-    "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "svgo": "^3.3.2",
-    "svgo-loader": "^4.0.0",
     "tailwindcss": "^3.4.16",
     "typescript": "5.3.3",
     "vite": "^5.4.10",
-    "vue-tsc": "^2.1.8"
+    "vue-tsc": "^2.1.8",
+    "vite-svg-loader": "^5.1.0"
   }
 }
