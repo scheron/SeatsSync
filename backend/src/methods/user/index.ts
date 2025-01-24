@@ -5,12 +5,12 @@ import {logout} from "./logout"
 import {register} from "./register"
 import {UserMethods} from "@/constants/messageTypes"
 
-import type {Express} from "express"
+import type {Router} from "express"
 
-export function initUserMethods(app: Express) {
-  app.post(UserMethods["user.auth_start"], authStart)
-  app.post(UserMethods["user.auth_reset"], authReset)
-  app.post(UserMethods["user.login"], login)
-  app.post(UserMethods["user.logout"], logout)
-  app.post(UserMethods["user.register"], register)
+export function initUserMethods(router: Router) {
+  router.post(UserMethods["user.auth_start"], authStart)
+  router.post(UserMethods["user.auth_reset"], authReset)
+  router.post(UserMethods["user.login"], login)
+  router.post(UserMethods["user.logout"], logout)
+  router.post(UserMethods["user.register"], register)
 }

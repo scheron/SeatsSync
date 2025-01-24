@@ -16,6 +16,7 @@ dotenv.config()
 const PORT = process.env.PORT || 3001
 
 const app = express()
+const router = express.Router()
 const server = createServer(app)
 
 app.use(express.json())
@@ -29,8 +30,9 @@ app.use(
     credentials: true,
   }),
 )
+app.use("/api", router)
 
-initUserMethods(app)
+initUserMethods(router)
 
 const handlersMap: Partial<Record<Namespace, WebSocketOnMessage>> = {
   user: handleUserMessages,
