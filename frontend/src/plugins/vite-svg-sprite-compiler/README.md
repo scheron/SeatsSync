@@ -10,12 +10,12 @@ import {svgSpriteCompiler} from "./src/plugins/vite-svg-sprite-compiler"
 
 export default defineConfig({
   plugins: [
-    vue(),
     svgSpriteCompiler({
       iconsDir: "src/assets/icons",
       outputSprite: "public/icons-sprite.svg",
       typesOutput: "src/types/icons.ts",
     }),
+    // ...otherPlugins,
   ],
 })
 ```
