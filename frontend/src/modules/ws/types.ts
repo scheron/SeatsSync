@@ -7,13 +7,22 @@ export type ResponseStatus = "success" | "error" | "snapshot" | "update"
 
 export type RequestMessage<T = any> = {
   type: MessageType
-  eid?: string
+  eid: string
   data: T
+}
+
+export type SubscriptionOptions = {
+  msg?: RequestMessage
+  onResult?: <T>(msg: ResponseMessageSuccess<T>) => void
+  onError?: (msg: ResponseMessageError) => void
+  onDelete?: () => void
+  isKeepAlive?: boolean
+  isOnce?: boolean
 }
 
 export type ResponseMessageSuccess<T = any> = {
   type: MessageType
-  eid?: string
+  eid: string
   data: T
   error: null
   status: Exclude<ResponseStatus, "error">
@@ -21,7 +30,7 @@ export type ResponseMessageSuccess<T = any> = {
 
 export type ResponseMessageError = {
   type: MessageType
-  eid?: string
+  eid: string
   data: null
   error: keyof typeof Errors
   status: "error"
@@ -39,4 +48,4 @@ export function isSuccessMessage<T>(message: ResponseMessage<T>): message is Res
   return message.status !== "error" && message.error === null
 }
 
-export type ConnectionState = "disconnected" | "connecting" | "connected"
+export type ConnectionState = "DISCONNECTED" | "CONNECTING" | "RECONNECTING" | "CONNECTED" | "DESTROYED" | "INITIALIZED"
