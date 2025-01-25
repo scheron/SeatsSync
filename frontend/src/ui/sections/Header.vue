@@ -7,6 +7,7 @@ import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BasePopover from "@/ui/common/base/BasePopover.vue"
 import Logo from "@/ui/common/Logo.vue"
 import AuthForm from "@/ui/features/auth"
+import {wsClient} from "@/modules/ws"
 
 const cinema = "CGV Pearl Plaza"
 const themeStore = useThemeStore()
@@ -24,10 +25,14 @@ onSnapshot(({status}) => {
 
 onUpdate(({status}) => {
   console.log("UPDATE", status)
-  if (status === "user") {
-    isUserLoggedIn.value = true
-  } else {
-    isUserLoggedIn.value = false
+  if (status !== undefined) {
+    wsClient.reconnect()
+
+    if (status === "user") {
+      isUserLoggedIn.value = true
+    } else {
+      isUserLoggedIn.value = false
+    }
   }
 })
 

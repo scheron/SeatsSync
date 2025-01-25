@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {useToasts} from "@/composables/useToasts"
 import {useMachine} from "@xstate/vue"
-import {wsClient} from "@/modules/ws"
 import {authMachine} from "./auth.machine"
 import StepLogin from "./fragments/StepLogin.vue"
 import StepRegister from "./fragments/StepRegister.vue"
@@ -13,7 +12,6 @@ const {snapshot, send} = useMachine(authMachine)
 
 function onFinish() {
   send({type: "END"})
-  wsClient.reconnectForce()
 }
 </script>
 

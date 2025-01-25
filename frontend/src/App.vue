@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import {ref} from "vue"
+import {onUnmounted, ref} from "vue"
+import {tryOnBeforeUnmount} from "@vueuse/core"
 import {useSubscription} from "@/composables/useSubscription"
 import AppLayout from "@/ui/common/AppLayout.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
@@ -24,29 +25,29 @@ wsClient.on("user.subscribe").subscribe({
 })
 
 onConnectionStateChange((state, prevState) => {
-  if (state === "connecting" && prevState === "connected") {
+  // console.log("CONNECTION STATE", state, prevState)
+
+  if (state === "RECONNECTING") {
     toast.info("Connecting...", {toastId: id, autoClose: false, isLoading: isConnecting.value})
     return
   }
 
-  // console.log("state", state, prevState)
-  if (state === "connected" && prevState === "connecting") {
-    //   toast.hideToast(id)
-    //   toast.success("Connected")
-    // isConnecting.value = false
-    wsClient.send({
-      type: "user.subscribe",
-      data: {},
-      eid: "123",
-    })
+  if (state === "CONNECTED" && prevState === "RECONNECTING") {
+    toast.hideToast(id)
+    toast.success("Connected")
+    isConnecting.value = false
 
     return
   }
 
-  if (state === "disconnected" && prevState === "connecting") {
+  if (state === "DISCONNECTED" && prevState === "RECONNECTING") {
     toast.hideToast(id)
     toast.error("Connection failed")
     isConnecting.value = false
+  }
+
+  if (state === "CONNECTED") {
+    wsClient.send({type: "user.subscribe", data: {}, eid: "123"})
   }
 })
 
@@ -54,6 +55,10 @@ onError((value) => {
   if (!value) return
   console.log("error", value)
   toast.error(value)
+})
+
+tryOnBeforeUnmount(() => {
+  wsClient.destroy()
 })
 </script>
 
