@@ -74,16 +74,6 @@ export function defineSubscription(ws: WebSocketClient) {
       ws.send(this.msg as RequestMessage)
     }
 
-    destroy() {
-      if (this.#destroyed$.value) return
-
-      logger.info("[Subscription] Destroying:", {id: this.id})
-      this.onDelete()
-      subscriptions.delete(this.id)
-      this.#destroyed$.next(true)
-      this.#destroyed$.complete()
-    }
-
     resubscribe() {
       if (this.isSubscribed) this.unsubscribe()
 
@@ -95,6 +85,11 @@ export function defineSubscription(ws: WebSocketClient) {
       this.#subscribe()
     }
 
+    /**
+     * Unsubscribe from the WebSocket message.
+     * After unsubscribing, the subscription will be destroyed.
+     * If subscription has 'subscribe' in the type, it will send 'unsubscribe' message before destroying
+     */
     unsubscribe() {
       if (this.msg.type.includes("subscribe")) {
         const message: RequestMessage = {
@@ -112,6 +107,22 @@ export function defineSubscription(ws: WebSocketClient) {
       this.destroy()
     }
 
+    destroy() {
+      if (this.#destroyed$.value) return
+
+      logger.info("[Subscription] Destroying:", {id: this.id})
+      this.onDelete()
+      subscriptions.delete(this.id)
+      this.#destroyed$.next(true)
+      this.#destroyed$.complete()
+    }
+
+    /**
+     * Creates a one-time request to the WebSocket.
+     * Resolves or rejects based on the response status.
+     * @param msg - The WebSocket request message.
+     * @returns A promise that resolves with the response data or rejects with an error.
+     */
     static request<T = any>(msg: RequestMessage<T> & {eid?: string}): Promise<T> {
       return new Promise((resolve, reject) => {
         new Subscription({
