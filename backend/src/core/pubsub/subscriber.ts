@@ -10,24 +10,33 @@ import type {Subscriber as ISubscriber, SubscriptionHandler} from "./types"
 export class Subscriber<T extends string = string, D = any> {
   private subscribers = new Map<string, ISubscriber>()
 
+  private compositeKey(clientId: string, eid: string) {
+    return `${clientId}::${eid}`
+  }
+
   constructor(private handler: SubscriptionHandler<T, D>) {}
 
   async onSubscribe(ws: IWebSocketClient, message: MessageRequest<T, D>) {
     try {
-      const clientId = (ws as any).id
+      const clientId = ws.context?.id
 
-      for (const subscriber of this.subscribers.values()) {
-        if (subscriber.ws === ws && subscriber.eid === message.eid) {
-          ws.send(formatError({eid: message.eid, error: Errors.SubscriptionAlreadyExists}))
-          return
-        }
+      if (!clientId) {
+        ws.send(formatError({eid: message?.eid, error: Errors.Unauthorized}))
+        return
+      }
+
+      const subKey = this.compositeKey(clientId, message.eid)
+
+      if (this.subscribers.has(subKey)) {
+        ws.send(formatError({eid: message.eid, error: Errors.SubscriptionAlreadyExists}))
+        return
       }
 
       const snapshot = await this.handler.onSnapshot(ws, message)
 
       ws.send(formatSuccess({eid: message.eid, status: "snapshot", type: this.handler.name, data: snapshot}))
 
-      this.subscribers.set(clientId, {ws, eid: message.eid})
+      this.subscribers.set(subKey, {ws, eid: message.eid})
 
       logger.info(`Client subscribed to ${this.handler.name}`, {clientId, eid: message.eid})
     } catch (error) {
@@ -36,8 +45,18 @@ export class Subscriber<T extends string = string, D = any> {
     }
   }
 
-  unsubscribe(clientId: string) {
-    this.subscribers.delete(clientId)
+  unsubscribe(clientId: string, eid: string) {
+    // NOTE: if eid is not provided, unsubscribe from all subscriptions
+    if (!eid) {
+      for (const key of this.subscribers.keys()) {
+        if (key.split("::")[0] === clientId) {
+          this.subscribers.delete(key)
+        }
+      }
+      return
+    }
+
+    this.subscribers.delete(this.compositeKey(clientId, eid))
   }
 
   notify<T = any>(status: Extract<ResponseStatus, "update" | "error">, message: T | ErrorCode) {
@@ -52,7 +71,6 @@ export class Subscriber<T extends string = string, D = any> {
           logger.error(`Failed to notify client for ${this.handler.name}`, {error: (error as Error).message, clientId, eid})
         }
       } else {
-        // TODO: if we connecting, await for reconnect,then send
         this.subscribers.delete(clientId)
       }
     })

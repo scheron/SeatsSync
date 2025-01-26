@@ -6,11 +6,11 @@ export const UserMethods = {
   "user.register": "/user/register",
   "user.recovery_phrase": "/user/recovery_phrase",
   "user.save_recovery_phrase": "/user/save_recovery_phrase",
-  "user.unsubscribe": "/user/unsubscribe",
 } as const
 
 export const UserSubscriptions = {
-  "user.subscribe": "/user/subscribe",
+  "user.subscribe": "/user.subscribe",
+  "user.unsubscribe": "/user.unsubscribe",
 } as const
 
 export const Methods = {
