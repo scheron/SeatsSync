@@ -12,7 +12,7 @@ export async function authReset(req: Request<{}, {}, {username: string}>, res: R
     UserService.deleteCandidate(username)
     sendSuccess(res, {})
   } catch (error) {
-    sendError(res, error.message ?? Errors.InternalServerError, error.message ? 400 : 500)
+    sendError(res, error.message ?? Errors.InternalServerError)
     logger.error("Failed to reset", {error: (error as Error).message, username})
   }
 }

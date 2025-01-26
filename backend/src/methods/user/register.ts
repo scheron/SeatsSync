@@ -1,4 +1,4 @@
-import {notifyUserStatusChange} from "@/subscriptions/user/main"
+import {notifyUserStatusChange} from "@/subscriptions/user"
 import {UserService} from "@/services/user"
 import {COOKIE_OPTIONS, TOKEN_NAME} from "@/model/user"
 import {Errors} from "@/constants/errors"
@@ -24,10 +24,10 @@ export async function register(req: Request<{}, {}, {username: string; code: str
 
     res.cookie(TOKEN_NAME, newToken, COOKIE_OPTIONS)
     sendSuccess(res, {username})
-    notifyUserStatusChange("user")
+    notifyUserStatusChange("user", user.username)
     logger.info("User registered", {username})
   } catch (error) {
-    sendError(res, error.message ?? Errors.InternalServerError, error.message ? 400 : 500)
+    sendError(res, error.message ?? Errors.InternalServerError)
     logger.error("Registration failed", {error: (error as Error).message, username})
   }
 }

@@ -1,6 +1,6 @@
 import {Errors} from "@/constants/errors"
 import {Methods} from "@/constants/messageTypes"
-import {from, map, throwError} from "rxjs"
+import {from, map} from "rxjs"
 import {switchMap} from "rxjs/operators"
 
 import type {Method} from "@/constants/messageTypes"
@@ -24,7 +24,7 @@ export class HttpClient {
     ).pipe(
       switchMap((response) => from(response.json())),
       map((response: ApiResponse<T>) => {
-        if (response.status === "error") throwError(() => response.error ?? Errors.InternalServerError)
+        if (response.status === "error") throw response.error ?? Errors.InternalServerError
         return response.data
       }),
     )

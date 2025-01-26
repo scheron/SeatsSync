@@ -29,10 +29,10 @@ export async function login(req: Request<{}, {}, {username: string; code: string
     })
 
     sendSuccess(res, {username: user.username})
-    notifyUserStatusChange("user")
+    notifyUserStatusChange("user", user.username)
     logger.info("User logged in", {username})
   } catch (error) {
-    sendError(res, error.message ?? Errors.InternalServerError, error.message ? 400 : 500)
+    sendError(res, error.message ?? Errors.InternalServerError)
     logger.error("Login failed", {error: (error as Error).message, username})
   }
 }

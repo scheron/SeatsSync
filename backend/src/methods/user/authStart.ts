@@ -16,11 +16,11 @@ export async function authStart(req: Request<{}, {}, {username: string}>, res: R
       const candidate = UserService.createCandidate(username)
       sendSuccess(res, {qr_url: candidate.qr_url, username, status: "candidate"})
     } catch (error) {
-      sendError(res, error.message ?? Errors.InternalServerError, 500)
+      sendError(res, error.message ?? Errors.InternalServerError)
       logger.error("Failed to create candidate", {error: (error as Error).message, username})
     }
   } catch (error) {
-    sendError(res, error.message ?? Errors.InternalServerError, error.message ? 400 : 500)
+    sendError(res, error.message ?? Errors.InternalServerError)
     logger.error("Failed to get user", {error: (error as Error).message, username})
   }
 }

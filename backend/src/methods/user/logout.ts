@@ -27,6 +27,6 @@ export async function logout(req: Request<{}, {}, {}>, res: Response) {
     notifyUserStatusChange("guest")
     sendSuccess(res, {success: true})
   } catch (error) {
-    sendError(res, error.message ?? Errors.InternalServerError, error.message ? 400 : 500)
+    sendError(res, error.message ?? Errors.InternalServerError)
   }
 }
