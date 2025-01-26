@@ -7,7 +7,6 @@ import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BasePopover from "@/ui/common/base/BasePopover.vue"
 import Logo from "@/ui/common/Logo.vue"
 import AuthForm from "@/ui/features/auth"
-import {Subscription} from "@/modules/ws"
 
 const cinema = "CGV Pearl Plaza"
 const themeStore = useThemeStore()
@@ -25,40 +24,6 @@ const unsubscribe = subscribe<{status: "user" | "guest"}, null>({
 
 onUnmounted(() => unsubscribe())
 
-// subscribe<{status: "user" | "guest"}>({
-//   msg: {
-//     type: "user.subscribe",
-//     data: {},
-//     eid: "1234",
-//   },
-//   onSnapshot: (data) => {
-//     isUserLoggedIn.value = data.status === "user"
-//   },
-//   onUpdate: (data) => {
-//     isUserLoggedIn.value = data.status === "user"
-//   },
-// })
-
-// onSnapshot(({status}) => {
-//   console.log("SNAPSHOT", status)
-//   if (status === "user") {
-//     isUserLoggedIn.value = true
-//   }
-// })
-
-// onUpdate(({status}) => {
-//   console.log("UPDATE", status)
-//   if (status !== undefined) {
-//     wsClient.reconnect()
-
-//     if (status === "user") {
-//       isUserLoggedIn.value = true
-//     } else {
-//       isUserLoggedIn.value = false
-//     }
-//   }
-// })
-
 function onLogout() {
   request({
     method: "POST",
@@ -70,7 +35,7 @@ function onLogout() {
 <template>
   <header class="relative flex items-center justify-between rounded-lg bg-primary-100 p-4 shadow-md">
     <div>
-      <BaseButton icon="map-pin" class="text-lg" @click="() => subscription.unsubscribe()">{{ cinema }}</BaseButton>
+      <BaseButton icon="map-pin" class="text-lg" @click="() => unsubscribe()">{{ cinema }}</BaseButton>
     </div>
 
     <Logo class="absolute-center" />
