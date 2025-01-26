@@ -60,6 +60,14 @@ export function verifyJWT(token: string): TokenPayload | null {
   }
 }
 
+export function decodeJWT(token: string): TokenPayload | null {
+  try {
+    return jwt.decode(token) as TokenPayload | null
+  } catch {
+    return null
+  }
+}
+
 export function refreshJWT(token: string): string | null {
   try {
     const payload = verifyJWT(token)
