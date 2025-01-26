@@ -5,14 +5,14 @@ import type {ErrorCode} from "@/constants/errors"
 import type {Method} from "@/constants/messageTypes"
 import type {Observable, Subscription} from "rxjs"
 
-type Handler<T> = (data: T) => void
+type Handler<TypeResponse> = (data: TypeResponse) => void
 type ErrorHandler = (error: ErrorCode) => void
 
-interface RequestConfig<T, B = unknown> {
+interface RequestConfig<TypeResponse, TypeBody = unknown> {
   method: "GET" | "POST" | "DELETE"
   url: Method
-  data?: B
-  onSuccess?: Handler<T>
+  data?: TypeBody
+  onSuccess?: Handler<TypeResponse>
   onError?: ErrorHandler
 }
 
@@ -28,21 +28,21 @@ export function useRequest() {
     unsubscribe()
   })
 
-  return <T, B = unknown>(config: RequestConfig<T, B>) => {
+  return <TypeResponse, TypeBody = unknown>(config: RequestConfig<TypeResponse, TypeBody>) => {
     const {method, url, data, onSuccess, onError} = config
 
-    let observable: Observable<T>
+    let observable: Observable<TypeResponse>
 
     switch (method) {
       case "POST":
-        observable = httpClient.post<T, B>(url, data!)
+        observable = httpClient.post<TypeResponse, TypeBody>(url, data!)
         break
       case "DELETE":
-        observable = httpClient.delete<T>(url)
+        observable = httpClient.delete<TypeResponse>(url)
         break
 
       default:
-        observable = httpClient.get<T>(url)
+        observable = httpClient.get<TypeResponse>(url)
     }
 
     const subscription = observable.subscribe({
