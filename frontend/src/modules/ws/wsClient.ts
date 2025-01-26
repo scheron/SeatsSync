@@ -3,7 +3,7 @@ import {randomUUID} from "@/utils/random"
 import {BehaviorSubject, catchError, distinctUntilChanged, EMPTY, filter, interval, map, ReplaySubject, Subject, takeUntil, tap} from "rxjs"
 import {webSocket} from "rxjs/webSocket"
 
-import type {Observable} from "rxjs"
+import type {Observable, Subscription} from "rxjs"
 import type {WebSocketSubject} from "rxjs/webSocket"
 import type {
   ConnectionState,
@@ -21,50 +21,84 @@ type State = {
   connectAttempts: number
 }
 
+type WebSocketClientConfig = {
+  maxReconnectAttempts?: number
+  pingInterval?: number
+  minReconnectDelay?: number
+  maxReconnectDelay?: number
+  backoffFactor?: number
+  debug?: boolean
+}
+
 export class WebSocketClient {
   private socket$: WebSocketSubject<WebSocketMessage<any>> | null = null
+  private socketSubscription?: Subscription
+  private pingSubscription?: Subscription
+
   private readonly messages$ = new ReplaySubject<WebSocketMessage<any>>(1)
-  private readonly disconnect$ = new Subject<void>()
+  private readonly destroy$ = new Subject<void>()
   private readonly state$ = new BehaviorSubject<State>({connectionState: "INITIALIZED", connectAttempts: 0})
 
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null
-  private readonly maxReconnectAttempts = 10
-  private readonly pingInterval = 4000
-  private prevState: State | null = null
-  private readonly logger = new Logger(false)
 
-  constructor(private readonly url: string) {
+  private readonly maxReconnectAttempts: number
+  private readonly pingInterval: number
+  private readonly minReconnectDelay: number
+  private readonly maxReconnectDelay: number
+  private readonly backoffFactor: number
+
+  private prevState: State | null = null
+  private readonly logger: Logger
+
+  private isManualClose: boolean = false
+  private messageQueue: RequestMessage<any>[] = []
+
+  constructor(
+    private readonly url: string,
+    config: WebSocketClientConfig = {},
+  ) {
+    this.maxReconnectAttempts = config.maxReconnectAttempts ?? 10
+    this.pingInterval = config.pingInterval ?? 4000
+    this.minReconnectDelay = config.minReconnectDelay ?? 2000
+    this.maxReconnectDelay = config.maxReconnectDelay ?? 20000
+    this.backoffFactor = config.backoffFactor ?? 1.2
+    this.isManualClose = false
+
+    this.logger = new Logger(config.debug ?? false)
     this.logger.info("[WebSocket] Initializing with URL:", url)
+
     this.startPing()
     this.connect()
   }
 
   private startPing() {
-    interval(this.pingInterval)
+    this.pingSubscription?.unsubscribe()
+
+    this.pingSubscription = interval(this.pingInterval)
       .pipe(
-        takeUntil(this.disconnect$),
+        takeUntil(this.destroy$),
         filter(() => this.state$.getValue().connectionState === "CONNECTED" && this.socket$ !== null),
-        tap(() => this.socket$ && this.socket$.next(1)),
-        tap(() => this.logger.info("[WebSocket] PING")),
-        catchError((error) => {
-          this.logger.error("[WebSocket] Ping error:", error)
-          return EMPTY
-        }),
+        tap(() => this.socket$?.next(1)),
+        catchError(() => EMPTY),
       )
       .subscribe()
   }
 
   private connect() {
-    if (this.socket$) {
-      this.socket$.complete()
-      this.socket$ = null
-    }
+    this.logger.info("[WebSocket] Connecting...")
 
-    const isReconnecting = this.state$.getValue().connectionState === "RECONNECTING"
+    this.socket$?.complete()
+    this.socket$ = null
+
+    this.socketSubscription?.unsubscribe()
+    this.socketSubscription = undefined
+
+    const current = this.state$.getValue()
+    const isReconnecting = current.connectionState === "RECONNECTING"
 
     this.updateState({
       connectionState: isReconnecting ? "RECONNECTING" : "CONNECTING",
-      connectAttempts: isReconnecting ? this.state$.getValue().connectAttempts : 0,
+      connectAttempts: isReconnecting ? current.connectAttempts : 0,
     })
 
     this.socket$ = webSocket<WebSocketMessage<any>>({
@@ -73,16 +107,21 @@ export class WebSocketClient {
         next: () => {
           this.logger.info("[WebSocket] Connected successfully")
           this.updateState({connectionState: "CONNECTED", connectAttempts: 0})
+
+          this.flushQueue()
+        },
+      },
+      closeObserver: {
+        next: (event) => {
+          this.logger.info("[WebSocket] Connection closed by server:", event.code, event.reason)
+          if (!this.isManualClose) this.reconnectClient()
         },
       },
     })
 
-    this.socket$.subscribe({
+    this.socketSubscription = this.socket$.subscribe({
       next: (message) => {
-        if (typeof message === "number") {
-          this.logger.info("[WebSocket] PONG")
-          return
-        }
+        if (typeof message === "number") return
 
         if (typeof message === "object") {
           this.logger.info("[WebSocket] Message received:", {
@@ -100,9 +139,19 @@ export class WebSocketClient {
         this.reconnectClient()
       },
       complete: () => {
-        this.logger.info("[WebSocket] Connection closed")
+        this.logger.info("[WebSocket] Connection completed")
+        // this.reconnectClient()
       },
     })
+  }
+
+  private flushQueue() {
+    while (this.messageQueue.length > 0 && this.socket$ && this.state$.getValue().connectionState === "CONNECTED") {
+      const msg = this.messageQueue.shift()
+      if (msg) {
+        this.socket$.next(msg as WebSocketMessage<any>)
+      }
+    }
   }
 
   private reconnectClient() {
@@ -120,12 +169,9 @@ export class WebSocketClient {
       return
     }
 
-    const minTimeout = 2_000
-    const maxTimeout = 20_000
-    const backoffFactor = 1.2
-    const delay = Math.trunc(Math.min(minTimeout * backoffFactor ** attempts, maxTimeout))
+    const delay = Math.trunc(Math.min(this.minReconnectDelay * this.backoffFactor ** attempts, this.maxReconnectDelay))
 
-    this.logger.info(`[WebSocket] Scheduling reconnect:`, {
+    this.logger.info("[WebSocket] Scheduling reconnect:", {
       delay,
       attempt: attempts,
       maxAttempts: this.maxReconnectAttempts,
@@ -139,28 +185,26 @@ export class WebSocketClient {
     }, delay)
   }
 
-  private updateState(patch: Partial<State>) {
-    const currentState = this.state$.getValue()
-    const newState = {...currentState, ...patch}
-
-    this.prevState = currentState
-    this.state$.next(newState)
-  }
-
   send<T = any>(message: RequestMessage<T>) {
-    if (!this.socket$ || this.state$.getValue().connectionState !== "CONNECTED") {
-      this.logger.warn("[WebSocket] Cannot send message: socket not connected")
-      return
+    if (!message.eid) {
+      message.eid = randomUUID()
     }
 
-    message.eid = message?.eid ?? randomUUID()
+    const state = this.state$.getValue().connectionState
+    if (!this.socket$ || state !== "CONNECTED") {
+      this.logger.warn("[WebSocket] Socket not connected, queueing message", {
+        type: message.type,
+        eid: message.eid,
+      })
+      this.messageQueue.push(message)
+      return
+    }
 
     this.logger.info("[WebSocket] Sending message:", {
       type: message.type,
       eid: message.eid,
       data: message.data,
     })
-
     this.socket$.next(message as WebSocketMessage<T>)
   }
 
@@ -170,12 +214,12 @@ export class WebSocketClient {
   on<T = any>(type?: MessageType, status?: ResponseStatus | ResponseStatus[]): Observable<ResponseMessage<T>> {
     this.logger.info("[WebSocket] Subscribing to messages:", {type, status})
 
-    const statuses = Array.isArray(status) ? status : [status]
+    const statuses = Array.isArray(status) ? status : status ? [status] : []
 
     return this.messages$.pipe(
-      filter((message): message is ResponseMessage<T> => typeof message === "object" && "status" in message),
-      filter((message) => (type && type !== "*" ? message.type === type : true)),
-      filter((message) => (status ? statuses.includes(message.status) : true)),
+      filter((msg): msg is ResponseMessage<T> => typeof msg === "object" && "status" in msg),
+      filter((msg) => (type && type !== "*" ? msg.type === type : true)),
+      filter((msg) => (statuses.length ? statuses.includes(msg.status) : true)),
       catchError((err) => {
         this.logger.error("[WebSocket] Message processing error:", err)
         return EMPTY
@@ -189,22 +233,24 @@ export class WebSocketClient {
 
   get connectionState(): Observable<{state: ConnectionState; prevState: ConnectionState | null}> {
     return this.state$.pipe(
-      map((state) => state.connectionState),
+      map((s) => s.connectionState),
       distinctUntilChanged(),
-      tap((state) => this.logger.info("[WebSocket] Connection state changed:", state)),
-      map((state) => ({state, prevState: this.prevState?.connectionState ?? null})),
+      tap((st) => this.logger.info("[WebSocket] Connection state changed:", st)),
+      map((st) => ({
+        state: st,
+        prevState: this.prevState?.connectionState ?? null,
+      })),
     )
   }
 
   reconnect() {
-    this.logger.info("[WebSocket] reconnecting...")
+    this.logger.info("[WebSocket] Manual reconnect...")
 
-    if (this.socket$) {
-      this.socket$.complete()
-      this.socket$ = null
-    }
+    this.isManualClose = true
+    this.socket$?.complete()
+    this.socket$ = null
 
-    this.updateState({connectionState: "RECONNECTING", connectAttempts: 0})
+    this.updateState({connectionState: "CONNECTING", connectAttempts: 0})
     this.connect()
   }
 
@@ -216,11 +262,29 @@ export class WebSocketClient {
       this.reconnectTimer = null
     }
 
-    this.disconnect$.next()
-    this.disconnect$.complete()
+    this.destroy$.next()
+    this.destroy$.complete()
+
     this.messages$.complete()
+
     this.socket$?.complete()
     this.socket$ = null
+    this.socketSubscription?.unsubscribe()
+    this.socketSubscription = undefined
+
+    this.pingSubscription?.unsubscribe()
+    this.pingSubscription = undefined
+
     this.updateState({connectionState: "DESTROYED", connectAttempts: 0})
+  }
+
+  private updateState(patch: Partial<State>) {
+    const currentState = this.state$.getValue()
+    const newState = {...currentState, ...patch}
+
+    if (currentState.connectionState === newState.connectionState && currentState.connectAttempts === newState.connectAttempts) return
+
+    this.prevState = currentState
+    this.state$.next(newState)
   }
 }
