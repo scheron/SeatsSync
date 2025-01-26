@@ -54,8 +54,8 @@ const handlersMap: Partial<Record<Namespace, WebSocketOnMessage>> = {
 }
 
 const ws = new WebSocketClient(server, {
-  pingInterval: 3_000,
-  autoCloseTimeout: 10_000,
+  pingInterval: 5_000,
+  autoCloseTimeout: 15_000,
   enablePingPong: true,
   onMessage: (ws, message) => {
     const [namespace] = message.type.split(".")

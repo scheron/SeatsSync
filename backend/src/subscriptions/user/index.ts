@@ -13,7 +13,10 @@ export function handleUserMessages(ws: IWebSocketClient, message: MessageRequest
   switch (message.type) {
     case "user.subscribe":
       return userMain.onSubscribe(ws, message)
-    default:
+    case "user.unsubscribe":
+      return userMain.unsubscribe(message.data.eid)
+    default: {
       ws.send(formatError({eid: message.eid, error: Errors.UnknownMessageType}))
+    }
   }
 }
