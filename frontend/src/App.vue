@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import {onUnmounted, ref} from "vue"
+import {ref} from "vue"
 import {tryOnBeforeUnmount} from "@vueuse/core"
-import {useSubscription} from "@/composables/useSubscription"
 import AppLayout from "@/ui/common/AppLayout.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
 import AuthForm from "@/ui/features/auth"
@@ -11,22 +10,10 @@ import {wsClient} from "./modules/ws"
 
 const toast = useToasts()
 
-const {onError, onConnectionStateChange} = useSubscription("*")
 const isConnecting = ref(false)
 const id = 2
 
-wsClient.on("user.subscribe").subscribe({
-  next: (message) => {
-    console.log("Received message:", message)
-  },
-  error: (error) => {
-    console.log("Error in subscription:", error)
-  },
-})
-
-onConnectionStateChange((state, prevState) => {
-  // console.log("CONNECTION STATE", state, prevState)
-
+wsClient.connectionState.subscribe(({state, prevState}) => {
   if (state === "RECONNECTING") {
     toast.info("Connecting...", {toastId: id, autoClose: false, isLoading: isConnecting.value})
     return
@@ -45,16 +32,12 @@ onConnectionStateChange((state, prevState) => {
     toast.error("Connection failed")
     isConnecting.value = false
   }
-
-  if (state === "CONNECTED") {
-    wsClient.send({type: "user.subscribe", data: {}, eid: "123"})
-  }
 })
 
-onError((value) => {
-  if (!value) return
-  console.log("error", value)
-  toast.error(value)
+wsClient.on("*", "error").subscribe(({error}) => {
+  if (!error) return
+  console.log("error", error)
+  toast.error(error)
 })
 
 tryOnBeforeUnmount(() => {

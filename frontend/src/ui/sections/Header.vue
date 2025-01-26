@@ -1,40 +1,63 @@
 <script setup lang="ts">
-import {ref} from "vue"
+import {onUnmounted, ref} from "vue"
 import {useRequest} from "@/composables/useRequest"
-import {useSubscription} from "@/composables/useSubscription"
+import {useWebSocket} from "@/composables/useWebSocket"
 import {useThemeStore} from "@/stores/theme"
 import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BasePopover from "@/ui/common/base/BasePopover.vue"
 import Logo from "@/ui/common/Logo.vue"
 import AuthForm from "@/ui/features/auth"
-import {wsClient} from "@/modules/ws"
+import {Subscription} from "@/modules/ws"
 
 const cinema = "CGV Pearl Plaza"
 const themeStore = useThemeStore()
 
 const isUserLoggedIn = ref(false)
-const {onSnapshot, onUpdate} = useSubscription<{status: "guest" | "user"}>("user.subscribe")
+const {subscribe} = useWebSocket()
 const request = useRequest()
 
-onSnapshot(({status}) => {
-  console.log("SNAPSHOT", status)
-  if (status === "user") {
-    isUserLoggedIn.value = true
-  }
+const unsubscribe = subscribe<{status: "user" | "guest"}, null>({
+  msg: {type: "user.subscribe", data: null, eid: "1234"},
+  onResult: ({data}) => {
+    isUserLoggedIn.value = data.status === "user"
+  },
 })
 
-onUpdate(({status}) => {
-  console.log("UPDATE", status)
-  if (status !== undefined) {
-    wsClient.reconnect()
+onUnmounted(() => unsubscribe())
 
-    if (status === "user") {
-      isUserLoggedIn.value = true
-    } else {
-      isUserLoggedIn.value = false
-    }
-  }
-})
+// subscribe<{status: "user" | "guest"}>({
+//   msg: {
+//     type: "user.subscribe",
+//     data: {},
+//     eid: "1234",
+//   },
+//   onSnapshot: (data) => {
+//     isUserLoggedIn.value = data.status === "user"
+//   },
+//   onUpdate: (data) => {
+//     isUserLoggedIn.value = data.status === "user"
+//   },
+// })
+
+// onSnapshot(({status}) => {
+//   console.log("SNAPSHOT", status)
+//   if (status === "user") {
+//     isUserLoggedIn.value = true
+//   }
+// })
+
+// onUpdate(({status}) => {
+//   console.log("UPDATE", status)
+//   if (status !== undefined) {
+//     wsClient.reconnect()
+
+//     if (status === "user") {
+//       isUserLoggedIn.value = true
+//     } else {
+//       isUserLoggedIn.value = false
+//     }
+//   }
+// })
 
 function onLogout() {
   request({
@@ -47,7 +70,7 @@ function onLogout() {
 <template>
   <header class="relative flex items-center justify-between rounded-lg bg-primary-100 p-4 shadow-md">
     <div>
-      <BaseButton icon="map-pin" class="text-lg">{{ cinema }}</BaseButton>
+      <BaseButton icon="map-pin" class="text-lg" @click="() => subscription.unsubscribe()">{{ cinema }}</BaseButton>
     </div>
 
     <Logo class="absolute-center" />
