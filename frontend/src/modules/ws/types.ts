@@ -11,9 +11,11 @@ export type RequestMessage<T = any> = {
   data: T
 }
 
-export type SubscriptionOptions = {
-  msg?: RequestMessage
-  onResult?: <T>(msg: ResponseMessageSuccess<T>) => void
+export type SubscriptionOptions<T = any, D = any> = {
+  msg?: RequestMessage<D>
+  onSnapshot?: (data: T) => void
+  onUpdate?: (data: T) => void
+  onResult?: (msg: ResponseMessageSuccess<T>) => void
   onError?: (msg: ResponseMessageError) => void
   onDelete?: () => void
   isKeepAlive?: boolean

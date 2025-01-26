@@ -29,9 +29,9 @@ export class WebSocketClient {
 
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null
   private readonly maxReconnectAttempts = 10
-  private readonly pingInterval = 2000
+  private readonly pingInterval = 4000
   private prevState: State | null = null
-  private readonly logger = new Logger(true)
+  private readonly logger = new Logger(false)
 
   constructor(private readonly url: string) {
     this.logger.info("[WebSocket] Initializing with URL:", url)
@@ -187,7 +187,7 @@ export class WebSocketClient {
     return this.state$.getValue().connectionState
   }
 
-  get connectionState(): Observable<{state: ConnectionState; prevState: ConnectionState}> {
+  get connectionState(): Observable<{state: ConnectionState; prevState: ConnectionState | null}> {
     return this.state$.pipe(
       map((state) => state.connectionState),
       distinctUntilChanged(),
@@ -198,11 +198,6 @@ export class WebSocketClient {
 
   reconnect() {
     this.logger.info("[WebSocket] reconnecting...")
-
-    if (this.reconnectTimer !== null) {
-      clearTimeout(this.reconnectTimer)
-      this.reconnectTimer = null
-    }
 
     if (this.socket$) {
       this.socket$.complete()

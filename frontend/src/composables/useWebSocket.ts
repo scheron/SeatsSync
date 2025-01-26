@@ -10,7 +10,7 @@ import type {Ref} from "vue"
 type UseWebSocketReturn = {
   connectionState: Ref<ConnectionState>
   subscriptions: Ref<Map<string, SubscriptionInstance>>
-  subscribe: (options: SubscriptionOptions) => SubscriptionInstance["unsubscribe"]
+  subscribe: <T = any, D = any>(options: SubscriptionOptions<T, D>) => SubscriptionInstance["unsubscribe"]
   unsubscribe: (id: string) => void
   resubscribe: (id: string) => void
   send: <T = any>(message: RequestMessage<T>) => Promise<T>
@@ -25,10 +25,10 @@ export function useWebSocket(): UseWebSocketReturn {
     connectionState.value = state
   })
 
-  function subscribe(options: SubscriptionOptions): SubscriptionInstance["unsubscribe"] {
-    const subscription = new Subscription(options)
+  function subscribe<T, D>(options: SubscriptionOptions<T, D>): SubscriptionInstance["unsubscribe"] {
+    const subscription = new Subscription<T, D>(options)
 
-    subscriptions.value.set(subscription.id, subscription)
+    subscriptions.value.set(subscription.id, subscription as SubscriptionInstance)
 
     return () => subscription.unsubscribe()
   }

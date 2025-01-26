@@ -6,18 +6,20 @@ import type {RequestMessage, ResponseMessage, ResponseMessageError, ResponseMess
 import type {WebSocketClient} from "./wsClient"
 
 export function defineSubscription(ws: WebSocketClient) {
-  const logger = new Logger(true)
+  const logger = new Logger(false)
   let _id = 0
 
   const subscriptions = new Map<string, Subscription>()
   const subscriptionEvents$ = new Subject<ResponseMessage>()
 
-  class Subscription {
-    readonly #destroyed$ = new BehaviorSubject<boolean>(false)
+  class Subscription<T = any, D = any> {
+    readonly #destroyed$ = new Subject<boolean>()
 
     id: string
     msg: RequestMessage
-    onResult: <T>(msg: ResponseMessageSuccess<T>) => void
+    onSnapshot: (data: T) => void
+    onUpdate: (data: T) => void
+    onResult: (msg: ResponseMessageSuccess<T>) => void
     onError: (msg: ResponseMessageError) => void
     onDelete: () => void
     isSubscribed = false
@@ -26,14 +28,18 @@ export function defineSubscription(ws: WebSocketClient) {
 
     constructor({
       msg = {type: "*"} as RequestMessage,
+      onSnapshot = () => {},
+      onUpdate = () => {},
       onResult = () => {},
       onError = () => {},
       onDelete = () => {},
       isKeepAlive = true,
       isOnce = false,
-    }: SubscriptionOptions) {
+    }: SubscriptionOptions<T, D>) {
       this.id = msg.eid ?? `${++_id}`
       this.msg = {...msg, eid: this.id}
+      this.onSnapshot = onSnapshot
+      this.onUpdate = onUpdate
       this.onResult = onResult
       this.onError = onError
       this.onDelete = onDelete
@@ -62,6 +68,9 @@ export function defineSubscription(ws: WebSocketClient) {
             this.isSubscribed = false
           } else {
             this.onResult(msg)
+            if (msg.status === "snapshot") this.onSnapshot(msg.data)
+            if (msg.status === "update") this.onUpdate(msg.data)
+
             this.isSubscribed = true
 
             if (this.isOnce) this.unsubscribe()
@@ -71,10 +80,14 @@ export function defineSubscription(ws: WebSocketClient) {
 
     #subscribe() {
       logger.info("[Subscription] Subscribing:", {id: this.id, type: this.msg.type})
+      if (this.msg.type === "*") return
+
       ws.send(this.msg as RequestMessage)
     }
 
     resubscribe() {
+      if (this.msg.type === "*") return
+
       if (this.isSubscribed) this.unsubscribe()
 
       this.id = `${++_id}`
@@ -91,6 +104,13 @@ export function defineSubscription(ws: WebSocketClient) {
      * If subscription has 'subscribe' in the type, it will send 'unsubscribe' message before destroying
      */
     unsubscribe() {
+      this.isSubscribed = false
+
+      if (this.msg.type === "*") {
+        this.destroy()
+        return
+      }
+
       if (this.msg.type.includes("subscribe")) {
         const message: RequestMessage = {
           type: this.msg.type.replace("subscribe", "unsubscribe") as any,
@@ -102,13 +122,11 @@ export function defineSubscription(ws: WebSocketClient) {
         ws.send(message)
       }
 
-      this.isSubscribed = false
-
       this.destroy()
     }
 
     destroy() {
-      if (this.#destroyed$.value) return
+      if (this.#destroyed$.closed) return
 
       logger.info("[Subscription] Destroying:", {id: this.id})
       this.onDelete()
