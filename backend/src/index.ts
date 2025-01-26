@@ -1,11 +1,11 @@
 import {createServer} from "http"
+import {handleUserSubscriptions, unsubscribeUser} from "./subscriptions/user"
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import dotenv from "dotenv"
 import express from "express"
 import {WebSocketClient, WebSocketOnMessage} from "@/core/ws"
 import {initUserMethods} from "@/methods/user"
-import {handleUserMessages} from "@/subscriptions/user"
 import {Errors} from "@/constants/errors"
 import {formatError} from "@/shared/messages/formatters"
 
@@ -35,7 +35,7 @@ app.use("/api", router)
 initUserMethods(router)
 
 const handlersMap: Partial<Record<Namespace, WebSocketOnMessage>> = {
-  user: handleUserMessages,
+  user: handleUserSubscriptions,
   cinema: (ws, message) => {
     ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
   },
@@ -71,6 +71,9 @@ const ws = new WebSocketClient(server, {
       console.error(error)
       ws.send(formatError({eid: message.eid, type: message.type, error: Errors.InternalServerError}))
     }
+  },
+  onDisconnect: (ws) => {
+    unsubscribeUser(ws)
   },
 })
 
