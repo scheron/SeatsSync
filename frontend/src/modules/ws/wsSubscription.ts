@@ -1,33 +1,34 @@
 import {Logger} from "@/utils/logger"
 import {randomUUID} from "@/utils/random"
-import {BehaviorSubject, filter, Subject, takeUntil} from "rxjs"
+import {filter, Subject, takeUntil} from "rxjs"
 
 import type {RequestMessage, ResponseMessage, ResponseMessageError, ResponseMessageSuccess, SubscriptionOptions} from "./types"
 import type {WebSocketClient} from "./wsClient"
 
+type SubscriptionState = "INIT" | "PENDING" | "SUBSCRIBED" | "ERROR" | "UNSUBSCRIBED" | "DESTROYED"
 export function defineSubscription(ws: WebSocketClient) {
   const logger = new Logger(false)
-  let _id = 0
+  let _counter = 0
 
   const subscriptions = new Map<string, Subscription>()
   const subscriptionEvents$ = new Subject<ResponseMessage>()
 
   class Subscription<T = any, D = any> {
     readonly #destroyed$ = new Subject<boolean>()
+    state: SubscriptionState = "INIT"
 
     id: string
-    msg: RequestMessage
+    msg: RequestMessage<D>
     onSnapshot: (data: T) => void
     onUpdate: (data: T) => void
     onResult: (msg: ResponseMessageSuccess<T>) => void
     onError: (msg: ResponseMessageError) => void
     onDelete: () => void
-    isSubscribed = false
     isOnce: boolean
     isKeepAlive: boolean
 
     constructor({
-      msg = {type: "*"} as RequestMessage,
+      msg = {type: "*"} as RequestMessage<D>,
       onSnapshot = () => {},
       onUpdate = () => {},
       onResult = () => {},
@@ -36,7 +37,7 @@ export function defineSubscription(ws: WebSocketClient) {
       isKeepAlive = true,
       isOnce = false,
     }: SubscriptionOptions<T, D>) {
-      this.id = msg.eid ?? `${++_id}`
+      this.id = msg.eid ?? `${++_counter}`
       this.msg = {...msg, eid: this.id}
       this.onSnapshot = onSnapshot
       this.onUpdate = onUpdate
@@ -52,7 +53,7 @@ export function defineSubscription(ws: WebSocketClient) {
 
       this.#init()
 
-      if (ws.state === "CONNECTED") this.#subscribe()
+      if (ws.state === "CONNECTED") this.subscribe()
     }
 
     #init() {
@@ -62,40 +63,46 @@ export function defineSubscription(ws: WebSocketClient) {
           takeUntil(this.#destroyed$),
         )
         .subscribe((msg) => {
+          if (this.state === "DESTROYED") return
+
           if (msg.status === "error") {
-            this.onError(msg)
+            this.state = "ERROR"
+            this.onError(msg as ResponseMessageError)
             this.destroy()
-            this.isSubscribed = false
-          } else {
-            this.onResult(msg)
-            if (msg.status === "snapshot") this.onSnapshot(msg.data)
-            if (msg.status === "update") this.onUpdate(msg.data)
-
-            this.isSubscribed = true
-
-            if (this.isOnce) this.unsubscribe()
+            return
           }
+
+          this.state = "SUBSCRIBED"
+
+          this.onResult(msg as ResponseMessageSuccess<T>)
+          if (msg.status === "snapshot") this.onSnapshot(msg.data as T)
+          if (msg.status === "update") this.onUpdate(msg.data as T)
+
+          if (this.isOnce) this.unsubscribe()
         })
     }
 
-    #subscribe() {
+    subscribe() {
       logger.info("[Subscription] Subscribing:", {id: this.id, type: this.msg.type})
       if (this.msg.type === "*") return
 
+      this.state = "PENDING"
       ws.send(this.msg as RequestMessage)
     }
 
     resubscribe() {
+      if (this.state === "DESTROYED") return
       if (this.msg.type === "*") return
 
-      if (this.isSubscribed) this.unsubscribe()
+      this.softUnsubscribe()
 
-      this.id = `${++_id}`
+      this.id = `${++_counter}`
       this.msg.eid = this.id
+      this.state = "INIT"
 
       subscriptions.set(this.id, this)
 
-      this.#subscribe()
+      if (ws.state === "CONNECTED") this.subscribe()
     }
 
     /**
@@ -104,8 +111,6 @@ export function defineSubscription(ws: WebSocketClient) {
      * If subscription has 'subscribe' in the type, it will send 'unsubscribe' message before destroying
      */
     unsubscribe() {
-      this.isSubscribed = false
-
       if (this.msg.type === "*") {
         this.destroy()
         return
@@ -125,12 +130,35 @@ export function defineSubscription(ws: WebSocketClient) {
       this.destroy()
     }
 
+    /**
+     * Same as unsubscribe, but without destroying the subscription
+     */
+    softUnsubscribe() {
+      if (this.state === "DESTROYED") return
+      if (this.msg.type === "*") return
+
+      const message: RequestMessage<any> = {
+        type: this.msg.type.replace("subscribe", "unsubscribe") as any,
+        data: {sub_eid: this.id},
+        eid: randomUUID(),
+      }
+
+      logger.info("[Subscription] Soft unsubscribe:", {oldId: this.id, unsubMsgType: message.type})
+
+      ws.send(message)
+      this.state = "UNSUBSCRIBED"
+    }
+
     destroy() {
-      if (this.#destroyed$.closed) return
+      if (this.state === "DESTROYED") return
 
       logger.info("[Subscription] Destroying:", {id: this.id})
+
       this.onDelete()
       subscriptions.delete(this.id)
+
+      this.state = "DESTROYED"
+
       this.#destroyed$.next(true)
       this.#destroyed$.complete()
     }
@@ -148,23 +176,32 @@ export function defineSubscription(ws: WebSocketClient) {
           onResult: (data) => resolve(data.data as unknown as T),
           onError: reject,
           isOnce: true,
+          isKeepAlive: false,
         })
       })
     }
   }
 
   ws.connectionState.subscribe(({state}) => {
-    if (state === "DISCONNECTED" || state === "DESTROYED") {
-      // probably need soft destroy
-      console.log("destroying subscriptions", Array.from(subscriptions.values()))
+    if (state === "DESTROYED") {
+      logger.info("[Subscription] WS state -> DESTROYED; destroying all subs")
       subscriptions.forEach((sub) => sub.destroy())
       subscriptions.clear()
+      return
+    }
+
+    if (state === "DISCONNECTED") {
+      logger.info("[Subscription] WS state -> DISCONNECTED; clearing all subs")
+      subscriptions.forEach((sub) => sub.softUnsubscribe())
+      return
     }
 
     if (state === "CONNECTED") {
       subscriptions.forEach((sub) => {
-        if (sub.isSubscribed && sub.isOnce) return
-        if (sub.isKeepAlive) ws.send(sub.msg as RequestMessage)
+        if (sub.state === "DESTROYED") return
+        if (sub.isOnce) return
+
+        if (sub.isKeepAlive) sub.subscribe()
       })
     }
   })
