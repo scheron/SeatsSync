@@ -2,10 +2,11 @@ import {Heartbeat} from "./heartbeat"
 import cookie from "cookie"
 import cookieParser from "cookie-parser"
 import {TOKEN_NAME} from "model/user"
+import {nanoid} from "nanoid"
 import {WebSocket, WebSocketServer} from "ws"
 import {Errors} from "@/constants/errors"
 import {ApiError} from "@/shared/errors/ApiError"
-import {verifyJWT} from "@/shared/jwt"
+import {decodeJWT, verifyJWT} from "@/shared/jwt"
 import {logger, LogMessageType} from "@/shared/logger"
 import {formatError, formatRequest} from "@/shared/messages/formatters"
 
@@ -16,12 +17,14 @@ import type {IWebSocketClient, WebSocketCallbacks, WebSocketClientOptions} from 
 const MAX_MESSAGE_SIZE = 1024 * 1024
 
 export class WebSocketClient {
+  id: string
   private ws: WebSocketServer
   private callbacks: WebSocketCallbacks
   private heartbeat?: Heartbeat
 
   constructor(server: Server, options: WebSocketClientOptions) {
     this.ws = new WebSocketServer({server, maxPayload: MAX_MESSAGE_SIZE, clientTracking: true})
+    this.id = nanoid()
 
     this.callbacks = {
       onConnect: options.onConnect ?? (() => {}),
@@ -54,7 +57,7 @@ export class WebSocketClient {
     })
   }
 
-  public async send(message: string, filter?: (ws: IWebSocketClient) => boolean) {
+  public async send(message: string, filter?: (ws: WebSocket) => boolean) {
     this.ws.clients.forEach((ws) => {
       if (filter && !filter(ws)) return
       if (ws.readyState !== WebSocket.OPEN) return
@@ -97,7 +100,7 @@ export class WebSocketClient {
 
     const token = this.extractToken(req)
 
-    ws.context = {token, isAuthenticated: () => this.validateToken(token)}
+    ws.context = {id: this.id, token, username: () => decodeJWT(token)?.username ?? null, isAuthenticated: () => this.validateToken(token)}
 
     this.setupClientHandlers(ws)
     this.callbacks.onConnect?.(ws)
@@ -153,7 +156,7 @@ export class WebSocketClient {
     }
   }
 
-  private handleError(ws: IWebSocketClient, error: Error) {
+  private handleError(ws: WebSocket, error: Error) {
     logger.error("", {type: LogMessageType.WS_ERROR, data: {error: error.message}})
 
     if (error instanceof ApiError) {
