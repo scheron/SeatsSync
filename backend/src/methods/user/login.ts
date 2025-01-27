@@ -1,5 +1,5 @@
 import {COOKIE_OPTIONS, TOKEN_NAME} from "model/user"
-import {notifyUserStatusChange} from "@/subscriptions/user"
+import {notifyUserUpdate} from "@/subscriptions/user"
 import {UserService} from "@/services/user"
 import {Errors} from "@/constants/errors"
 import {ApiError} from "@/shared/errors/ApiError"
@@ -29,7 +29,7 @@ export async function login(req: Request<{}, {}, {username: string; code: string
     })
 
     sendSuccess(res, {username: user.username})
-    notifyUserStatusChange("user", user.username)
+    notifyUserUpdate({status: "user", username: user.username})
     logger.info("User logged in", {username})
   } catch (error) {
     sendError(res, error.message ?? Errors.InternalServerError)

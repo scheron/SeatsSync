@@ -19,24 +19,16 @@ const userSubscription = publisher.register({
   },
 })
 
-export function handleUserSubscriptions(ws: IWebSocketClient, message: MessageRequest<UserSubscription>) {
-  switch (message.type) {
-    case "user.subscribe":
-      return userSubscription.onSubscribe(ws, message)
-    case "user.unsubscribe":
-      return userSubscription.unsubscribe(ws.context.id, message.eid)
-    default: {
-      ws.send(formatError({eid: message.eid, error: Errors.UnknownMessageType}))
-    }
-  }
-}
-
-export function notifyUserStatusChange(status: UserStatus, username: string) {
-  userSubscription.notify("update", serialize(status, username))
+export function subscribeUser(ws: IWebSocketClient, message: MessageRequest<UserSubscription>) {
+  return userSubscription.subscribe(ws, message)
 }
 
 export function unsubscribeUser(ws: IWebSocketClient, eid?: string) {
   userSubscription.unsubscribe(ws.context.id, eid)
+}
+
+export function notifyUserUpdate({status, username}: {status: UserStatus; username?: string}) {
+  userSubscription.notify("update", serialize(status, username))
 }
 
 function serialize(status: UserStatus, username: string) {

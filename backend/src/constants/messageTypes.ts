@@ -9,8 +9,8 @@ export const UserMethods = {
 } as const
 
 export const UserSubscriptions = {
-  "user.subscribe": "/user.subscribe",
-  "user.unsubscribe": "/user.unsubscribe",
+  "user.subscribe": "user.subscribe",
+  "user.unsubscribe": "user.unsubscribe",
 } as const
 
 export const Methods = {

@@ -16,7 +16,7 @@ export class Subscriber<T extends string = string, D = any> {
 
   constructor(private handler: SubscriptionHandler<T, D>) {}
 
-  async onSubscribe(ws: IWebSocketClient, message: MessageRequest<T, D>) {
+  async subscribe(ws: IWebSocketClient, message: MessageRequest<T, D>) {
     try {
       const clientId = ws.context?.id
 
