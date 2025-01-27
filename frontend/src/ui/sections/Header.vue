@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onUnmounted, ref} from "vue"
-import {useRequest} from "@/composables/useRequest"
+import {useHttp} from "@/composables/useHttp"
 import {useWebSocket} from "@/composables/useWebSocket"
 import {useThemeStore} from "@/stores/theme"
 import BaseButton from "@/ui/common/base/BaseButton.vue"
@@ -13,7 +13,7 @@ const themeStore = useThemeStore()
 
 const isUserLoggedIn = ref(false)
 const {subscribe} = useWebSocket()
-const request = useRequest()
+const request = useHttp()
 
 const unsubscribe = subscribe<{status: "user" | "guest"}, null>({
   msg: {type: "user.subscribe", data: null, eid: "1234"},

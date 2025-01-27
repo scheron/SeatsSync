@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {reactive, ref} from "vue"
-import {useRequest} from "@/composables/useRequest"
+import {useHttp} from "@/composables/useHttp"
 import {useToasts} from "@/composables/useToasts"
 import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
@@ -11,7 +11,7 @@ import AuthFormLayout from "./AuthFormLayout.vue"
 const props = defineProps<{username: string; qrCode: string}>()
 const emit = defineEmits<{submit: [code: string]; back: [void]}>()
 
-const request = useRequest()
+const request = useHttp()
 const toasts = useToasts()
 
 const code = ref("")

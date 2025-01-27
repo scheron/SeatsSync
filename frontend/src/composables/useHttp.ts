@@ -16,7 +16,7 @@ interface RequestConfig<TypeResponse, TypeBody = unknown> {
   onError?: ErrorHandler
 }
 
-export function useRequest() {
+export function useHttp() {
   const subscriptions = new Set<Subscription>()
 
   function unsubscribe() {

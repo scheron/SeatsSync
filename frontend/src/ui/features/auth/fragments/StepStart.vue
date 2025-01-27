@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {ref} from "vue"
-import {useRequest} from "@/composables/useRequest"
+import {useHttp} from "@/composables/useHttp"
 import {useToasts} from "@/composables/useToasts"
 import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BaseInput from "@/ui/common/base/BaseInput"
@@ -13,7 +13,7 @@ const emit = defineEmits<{
   startCandidate: [{username: string; qrUrl: string}]
 }>()
 
-const request = useRequest()
+const request = useHttp()
 const toasts = useToasts()
 
 const username = ref("")
