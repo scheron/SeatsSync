@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {ref} from "vue"
 import {tryOnBeforeUnmount} from "@vueuse/core"
-import {useSubscription} from "@/composables/useSubscription"
+import {useWebSocket} from "@/composables/useWebSocket"
 import AppLayout from "@/ui/common/AppLayout.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
 import AuthForm from "@/ui/features/auth"
@@ -16,19 +16,24 @@ const toast = useToasts()
 type User = {username?: string; status?: UserStatus}
 
 const user = ref<User>({status: "guest"} as User)
-const {onSnapshot, onUpdate} = useSubscription<User>("user.subscribe")
+const {subscribe} = useWebSocket()
 
-onSnapshot(({status, username}) => {
-  user.value.status = status
-  user.value.username = username
-})
-
-onUpdate(({username, status}) => {
-  console.log("onUpdate", username, status)
-  if (status !== user.value.status) wsClient.reconnect()
-
-  user.value.username = username
-  user.value.status = status
+subscribe<User>({
+  msg: {
+    type: "user.subscribe",
+    data: null,
+  },
+  onSnapshot: ({status, username}) => {
+    console.log("onSnapshot", {status, username})
+    user.value.status = status
+    user.value.username = username
+  },
+  onUpdate: ({status, username}) => {
+    console.log("onUpdate", {status, username})
+    if (status !== user.value.status) wsClient.reconnect()
+    user.value.status = status
+    user.value.username = username
+  },
 })
 
 const isConnecting = ref(false)

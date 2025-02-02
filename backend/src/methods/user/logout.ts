@@ -21,7 +21,6 @@ export async function logout(req: Request<{}, {}, {}>, res: Response) {
     if (!result) {
       return sendError(res, Errors.Unauthorized, 401)
     }
-    console.log("result", result)
 
     res.clearCookie(TOKEN_NAME)
     notifyUserUpdate({status: "guest"})

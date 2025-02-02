@@ -1,5 +1,5 @@
 import {IWebSocketClient} from "./types"
-import {RawData, WebSocket} from "ws"
+import {RawData} from "ws"
 
 type HeartbeatOptions = {
   enablePingPong: boolean
@@ -16,7 +16,7 @@ export class Heartbeat {
   private autoCloseTimeout: number
   private intervalId: NodeJS.Timeout | null = null
 
-  private clients: Map<WebSocket, {lastPingTime: number; token: string | null}> = new Map()
+  private clients: Map<IWebSocketClient, {lastPingTime: number; token: string | null}> = new Map()
 
   private onPingTimeout: (ws: IWebSocketClient) => void
   private onSend: (ws: IWebSocketClient, message: string) => void
@@ -88,7 +88,6 @@ export class Heartbeat {
           ws.send("1")
           this.onSend(ws, "1")
         } catch (error) {
-          console.log("error", error)
           ws.terminate()
           this.clients.delete(ws)
           this.onPingTimeout(ws)

@@ -7,7 +7,7 @@ export type ResponseStatus = "success" | "error" | "snapshot" | "update"
 
 export type RequestMessage<T = any> = {
   type: MessageType
-  eid: string
+  eid?: string
   data: T
 }
 

@@ -37,7 +37,7 @@ export function defineSubscription(ws: WebSocketClient) {
       isKeepAlive = true,
       isOnce = false,
     }: SubscriptionOptions<T, D>) {
-      this.id = msg.eid ?? `${++_counter}`
+      this.id = msg?.eid ?? `${++_counter}`
       this.msg = {...msg, eid: this.id}
       this.onSnapshot = onSnapshot
       this.onUpdate = onUpdate
