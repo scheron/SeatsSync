@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from "vue"
-import {cn} from "@/utils/tailwindcss"
+import {cn} from "@/shared/utils/tailwindcss"
 import BaseSpinner from "./BaseSpinner.vue"
 
 import type {HtmlHTMLAttributes} from "vue"

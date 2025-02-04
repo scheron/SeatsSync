@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {defineVariant} from "@/utils/tailwindcss"
+import {defineVariant} from "@/shared/utils/tailwindcss"
 
 const props = withDefaults(defineProps<{disabled?: boolean; modelValue: boolean; size?: "xs" | "sm" | "md" | "lg" | "xl"}>(), {
   size: "md",

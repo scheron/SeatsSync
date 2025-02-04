@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import {cn} from "@/utils/tailwindcss"
+import {cn} from "@/shared/utils/tailwindcss"
 
 import type {IconName} from "@/types/icons"
 import type {ClassNameValue} from "tailwind-merge"

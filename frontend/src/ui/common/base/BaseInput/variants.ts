@@ -1,4 +1,4 @@
-import {defineVariant} from "@/utils/tailwindcss"
+import {defineVariant} from "@/shared/utils/tailwindcss"
 
 export const sizesVariants = defineVariant({
   baseClass: "w-full",

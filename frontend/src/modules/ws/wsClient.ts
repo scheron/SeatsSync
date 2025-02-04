@@ -1,7 +1,7 @@
-import {Logger} from "@/utils/logger"
-import {randomUUID} from "@/utils/random"
 import {BehaviorSubject, catchError, distinctUntilChanged, EMPTY, filter, interval, map, ReplaySubject, Subject, takeUntil, tap} from "rxjs"
 import {webSocket} from "rxjs/webSocket"
+import {Logger} from "@/shared/lib/logger"
+import {randomUUID} from "@/shared/utils/random"
 
 import type {Observable, Subscription} from "rxjs"
 import type {WebSocketSubject} from "rxjs/webSocket"
