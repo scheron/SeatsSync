@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {ref} from "vue"
 import {useHttp} from "@/composables/useHttp"
-import {useToasts} from "@/composables/useToasts"
 import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BaseInput from "@/ui/common/base/BaseInput"
+import {toast} from "@/shared/lib/toasts-lite"
 import AuthFormLayout from "./AuthFormLayout.vue"
 
 import type {UserAuthStartResponse} from "../types"
@@ -14,7 +14,6 @@ const emit = defineEmits<{
 }>()
 
 const request = useHttp()
-const toasts = useToasts()
 
 const username = ref("")
 
@@ -28,7 +27,7 @@ function onSubmit() {
       else emit("startCandidate", {username, qrUrl: qr_url})
     },
     onError: (error) => {
-      toasts.error(error)
+      toast.error(error)
     },
   })
 }

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {useToasts} from "@/composables/useToasts"
 import {useMachine} from "@xstate/vue"
 import {authMachine} from "./auth.machine"
 import StepLogin from "./fragments/StepLogin.vue"
@@ -7,7 +6,6 @@ import StepRegister from "./fragments/StepRegister.vue"
 import StepSavePhrase from "./fragments/StepSavePhrase.vue"
 import StepStart from "./fragments/StepStart.vue"
 
-const toasts = useToasts()
 const {snapshot, send} = useMachine(authMachine)
 
 function onFinish() {

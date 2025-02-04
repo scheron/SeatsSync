@@ -1,18 +1,17 @@
 <script setup lang="ts">
-import {reactive, ref} from "vue"
+import {ref} from "vue"
 import {useHttp} from "@/composables/useHttp"
-import {useToasts} from "@/composables/useToasts"
 import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
 import BaseInput from "@/ui/common/base/BaseInput"
 import QRCode from "@/ui/common/QRCode.vue"
+import {toast} from "@/shared/lib/toasts-lite"
 import AuthFormLayout from "./AuthFormLayout.vue"
 
 const props = defineProps<{username: string; qrCode: string}>()
 const emit = defineEmits<{submit: [code: string]; back: [void]}>()
 
 const request = useHttp()
-const toasts = useToasts()
 
 const code = ref("")
 
@@ -25,7 +24,7 @@ function onSubmit() {
       emit("submit", props.username)
     },
     onError: (error) => {
-      toasts.error(error)
+      toast.error(error)
     },
   })
 }

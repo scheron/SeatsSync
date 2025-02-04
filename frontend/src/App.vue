@@ -6,12 +6,10 @@ import AppLayout from "@/ui/common/AppLayout.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
 import AuthForm from "@/ui/features/auth"
 import Header from "@/ui/sections/Header.vue"
-import {useToasts} from "./composables/useToasts"
+import {toast, ToastsLiteProvider} from "@/shared/lib/toasts-lite"
 import {wsClient} from "./modules/ws"
 
 import type {UserStatus} from "@/types/user"
-
-const toast = useToasts()
 
 type User = {username?: string; status?: UserStatus}
 
@@ -19,51 +17,28 @@ const user = ref<User>({status: "guest"} as User)
 const {subscribe} = useWebSocket()
 
 subscribe<User>({
-  msg: {
-    type: "user.subscribe",
-    data: null,
-  },
+  msg: {type: "user.subscribe", data: null},
   onSnapshot: ({status, username}) => {
-    console.log("onSnapshot", {status, username})
     user.value.status = status
     user.value.username = username
   },
   onUpdate: ({status, username}) => {
-    console.log("onUpdate", {status, username})
     if (status !== user.value.status) wsClient.reconnect()
     user.value.status = status
     user.value.username = username
   },
 })
 
-const isConnecting = ref(false)
-const id = 2
+let toastID: string | undefined
 
 wsClient.connectionState.subscribe(({state, prevState}) => {
-  if (state === "RECONNECTING") {
-    toast.hideToast(id)
-    toast.info("Connecting...", {toastId: id, autoClose: false, isLoading: isConnecting.value})
-    return
-  }
-
-  if (state === "CONNECTED" && prevState === "RECONNECTING") {
-    toast.hideToast(id)
-    toast.success("Connected")
-    isConnecting.value = false
-
-    return
-  }
-
-  if (state === "DISCONNECTED" && prevState === "RECONNECTING") {
-    toast.hideToast(id)
-    toast.error("Connection failed")
-    isConnecting.value = false
-  }
+  if (state === "RECONNECTING") toastID = toast.loading("Connecting...", {id: toastID, autoClose: false})
+  else if (state === "CONNECTED" && prevState === "RECONNECTING") toast.success("Connected", {id: toastID, autoClose: true})
+  else if (state === "DISCONNECTED" && prevState === "RECONNECTING") toast.error("Connection failed", {id: toastID, autoClose: true})
 })
 
 wsClient.on("*", "error").subscribe(({error}) => {
   if (!error) return
-  console.log("error", error)
   toast.error(error)
 })
 
@@ -99,4 +74,6 @@ tryOnBeforeUnmount(() => {
       </BaseCard>
     </template>
   </AppLayout>
+
+  <ToastsLiteProvider />
 </template>
