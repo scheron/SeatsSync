@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import {ref} from "vue"
 import {tryOnBeforeUnmount} from "@vueuse/core"
-import {useWebSocket} from "@/composables/useWebSocket"
 import AppLayout from "@/ui/common/AppLayout.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
 import AuthForm from "@/ui/features/auth"
 import Header from "@/ui/sections/Header.vue"
+import {wsClient} from "@/modules/ws"
+import {useWebSocket} from "@/composables/useWebSocket"
 import {toast, ToastsLiteProvider} from "@/shared/lib/toasts-lite"
-import {wsClient} from "./modules/ws"
 
 import type {UserStatus} from "@/types/user"
 
@@ -54,8 +54,8 @@ tryOnBeforeUnmount(() => {
     </template>
 
     <template #start>
-      <BaseCard class="h-1/5">Left Top Section</BaseCard>
-      <BaseCard class="flex-1">Left Main Content</BaseCard>
+      <BaseCard class="h-1/5"> Left Top Content </BaseCard>
+      <BaseCard class="flex-1"> Left Center Content </BaseCard>
     </template>
 
     <template #middle>

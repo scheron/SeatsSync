@@ -7,10 +7,6 @@ import StepSavePhrase from "./fragments/StepSavePhrase.vue"
 import StepStart from "./fragments/StepStart.vue"
 
 const {snapshot, send} = useMachine(authMachine)
-
-function onFinish() {
-  send({type: "END"})
-}
 </script>
 
 <template>
@@ -21,7 +17,12 @@ function onFinish() {
       @start-user="send({type: 'LOGIN', username: $event.username})"
     />
 
-    <StepLogin v-if="snapshot.matches('login')" :username="snapshot.context.username" @submit="onFinish" @back="send({type: 'BACK_TO_START'})" />
+    <StepLogin
+      v-if="snapshot.matches('login')"
+      :username="snapshot.context.username"
+      @submit="send({type: 'END'})"
+      @back="send({type: 'BACK_TO_START'})"
+    />
 
     <StepRegister
       v-if="snapshot.matches('register')"
