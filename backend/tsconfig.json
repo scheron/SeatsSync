@@ -28,7 +28,8 @@
       "@/constants/*": ["constants/*"],
       "@/shared/*": ["shared/*"]
 
-    }
+    },
+    "noEmitOnError": false
   },
   "include": ["src/**/*.ts", "src/**/*.json", ".env"],
   "exclude": ["node_modules", "src/http", "src/logs"]

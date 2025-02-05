@@ -108,3 +108,95 @@ The protocol is message-based:
   error?:  "ERROR_CODE",       // Error code
 }
 ```
+
+## Docker and Deployment
+
+### Using Makefile
+
+The project includes a Makefile to simplify Docker operations. Here are the available commands:
+
+#### Basic Commands
+
+- `make build V=1.0.0` - Build Docker image with specified version
+- `make push V=1.0.0` - Push image to Docker Hub
+- `make run` - Run project in production mode
+- `make dev` - Run project in development mode with logs
+- `make stop` - Stop all containers
+
+#### Maintenance Commands
+
+- `make clean` - Clean Docker (containers, volumes)
+- `make rebuild` - Rebuild and restart project
+- `make deploy V=1.0.0` - Full deployment (build + push + run)
+- `make version V=1.0.0` - Set new version in docker-compose.yml
+
+#### Development Workflow
+
+1. Make changes to the code
+2. Build new version:
+   ```bash
+   make build V=1.0.0
+   ```
+
+3. Push to Docker Hub:
+   ```bash
+   make push V=1.0.0
+   ```
+
+4. Deploy changes:
+   ```bash
+   make deploy V=1.0.0
+   ```
+
+#### Quick Start for Development
+
+```bash
+# Start project in development mode
+make dev
+
+# Stop project
+make stop
+
+# Rebuild and restart
+make rebuild
+```
+
+#### Production Deployment
+
+```bash
+# Full deployment with version
+make deploy V=1.0.0
+
+# Or step by step:
+make build V=1.0.0
+make push V=1.0.0
+make run
+```
+
+### Docker Image Structure
+
+The project uses a multi-stage build process:
+1. Builder stage - compiles TypeScript and generates Prisma client
+2. Production stage - contains only necessary files for running the application
+
+### Environment Variables
+
+Make sure to set up your `.env` file with the following variables:
+```env
+PORT=3001
+JWT_SECRET=your_secret
+COOKIE_SECRET=your_cookie_secret
+POSTGRES_USER=your_db_user
+POSTGRES_PASSWORD=your_db_password
+POSTGRES_DB=your_db_name
+POSTGRES_PORT=5432
+DATABASE_URL=postgresql://user:password@postgres:5432/dbname?schema=public
+```
+
+### Container Health Checks
+
+The application includes health checks for both the backend and database services:
+- PostgreSQL health is checked every 5 seconds
+- Backend health is verified through Prisma database connectivity
+
+For more information about the project architecture and features, see the sections above.

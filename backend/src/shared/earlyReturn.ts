@@ -1,3 +1,4 @@
+import type {IWebSocketClient} from "@/core/ws"
 import type {Response} from "express"
 
 function isFunction<T>(value: T | (() => T | Promise<T>)): value is () => T | Promise<T> {

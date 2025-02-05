@@ -1,17 +1,14 @@
 import {ApiError} from "./errors/ApiError"
 import {logger} from "./logger"
-import dotenv from "dotenv"
 import jwt from "jsonwebtoken"
+import {env} from "@/constants/env"
 import {AuthErrors} from "@/constants/errors"
 
-dotenv.config()
-
-if (!process.env.JWT_SECRET) {
+if (!env.JWT_SECRET) {
   logger.error("JWT_SECRET is not set")
   process.exit(1)
 }
 
-const JWT_SECRET = process.env.JWT_SECRET
 const JWT_ALGORITHM = "HS256"
 const TOKEN_EXPIRATION = "5d"
 
@@ -24,7 +21,7 @@ export type TokenPayload = {
 
 export function createJWT(payload: Omit<TokenPayload, "iat" | "exp">): string {
   try {
-    return jwt.sign(payload, JWT_SECRET, {
+    return jwt.sign(payload, env.JWT_SECRET, {
       algorithm: JWT_ALGORITHM,
       expiresIn: TOKEN_EXPIRATION,
     })
@@ -40,7 +37,7 @@ export function verifyJWT(token: string): TokenPayload | null {
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET, {
+    const decoded = jwt.verify(token, env.JWT_SECRET, {
       algorithms: [JWT_ALGORITHM],
     })
 

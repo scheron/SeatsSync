@@ -6,14 +6,11 @@ import dotenv from "dotenv"
 import express from "express"
 import {WebSocketClient, WebSocketOnMessage} from "@/core/ws"
 import {initUserMethods} from "@/methods/user"
+import {env} from "@/constants/env"
 import {Errors} from "@/constants/errors"
 import {formatError} from "@/shared/messages/formatters"
 
 import type {Namespace} from "@/shared/types"
-
-dotenv.config()
-
-const PORT = process.env.PORT || 3001
 
 const app = express()
 const router = express.Router()
@@ -77,5 +74,5 @@ const ws = new WebSocketClient(server, {
   },
 })
 
-server.listen(PORT, () => console.log(`Server is running on port ${PORT}`))
+server.listen(env.PORT, () => console.log(`Server is running on port ${env.PORT}`))
 server.on("close", () => ws.destroy())
