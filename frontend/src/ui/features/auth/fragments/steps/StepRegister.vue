@@ -10,8 +10,8 @@ import {useHttp} from "@/composables/useHttp"
 import {toast} from "@/shared/lib/toasts-lite"
 import AuthFormLayout from "../AuthFormLayout.vue"
 
-const props = defineProps<{username: string; qrCode: string; code?: string}>()
 const emit = defineEmits<{submit: [code: string]; back: [void]}>()
+const props = defineProps<{username: string; qrCode: string; code?: string}>()
 
 const request = useHttp()
 
@@ -21,6 +21,16 @@ function onSubmit(code: string) {
     url: "user.register",
     data: {username: props.username, code},
     onSuccess: () => emit("submit", props.username),
+    onError: (error) => toast.error(error),
+  })
+}
+
+function onBack() {
+  request<{}, {username: string}>({
+    method: "POST",
+    url: "user.auth_reset",
+    data: {username: props.username},
+    onSuccess: () => emit("back"),
     onError: (error) => toast.error(error),
   })
 }
@@ -41,7 +51,7 @@ function onSubmit(code: string) {
     <div class="mb-1 w-full border-b border-primary-300"></div>
 
     <div class="flex justify-between text-sm">
-      <BaseButton type="button" variant="primary" icon="arrow-left" class="w-1/3 justify-start gap-1" class-icon="size-4" @click="emit('back')">
+      <BaseButton type="button" variant="primary" icon="arrow-left" class="w-1/3 justify-start gap-1" class-icon="size-4" @click="onBack">
         Back
       </BaseButton>
       <BaseLink icon="key" class-icon="size-4" class="gap-1" :to="TWO_FA_DOCS"> What is 2FA-Key?</BaseLink>

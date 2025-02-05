@@ -19,11 +19,7 @@ export const authMachine = setup({
 }).createMachine({
   id: "auth",
   initial: "start",
-  context: {
-    username: "",
-    qrUrl: "",
-    code: "",
-  },
+  context: {username: "", qrUrl: "", code: ""},
   states: {
     start: {
       on: {

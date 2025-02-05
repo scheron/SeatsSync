@@ -18,6 +18,8 @@ const request = useHttp()
 const username = ref("")
 
 function onSubmit() {
+  if (!username.value.trim()) return
+
   request<UserAuthStartResponse, {username: string}>({
     method: "POST",
     url: "user.auth_start",

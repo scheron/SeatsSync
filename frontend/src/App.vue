@@ -1,33 +1,10 @@
 <script setup lang="ts">
-import {ref} from "vue"
 import {tryOnBeforeUnmount} from "@vueuse/core"
 import AppLayout from "@/ui/common/AppLayout.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
-import AuthForm from "@/ui/features/auth"
 import Header from "@/ui/sections/Header.vue"
 import {wsClient} from "@/modules/ws"
-import {useWebSocket} from "@/composables/useWebSocket"
 import {toast, ToastsLiteProvider} from "@/shared/lib/toasts-lite"
-
-import type {UserStatus} from "@/types/user"
-
-type User = {username?: string; status?: UserStatus}
-
-const user = ref<User>({status: "guest"} as User)
-const {subscribe} = useWebSocket()
-
-subscribe<User>({
-  msg: {type: "user.subscribe", data: null},
-  onSnapshot: ({status, username}) => {
-    user.value.status = status
-    user.value.username = username
-  },
-  onUpdate: ({status, username}) => {
-    if (status !== user.value.status) wsClient.reconnect()
-    user.value.status = status
-    user.value.username = username
-  },
-})
 
 let toastID: string | undefined
 
@@ -42,9 +19,7 @@ wsClient.on("*", "error").subscribe(({error}) => {
   toast.error(error)
 })
 
-tryOnBeforeUnmount(() => {
-  wsClient.destroy()
-})
+tryOnBeforeUnmount(() => wsClient.destroy())
 </script>
 
 <template>
@@ -64,14 +39,7 @@ tryOnBeforeUnmount(() => {
     </template>
 
     <template #end>
-      <BaseCard>
-        <AuthForm v-if="user.status === 'guest'" />
-        <BaseCard v-else>
-          <div>
-            <span>User: {{ user.username }}</span>
-          </div>
-        </BaseCard>
-      </BaseCard>
+      <BaseCard> Right Main Content </BaseCard>
     </template>
   </AppLayout>
 

@@ -5,8 +5,8 @@ import {useHttp} from "@/composables/useHttp"
 import {toast} from "@/shared/lib/toasts-lite"
 import AuthFormLayout from "../AuthFormLayout.vue"
 
-const props = defineProps<{username: string}>()
 const emit = defineEmits<{recoveryAccess: [void]; submit: [code: string]; back: [void]}>()
+const props = defineProps<{username: string}>()
 
 const request = useHttp()
 
