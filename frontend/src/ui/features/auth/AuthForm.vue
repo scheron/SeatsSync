@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {useMachine} from "@xstate/vue"
 import {authMachine} from "./auth.machine"
-import StepLogin from "./fragments/StepLogin.vue"
-import StepRegister from "./fragments/StepRegister.vue"
-import StepSavePhrase from "./fragments/StepSavePhrase.vue"
-import StepStart from "./fragments/StepStart.vue"
+import StepLogin from "./fragments/steps/StepLogin.vue"
+import StepRegister from "./fragments/steps/StepRegister.vue"
+import StepSavePhrase from "./fragments/steps/StepSavePhrase.vue"
+import StepStart from "./fragments/steps/StepStart.vue"
 
 const {snapshot, send} = useMachine(authMachine)
 </script>

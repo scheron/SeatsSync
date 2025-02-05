@@ -2,7 +2,7 @@
 import {ref} from "vue"
 import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BaseInput from "@/ui/common/base/BaseInput"
-import AuthFormLayout from "./AuthFormLayout.vue"
+import AuthFormLayout from "../AuthFormLayout.vue"
 
 const emit = defineEmits<{submit: [code: string]; skip: [void]}>()
 const phrase = ref("")

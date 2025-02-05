@@ -7,6 +7,7 @@ const props = withDefaults(
     digits?: number
     disabled?: boolean
     invalid?: boolean
+    clearOnVerify?: boolean
     variant?: "primary"
     size?: "xs" | "sm" | "md" | "lg" | "xl"
   }>(),
@@ -14,6 +15,7 @@ const props = withDefaults(
     digits: 6,
     disabled: false,
     invalid: false,
+    clearOnVerify: true,
     variant: "primary",
     size: "md",
   },
@@ -130,7 +132,11 @@ function handleFocus(event: FocusEvent) {
 
 watch(codes.value, (newCodes) => {
   const isFilled = newCodes.every((code) => code !== "") && newCodes.length === props.digits
-  if (isFilled) emit("verify", newCodes.join(""))
+
+  if (isFilled) {
+    emit("verify", newCodes.join(""))
+    if (props.clearOnVerify) reset()
+  }
 })
 
 onMounted(() => focusInput(0))

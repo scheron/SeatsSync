@@ -3,7 +3,7 @@ import BaseButton from "@/ui/common/base/BaseButton.vue"
 import PinInput from "@/ui/common/PinInput.vue"
 import {useHttp} from "@/composables/useHttp"
 import {toast} from "@/shared/lib/toasts-lite"
-import AuthFormLayout from "./AuthFormLayout.vue"
+import AuthFormLayout from "../AuthFormLayout.vue"
 
 const props = defineProps<{username: string}>()
 const emit = defineEmits<{recoveryAccess: [void]; submit: [code: string]; back: [void]}>()
@@ -22,11 +22,7 @@ function onSubmit(code: string) {
 </script>
 
 <template>
-  <AuthFormLayout desc="Enter 6 digits 2FA-Key from your authenticator application">
-    <div class="relative my-2 w-full border-b border-primary-300">
-      <span class="absolute bg-primary-100 px-2 text-sm text-accent absolute-center">Login</span>
-    </div>
-
+  <AuthFormLayout title="Login" desc="Enter 6 digits 2FA-Key from your authenticator application">
     <div class="mb-2 flex flex-col justify-between gap-1">
       <span class="text-sm text-content/60">Username</span>
       <span class="truncate text-content">{{ username }}</span>

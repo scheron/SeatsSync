@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {ref} from "vue"
-import {useHttp} from "@/composables/useHttp"
 import BaseButton from "@/ui/common/base/BaseButton.vue"
 import BaseInput from "@/ui/common/base/BaseInput"
+import {useHttp} from "@/composables/useHttp"
 import {toast} from "@/shared/lib/toasts-lite"
-import AuthFormLayout from "./AuthFormLayout.vue"
+import AuthFormLayout from "../AuthFormLayout.vue"
 
-import type {UserAuthStartResponse} from "../types"
+import type {UserAuthStartResponse} from "../../types"
 
 const emit = defineEmits<{
   startUser: [{username: string}]
@@ -35,7 +35,7 @@ function onSubmit() {
 
 <template>
   <AuthFormLayout desc="For enter to the system, you need the authenticator application" @submit="onSubmit">
-    <BaseInput v-model="username" label="Username" placeholder="Enter username" />
+    <BaseInput v-model="username" label="Username" size="sm" placeholder="Enter username" />
     <BaseButton variant="accent" type="submit" class="mt-2">Enter</BaseButton>
   </AuthFormLayout>
 </template>

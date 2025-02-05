@@ -24,7 +24,6 @@ class ToastsController implements Toast {
   private addOrUpdate(_options: ToastOptions): Id {
     let {id = this.ID(), ...options} = _options
 
-    console.log(this.toasts.has(id), id)
     if (this.toasts.has(id)) {
       Object.assign(this.toasts.get(id)!, options)
       return id
