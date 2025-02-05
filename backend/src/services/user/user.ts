@@ -42,10 +42,6 @@ export async function updateUser(userData: Partial<User>) {
     throw new ApiError(Errors.InvalidUsername)
   }
 
-  if (userData.recovery_phrase && userData.recovery_phrase.length < RECOVERY_PHRASE_MIN_LENGTH) {
-    throw new ApiError(Errors.InvalidRecoveryPhrase)
-  }
-
   try {
     const user = await getUser(userData.username)
     if (!user) throw new ApiError(Errors.UserNotFound)
