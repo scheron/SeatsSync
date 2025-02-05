@@ -1,7 +1,7 @@
 import type {Errors} from "@/constants/errors"
-import type {Subscription} from "@/constants/messageTypes"
+import type {Method, Subscription} from "@/constants/messageTypes"
 
-export type MessageType = Subscription | "*"
+export type MessageType = Method | Subscription | "*"
 
 export type ResponseStatus = "success" | "error" | "snapshot" | "update"
 

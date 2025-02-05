@@ -5,6 +5,7 @@ import BaseCard from "@/ui/common/base/BaseCard.vue"
 import Header from "@/ui/sections/Header.vue"
 import {wsClient} from "@/modules/ws"
 import {toast, ToastsLiteProvider} from "@/shared/lib/toasts-lite"
+import Cinemas from "./ui/features/cinemas/Cinemas.vue"
 
 let toastID: string | undefined
 
@@ -39,7 +40,7 @@ tryOnBeforeUnmount(() => wsClient.destroy())
     </template>
 
     <template #end>
-      <BaseCard> Right Main Content </BaseCard>
+      <BaseCard> <Cinemas /></BaseCard>
     </template>
   </AppLayout>
 
