@@ -1,12 +1,8 @@
 import {UserStatus} from "model/user"
 import {publisher} from "@/core/pubsub"
 import {IWebSocketClient} from "@/core/ws"
-import {Errors} from "@/constants/errors"
-import {UserSubscriptions} from "@/constants/messageTypes"
-import {formatError} from "@/shared/messages/formatters"
+import {Subscription} from "@/constants/messageTypes"
 import {MessageRequest} from "@/shared/messages/types"
-
-type UserSubscription = keyof typeof UserSubscriptions
 
 const userSubscription = publisher.register({
   name: "user.subscribe",
@@ -19,7 +15,7 @@ const userSubscription = publisher.register({
   },
 })
 
-export function subscribeUser(ws: IWebSocketClient, message: MessageRequest<UserSubscription>) {
+export function subscribeUser(ws: IWebSocketClient, message: MessageRequest<Subscription>) {
   return userSubscription.subscribe(ws, message)
 }
 
