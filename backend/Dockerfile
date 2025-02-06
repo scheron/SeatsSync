@@ -3,6 +3,8 @@ FROM oven/bun:latest
 WORKDIR /app
 
 COPY package.json bun.lockb ./
+COPY prisma ./prisma/
+COPY scripts ./scripts/
 
 RUN bun install --frozen-lockfile
 
@@ -16,4 +18,12 @@ RUN bun run build
 
 EXPOSE ${PORT}
 
-CMD /bin/sh -c 'sleep 5 && bunx prisma migrate deploy && bun run start'
+CMD ["sh", "-c", "\
+    echo 'Waiting for database...' && \
+    sleep 5 && \
+    echo 'Running migrations...' && \
+    bunx prisma migrate deploy && \
+    echo 'Seeding database...' && \
+    bun run scripts/seed.js && \
+    echo 'Starting application...' && \
+    bun run start"]
