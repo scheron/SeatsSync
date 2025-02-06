@@ -12,7 +12,6 @@ export const authMachine = setup({
       | {type: "LOGIN"; username: string}
       | {type: "REGISTER"; username: string; qrUrl: string}
       | {type: "RECOVERY_ACCESS"}
-      | {type: "SAVE_RECOVERY_PHRASE"}
       | {type: "END"}
       | {type: "BACK_TO_START"},
   },
@@ -35,9 +34,8 @@ export const authMachine = setup({
       },
     },
     login: {on: {RECOVERY_ACCESS: "recoveryAccess", END: "end"}},
-    register: {on: {RECOVERY_ACCESS: "recoveryAccess", SAVE_RECOVERY_PHRASE: "saveRecoveryPhrase"}},
+    register: {on: {RECOVERY_ACCESS: "recoveryAccess", END: "end"}},
     recoveryAccess: {on: {END: "end"}},
-    saveRecoveryPhrase: {on: {END: "end"}},
     end: {type: "final"},
   },
   on: {

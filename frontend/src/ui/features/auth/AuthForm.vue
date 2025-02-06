@@ -3,7 +3,6 @@ import {useMachine} from "@xstate/vue"
 import {authMachine} from "./auth.machine"
 import StepLogin from "./fragments/steps/StepLogin.vue"
 import StepRegister from "./fragments/steps/StepRegister.vue"
-import StepSavePhrase from "./fragments/steps/StepSavePhrase.vue"
 import StepStart from "./fragments/steps/StepStart.vue"
 
 const {snapshot, send} = useMachine(authMachine)
@@ -28,14 +27,8 @@ const {snapshot, send} = useMachine(authMachine)
       v-if="snapshot.matches('register')"
       :username="snapshot.context.username"
       :qr-code="snapshot.context.qrUrl"
-      @submit="send({type: 'SAVE_RECOVERY_PHRASE'})"
+      @submit="send({type: 'END'})"
       @back="send({type: 'BACK_TO_START'})"
     />
-
-    <StepSavePhrase v-if="snapshot.matches('saveRecoveryPhrase')" @submit="send({type: 'END'})" @skip="send({type: 'END'})" />
-
-    <div v-if="snapshot.matches('end')">
-      <p>Process completed. Welcome!</p>
-    </div>
   </div>
 </template>
