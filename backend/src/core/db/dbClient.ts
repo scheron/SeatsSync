@@ -1,9 +1,10 @@
 import {PrismaClient} from "@prisma/client"
+import {env} from "@/constants/env"
 import {Errors} from "@/constants/errors"
 
 import type {DBResponse, IDB, QueryOptions} from "./types"
 
-const client: PrismaClient = new PrismaClient()
+const client: PrismaClient = new PrismaClient({datasourceUrl: env.DB_URL})
 
 export class DB implements IDB {
   constructor(private tableName: string) {}

@@ -95,7 +95,7 @@ async function createTicketTypes(seatTypeRecords) {
 }
 
 async function createPricing(seatTypeRecords) {
-  sleepWithMessage("Creating pricing...")
+  await sleepWithMessage("Creating pricing...")
 
   const ticketTypes = await prisma.ticketType.findMany()
 
@@ -118,9 +118,9 @@ async function createPricing(seatTypeRecords) {
 
   if (validPricingData.length > 0) {
     await prisma.pricing.createMany({data: validPricingData})
-    sleepWithMessage("Pricing data seeded.")
+    await sleepWithMessage("Pricing data seeded.")
   } else {
-    sleepWithMessage("No valid pricing data to seed.")
+    await sleepWithMessage("No valid pricing data to seed.")
   }
 }
 
