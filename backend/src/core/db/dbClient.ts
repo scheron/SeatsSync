@@ -18,9 +18,9 @@ export class DB implements IDB {
     }
   }
 
-  async findOne<R>(where: Record<string, unknown>, options?: QueryOptions): Promise<DBResponse<R>> {
+  async findOne<R>(options?: QueryOptions): Promise<DBResponse<R>> {
     try {
-      const result = await client[this.tableName].findUnique({where, ...options})
+      const result = await client[this.tableName].findFirst({...options})
 
       if (!result) {
         return {success: false, data: null, error: `${this.tableName.toUpperCase()}_NOT_FOUND`}
@@ -56,6 +56,15 @@ export class DB implements IDB {
     }
   }
 
+  async updateMany<T, R>(where: Record<string, unknown>, data: T): Promise<DBResponse<R>> {
+    try {
+      const result = await client[this.tableName].updateMany({where, data})
+      return {success: true, data: result as R}
+    } catch (error: any) {
+      return {success: false, data: null, error: `${this.tableName.toUpperCase()}_UPDATE_FAILED`}
+    }
+  }
+
   async delete(id: number): Promise<DBResponse<null>> {
     try {
       const existing = await this.findOne({id})
@@ -68,6 +77,17 @@ export class DB implements IDB {
       return {success: true, data: null}
     } catch (error: any) {
       return {success: false, data: null, error: `${this.tableName.toUpperCase()}_DELETE_FAILED`}
+    }
+  }
+
+  async transaction<T>(fn: (tx: PrismaClient) => Promise<T>): Promise<DBResponse<T>> {
+    try {
+      const result = await client.$transaction(async (tx) => {
+        return await fn(tx as PrismaClient)
+      })
+      return {success: true, data: result}
+    } catch (error: any) {
+      return {success: false, data: null, error: Errors.InternalServerError}
     }
   }
 }

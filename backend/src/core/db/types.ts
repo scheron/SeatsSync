@@ -1,3 +1,5 @@
+import type {PrismaClient} from "@prisma/client"
+
 export type DBResponse<T> = {
   success: boolean
   data: T | null
@@ -5,15 +7,20 @@ export type DBResponse<T> = {
 }
 
 export type QueryOptions = {
-  include?: Record<string, boolean | QueryOptions>
-  select?: Record<string, boolean | QueryOptions>
+  select?: Record<string, unknown>
+  include?: Record<string, unknown>
   where?: Record<string, unknown>
+  orderBy?: Record<string, unknown>
+  skip?: number
+  take?: number
 }
 
 export interface IDB {
-  findAll<T>(options?: QueryOptions): Promise<DBResponse<T[]>>
-  findOne<R>(where: Record<string, unknown>, options?: QueryOptions): Promise<DBResponse<R>>
+  findAll<R>(options?: QueryOptions): Promise<DBResponse<R[]>>
+  findOne<R>(options?: QueryOptions): Promise<DBResponse<R>>
   create<T, R>(data: T): Promise<DBResponse<R>>
   update<T, R>(id: number, data: T): Promise<DBResponse<R>>
+  updateMany<T, R>(where: Record<string, unknown>, data: T): Promise<DBResponse<R>>
   delete(id: number): Promise<DBResponse<null>>
+  transaction<T>(fn: (tx: PrismaClient) => Promise<T>): Promise<DBResponse<T>>
 }

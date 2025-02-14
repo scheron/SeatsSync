@@ -3,6 +3,8 @@ export const SystemErrors = {
   ValidationError: "ValidationError",
   Unauthorized: "Unauthorized",
   Forbidden: "Forbidden",
+  NotFound: "NotFound",
+  BadRequest: "BadRequest",
   RouteNotFound: "RouteNotFound",
   RateLimitExceeded: "RateLimitExceeded",
   InvalidRequest: "InvalidRequest",

@@ -1,6 +1,6 @@
 import cookie from "cookie"
 import cookieParser from "cookie-parser"
-import {notifyUserUpdate} from "@/subscriptions/user"
+import {notifyUpdate} from "@/subscriptions/user"
 import {TOKEN_NAME} from "@/model/user"
 import {Errors} from "@/constants/errors"
 import {verifyJWT} from "@/shared/jwt"
@@ -23,7 +23,7 @@ export async function logout(req: Request<{}, {}, {}>, res: Response) {
     }
 
     res.clearCookie(TOKEN_NAME)
-    notifyUserUpdate({status: "guest"})
+    notifyUpdate({status: "guest"})
     sendSuccess(res, {success: true})
   } catch (error) {
     sendError(res, error.message ?? Errors.InternalServerError)

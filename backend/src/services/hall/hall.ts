@@ -1,12 +1,11 @@
-import {cinemaModel} from "@/model/cinema"
+import {hallModel} from "@/model/hall"
 import {Errors} from "@/constants/errors"
 import {ApiError} from "@/shared/errors/ApiError"
 
-import type {Cinema} from "@/model/cinema/types"
-
-export async function getCinemas(): Promise<Cinema[]> {
+export async function getHall(hallId: number) {
   try {
-    return await cinemaModel.getAll()
+    const hall = await hallModel.getOne(hallId)
+    return hall
   } catch (error) {
     if (error instanceof ApiError) throw error
     throw new ApiError(Errors.InternalServerError)

@@ -1,2 +1,2 @@
 export {cinemaModel} from "./cinemaModel"
-export type * from "./types"
+export type {Cinema} from "./types"

@@ -1,6 +1,7 @@
 import {createServer} from "http"
 import {initCinemaMethods} from "./methods/cinema"
-import {handleUserSubscriptions, unsubscribeUser} from "./subscriptions/user"
+import * as hallSubscription from "./subscriptions/hall"
+import * as userSubscription from "./subscriptions/user"
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import express from "express"
@@ -32,13 +33,11 @@ app.use("/api", router)
 initUserMethods(router)
 
 const handlersMap: Partial<Record<Namespace, WebSocketOnMessage>> = {
-  user: handleUserSubscriptions,
+  user: userSubscription.handleSubscription,
   cinema: (ws, message) => {
     initCinemaMethods(ws, message)
   },
-  hall: (ws, message) => {
-    ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
-  },
+  hall: hallSubscription.handleSubscriptions,
   seat: (ws, message) => {
     ws.send(formatError({eid: message.eid, type: message.type, error: Errors.NotImplemented}))
   },
@@ -70,7 +69,8 @@ const ws = new WebSocketClient(server, {
     }
   },
   onDisconnect: (ws) => {
-    unsubscribeUser(ws)
+    userSubscription.unsubscribe(ws)
+    hallSubscription.unsubscribe(ws)
   },
 })
 

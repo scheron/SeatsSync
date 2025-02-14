@@ -15,15 +15,15 @@ const userSubscription = publisher.register({
   },
 })
 
-export function subscribeUser(ws: IWebSocketClient, message: MessageRequest<Subscription>) {
+export function subscribe(ws: IWebSocketClient, message: MessageRequest<Subscription>) {
   return userSubscription.subscribe(ws, message)
 }
 
-export function unsubscribeUser(ws: IWebSocketClient, eid?: string) {
+export function unsubscribe(ws: IWebSocketClient, eid?: string) {
   userSubscription.unsubscribe(ws.context.id, eid)
 }
 
-export function notifyUserUpdate({status, username}: {status: UserStatus; username?: string}) {
+export function notifyUpdate({status, username}: {status: UserStatus; username?: string}) {
   userSubscription.notify("update", serialize(status, username))
 }
 

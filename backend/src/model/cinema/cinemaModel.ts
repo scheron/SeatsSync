@@ -1,13 +1,13 @@
 import {DB} from "@/core/db"
 import {logger} from "@/shared/logger"
 
-import type {Cinema} from "./types"
+import type {Cinema, CinemaDB} from "./types"
 
 class CinemaModel {
   constructor(private db: DB) {}
 
-  async findAll(): Promise<Cinema[]> {
-    const result = await this.db.findAll<Cinema>({
+  async getAll(): Promise<Cinema[]> {
+    const result = await this.db.findAll<CinemaDB>({
       include: {
         halls: {
           select: {
@@ -20,15 +20,16 @@ class CinemaModel {
             seats: {
               select: {
                 id: true,
+                // TODO: REMOVE AFTER CANVAS IS IMPLEMENTED
                 row: true,
                 place: true,
-                seat_type_id: true,
+                status: true,
                 x: true,
                 y: true,
                 width: true,
                 height: true,
                 rotation: true,
-                status: true,
+                seat_type_id: true,
               },
             },
           },
@@ -41,48 +42,15 @@ class CinemaModel {
       return []
     }
 
-    return result.data
-  }
-
-  async findById(id: number): Promise<Cinema | null> {
-    const result = await this.db.findOne<Cinema>(
-      {id},
-      {
-        include: {
-          halls: {
-            select: {
-              id: true,
-              name: true,
-              width: true,
-              height: true,
-              rows: true,
-              places: true,
-              seats: {
-                select: {
-                  id: true,
-                  row: true,
-                  place: true,
-                  seat_type_id: true,
-                  x: true,
-                  y: true,
-                  width: true,
-                  height: true,
-                  rotation: true,
-                  status: true,
-                },
-              },
-            },
-          },
-        },
-      },
-    )
-
-    if (!result.success) {
-      logger.error({message: "Failed to fetch cinema", error: result.error})
-      return null
-    }
-
-    return result.data
+    return result.data.map((cinema) => ({
+      ...cinema,
+      halls: cinema.halls.map(({seats, ...hall}) => ({
+        ...hall,
+        seats_count: seats.length,
+        // TODO: REMOVE AFTER CANVAS IS IMPLEMENTED
+        seats,
+      })),
+    }))
   }
 }
 

@@ -1,4 +1,4 @@
-import {notifyUpdate, subscribe, unsubscribe} from "./user"
+import {notifyUpdate, subscribe, unsubscribe} from "./hall"
 import {IWebSocketClient} from "@/core/ws"
 import {Errors} from "@/constants/errors"
 import {Subscription, Subscriptions} from "@/constants/messageTypes"
@@ -7,10 +7,10 @@ import {MessageRequest} from "@/shared/messages/types"
 
 export {notifyUpdate, unsubscribe}
 
-export function handleSubscription(ws: IWebSocketClient, message: MessageRequest<Subscription>) {
+export function handleSubscriptions(ws: IWebSocketClient, message: MessageRequest<Subscription>) {
   switch (message.type) {
-    case Subscriptions["user.subscribe"]:
-      return subscribe(ws, message)
+    case Subscriptions["hall.subscribe"]:
+      return subscribe(ws, message as MessageRequest<Subscription, {hall_id: number}>)
     case Subscriptions["user.unsubscribe"]:
       return unsubscribe(ws, message.eid)
     default: {

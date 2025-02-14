@@ -2,37 +2,32 @@ import {Namespaces} from "@/constants/namespaces"
 
 export type Namespace = (typeof Namespaces)[keyof typeof Namespaces]
 
-export type User = {
-  username: string
-  token: string
-}
-
 export type Cinema = {
   id: number
   name: string
   color: string
+  created_at: Date
   halls: Hall[]
 }
 
 export type Hall = {
   id: number
+  created_at: Date
+  cinema_id: number
   name: string
-  seatsCount: number
-}
-
-export type HallPlan = {
-  id: number
-  name: string
-  rows: number
-  places: number
   width: number
   height: number
+  rows: number
+  places: number
   seats: Seat[]
 }
 
+export type SeatStatus = "free" | "occupied"
+
 export type Seat = {
   id: number
-  seatType: number
+  created_at: Date
+  hall_id: number
   row: number
   place: number
   x: number
@@ -40,17 +35,5 @@ export type Seat = {
   width: number
   height: number
   rotation: number
-  status: "free" | "occupied"
-}
-
-export type SeatType = {
-  id: number
-  name: string
-  ticketTypes: TicketType[]
-}
-
-export type TicketType = {
-  id: number
-  name: string
-  price: number
+  status: SeatStatus
 }

@@ -13,6 +13,9 @@ export const Methods = {
 export const Subscriptions = {
   "user.subscribe": "user.subscribe",
   "user.unsubscribe": "user.unsubscribe",
+
+  "hall.subscribe": "hall.subscribe",
+  "hall.unsubscribe": "hall.unsubscribe",
 } as const
 
 export type Method = keyof typeof Methods
