@@ -11,7 +11,7 @@ export default defineConfig(() => {
     plugins: [
       svgSpriteCompiler({
         iconsDir: "src/assets/icons",
-        outputSprite: "public/icons-sprite.svg",
+        outputSprite: "public/icons.svg",
         typesOutput: "src/types/icons.ts",
       }),
 

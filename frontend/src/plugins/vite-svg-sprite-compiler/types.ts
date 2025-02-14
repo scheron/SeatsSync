@@ -1,19 +1,19 @@
 import type {Config as SVGOConfig} from "svgo"
 
-export type SvgSpriteCompilerOptions = {
+export interface SvgSpriteCompilerOptions {
   /** Directory containing SVG icons */
   iconsDir: string
-  /** Output path for the sprite file */
-  outputSprite: string
+  /** Output path for the sprite file. Defaults to "public/icons-sprite.svg" */
+  outputSprite?: string
   /** Output path for TypeScript types */
   typesOutput: string
   /** SVG files to exclude from sprite */
   exclude?: string[]
   /** SVGO optimization config */
-  svgoConfig?: Extract<SVGOConfig, "multipass" | "plugins" | "floatPrecision">
+  svgoConfig?: SVGOConfig
 }
 
-export type SpriteCompiler = {
-  generate: () => Promise<void>
-  dispose: () => void
+export interface SpriteCompiler {
+  /** Generate sprite and types */
+  generate(): Promise<void>
 }

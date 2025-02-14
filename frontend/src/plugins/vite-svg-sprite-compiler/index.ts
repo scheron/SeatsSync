@@ -29,6 +29,5 @@ export function svgSpriteCompiler(options: SvgSpriteCompilerOptions): Plugin {
     },
 
     buildStart: () => compiler.generate(),
-    closeBundle: () => compiler.dispose(),
   }
 }

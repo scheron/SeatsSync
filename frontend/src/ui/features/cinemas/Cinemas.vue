@@ -17,6 +17,6 @@ async function getCinemas() {
 <template>
   <div>
     <h1>Cinemas</h1>
-    <BaseButton @click="getCinemas">Get cinemas</BaseButton>
+    <BaseButton icon="terminal" @click="getCinemas">Get cinemas</BaseButton>
   </div>
 </template>

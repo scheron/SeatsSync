@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import {spriteInfo} from "@/types/icons"
 import {cn} from "@/shared/utils/tailwindcss"
 
 import type {IconName} from "@/types/icons"
@@ -9,6 +10,6 @@ defineProps<{name: IconName}>()
 
 <template>
   <svg :class="cn('inline-block aspect-square size-6', $attrs.class as ClassNameValue)" fill="currentColor">
-    <use :href="`/icons-sprite.svg#${name}`" />
+    <use :href="`/${spriteInfo.filename}#${name}`" />
   </svg>
 </template>
