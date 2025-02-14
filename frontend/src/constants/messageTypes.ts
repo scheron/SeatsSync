@@ -1,5 +1,6 @@
 export const Subscriptions = {
   "user.subscribe": "user.subscribe",
+  "hall.subscribe": "hall.subscribe",
 } as const
 
 export const Methods = {
