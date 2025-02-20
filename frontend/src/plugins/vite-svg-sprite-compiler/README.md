@@ -14,6 +14,7 @@ Vite plugin for generating SVG sprites with automatic cache busting, TypeScript 
 ## Dependencies
 
 The plugin requires the following packages:
+
 - `svg-sprite`: For sprite generation
 - `svgo`: For SVG optimization
 
@@ -35,11 +36,11 @@ import {svgSpriteCompiler} from "./src/plugins/vite-svg-sprite-compiler"
 export default defineConfig({
   plugins: [
     svgSpriteCompiler({
-      iconsDir: "src/assets/icons",      // Directory with SVG icons
+      iconsDir: "src/assets/icons", // Directory with SVG icons
       outputSprite: "public/icons-sprite.svg", // Where to output the sprite
-      typesOutput: "src/types/icons.ts",  // Where to generate TypeScript types
-      exclude: ["ignored.svg"],           // Optional: files to exclude
-      svgoConfig: {},                     // Optional: SVGO config
+      typesOutput: "src/types/icons.ts", // Where to generate TypeScript types
+      exclude: ["ignored.svg"], // Optional: files to exclude
+      svgoConfig: {}, // Optional: SVGO config
     }),
     // ...other plugins
   ],
@@ -69,30 +70,62 @@ The plugin generates two important files:
 
 ```typescript
 // Generated src/types/icons.ts
-export type IconName = "arrow-left" | "check" | "home";
+export type IconName = "arrow-left" | "check" | "home"
 
 export const spriteInfo = {
   filename: "icons-sprite.a1b2c3d4.svg",
-  hash: "a1b2c3d4"
-} as const;
+  hash: "a1b2c3d4",
+} as const
 ```
 
-Use the BaseIcon component to display icons:
+Use the icon component to display icons:
 
 ```vue
 <script setup lang="ts">
+import {spriteInfo} from "@/types/icons"
+
 import type {IconName} from "@/types/icons"
 
-// Icon name is type-safe
+// Icon name is type-safe and required
 defineProps<{name: IconName}>()
 </script>
 
 <template>
-  <BaseIcon name="check" />
+  <svg>
+    <!-- href format: /{filename}#{icon-name} -->
+    <use :href="`/${spriteInfo.filename}#${name}`" />
+  </svg>
 </template>
 ```
 
+Key points:
+
+- Import `spriteInfo` to get the current sprite filename
+- Use TypeScript for type-safe icon names
+- Use SVG `<use>` element to reference icons from sprite
+- Format href as `/{filename}#{icon-name}`
+
 ## How It Works
+
+### Development Mode
+
+In development mode, the plugin:
+
+1. Watches for changes in the icons directory
+2. Automatically rebuilds the sprite when:
+   - New icons are added
+   - Icons are renamed or deleted
+   - Icon content is modified
+3. Updates types and sprite info
+4. Cleans up old sprite versions
+
+### Production Build
+
+During production build:
+
+1. Generates optimized sprite with SVGO
+2. Creates a file with hash
+3. Generates TypeScript types
 
 ### Cache Busting
 
@@ -106,79 +139,41 @@ The plugin implements cache busting:
 4. Automatically cleans up old sprite versions
 
 This ensures:
+
 - Browser always loads the correct sprite version
 - No manual cache clearing needed
 - Old sprites are automatically removed
 - Unnecessary rebuilds are avoided
 
-### Development Mode
-
-In development mode, the plugin:
-1. Watches for changes in the icons directory
-2. Automatically rebuilds the sprite when:
-   - New icons are added
-   - Icons are renamed or deleted
-   - Icon content is modified
-3. Updates types and sprite info
-4. Cleans up old sprite versions
-
-### Production Build
-
-During production build:
-1. Generates optimized sprite with SVGO
-2. Creates a file with hash
-3. Generates TypeScript types
-
 ## Configuration Options
 
-| Option | Type | Description |
-|--------|------|-------------|
-| `iconsDir` | `string` | Directory containing SVG icons |
-| `outputSprite` | `string` | Where to output the sprite file |
-| `typesOutput` | `string` | Where to generate TypeScript types |
-| `exclude` | `string[]` | Optional: SVG files to exclude |
-| `svgoConfig` | `SVGOConfig` | Optional: SVGO optimization config |
+| Option         | Type         | Description                        |
+| -------------- | ------------ | ---------------------------------- |
+| `iconsDir`     | `string`     | Directory containing SVG icons     |
+| `outputSprite` | `string`     | Where to output the sprite file    |
+| `typesOutput`  | `string`     | Where to generate TypeScript types |
+| `exclude`      | `string[]`   | Optional: SVG files to exclude     |
+| `svgoConfig`   | `SVGOConfig` | Optional: SVGO optimization config |
 
 ## Best Practices
 
 1. **Icon Names**:
+
    - Use kebab-case for icon filenames
    - Avoid special characters
    - Names will be used as sprite IDs
 
 2. **SVG Files**:
+
    - Keep icons simple and optimized
    - Remove unnecessary attributes
    - Use currentColor for fill and stroke
    - Use consistent viewBox sizes
 
-3. **BaseIcon Implementation**:
-   ```vue
-   <script setup lang="ts">
-   import {spriteInfo} from "@/types/icons"
-   import type {IconName} from "@/types/icons"
-   
-   // Icon name is type-safe and required
-   defineProps<{name: IconName}>()
-   </script>
-   
-   <template>
-     <svg>
-       <!-- href format: /{filename}#{icon-name} -->
-       <use :href="`/${spriteInfo.filename}#${name}`" />
-     </svg>
-   </template>
-   ```
-   
-   Key points:
-   - Import `spriteInfo` to get the current sprite filename
-   - Use TypeScript for type-safe icon names
-   - Use SVG `<use>` element to reference icons from sprite
-   - Format href as `/{filename}#{icon-name}`
-
 ## TypeScript Support
 
 The plugin provides full TypeScript support:
+
 - Auto-generated types for icon names
 - Type-safe icon usage in components
-- Proper type definitions for configuration 
+- Proper type definitions for configuration

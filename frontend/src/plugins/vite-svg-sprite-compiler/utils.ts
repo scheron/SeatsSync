@@ -101,3 +101,19 @@ export async function getPreviousHash(typesPath: string): Promise<string | null>
     return null
   }
 }
+
+export function injectSpritePreload(params: {html: string; typesPath: string}): string {
+  const {html, typesPath} = params
+  try {
+    const typesContent = readFileSync(typesPath, "utf-8")
+    const match = typesContent.match(/filename: "([^"]+)"/)
+    if (!match) return html
+
+    const spriteFilename = match[1]
+    const prefetchTag = `<link rel="prefetch" href="/${spriteFilename}" as="image" type="image/svg+xml">`
+
+    return html.replace("</head>", `  ${prefetchTag}\n  </head>`)
+  } catch {
+    return html
+  }
+}

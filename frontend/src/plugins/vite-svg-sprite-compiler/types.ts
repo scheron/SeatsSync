@@ -1,7 +1,7 @@
 import type {Config as SVGOConfig} from "svgo"
 
 export interface SvgSpriteCompilerOptions {
-  /** Directory containing SVG icons */
+  /** Source directory for SVG icons */
   iconsDir: string
   /** Output path for the sprite file. Defaults to "public/icons-sprite.svg" */
   outputSprite?: string
