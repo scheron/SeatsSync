@@ -1,541 +1,341 @@
 {
-  "maxTicketsCount": 5,
-  "id": "7",
-  "name": "ЗАЛ 7",
+  "id": 1,
+  "name": "Hall 1",
+  "rows": 5,
+  "places": 8,
   "seats": [
-    [
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6MH0=",
-        "number": "13",
-        "x": 212.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6MX0=",
-        "number": "12",
-        "x": 196.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6Mn0=",
-        "number": "11",
-        "x": 180.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6M30=",
-        "number": "10",
-        "x": 164.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6NH0=",
-        "number": "9",
-        "x": 148.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6NX0=",
-        "number": "8",
-        "x": 132.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6Nn0=",
-        "number": "7",
-        "x": 116.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6N30=",
-        "number": "6",
-        "x": 100.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6OH0=",
-        "number": "5",
-        "x": 84.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6OX0=",
-        "number": "4",
-        "x": 68.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6MTB9",
-        "number": "3",
-        "x": 52.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6MTF9",
-        "number": "2",
-        "x": 36.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjQsImNvbCI6MTJ9",
-        "number": "1",
-        "x": 20.0,
-        "y": 32.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6MH0=",
-        "number": "13",
-        "x": 212.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6MX0=",
-        "number": "12",
-        "x": 196.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6Mn0=",
-        "number": "11",
-        "x": 180.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6M30=",
-        "number": "10",
-        "x": 164.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6NH0=",
-        "number": "9",
-        "x": 148.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6NX0=",
-        "number": "8",
-        "x": 132.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6Nn0=",
-        "number": "7",
-        "x": 116.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6N30=",
-        "number": "6",
-        "x": 100.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6OH0=",
-        "number": "5",
-        "x": 84.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6OX0=",
-        "number": "4",
-        "x": 68.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6MTB9",
-        "number": "3",
-        "x": 52.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6MTF9",
-        "number": "2",
-        "x": 36.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjMsImNvbCI6MTJ9",
-        "number": "1",
-        "x": 20.0,
-        "y": 48.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjIsImNvbCI6MH0=",
-        "number": "10",
-        "x": 212.0,
-        "y": 64.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjIsImNvbCI6MX0=",
-        "number": "9",
-        "x": 196.0,
-        "y": 64.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjIsImNvbCI6Mn0=",
-        "number": "8",
-        "x": 180.0,
-        "y": 64.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjIsImNvbCI6M30=",
-        "number": "7",
-        "x": 164.0,
-        "y": 64.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjIsImNvbCI6NH0=",
-        "number": "6",
-        "x": 148.0,
-        "y": 64.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjIsImNvbCI6NX0=",
-        "number": "5",
-        "x": 132.0,
-        "y": 64.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjIsImNvbCI6Nn0=",
-        "number": "4",
-        "x": 116.0,
-        "y": 64.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjIsImNvbCI6N30=",
-        "number": "3",
-        "x": 100.0,
-        "y": 64.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjIsImNvbCI6OH0=",
-        "number": "2",
-        "x": 84.0,
-        "y": 64.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjIsImNvbCI6OX0=",
-        "number": "1",
-        "x": 68.0,
-        "y": 64.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjEsImNvbCI6MH0=",
-        "number": "10",
-        "x": 212.0,
-        "y": 80.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjEsImNvbCI6MX0=",
-        "number": "9",
-        "x": 196.0,
-        "y": 80.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjEsImNvbCI6Mn0=",
-        "number": "8",
-        "x": 180.0,
-        "y": 80.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjEsImNvbCI6M30=",
-        "number": "7",
-        "x": 164.0,
-        "y": 80.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjEsImNvbCI6NH0=",
-        "number": "6",
-        "x": 148.0,
-        "y": 80.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjEsImNvbCI6NX0=",
-        "number": "5",
-        "x": 132.0,
-        "y": 80.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjEsImNvbCI6Nn0=",
-        "number": "4",
-        "x": 116.0,
-        "y": 80.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjEsImNvbCI6N30=",
-        "number": "3",
-        "x": 100.0,
-        "y": 80.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjEsImNvbCI6OH0=",
-        "number": "2",
-        "x": 84.0,
-        "y": 80.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjEsImNvbCI6OX0=",
-        "number": "1",
-        "x": 68.0,
-        "y": 80.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6MH0=",
-        "number": "12",
-        "x": 212.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6MX0=",
-        "number": "11",
-        "x": 196.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6Mn0=",
-        "number": "10",
-        "x": 180.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6M30=",
-        "number": "9",
-        "x": 164.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6NH0=",
-        "number": "8",
-        "x": 148.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6NX0=",
-        "number": "7",
-        "x": 132.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6Nn0=",
-        "number": "6",
-        "x": 116.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6N30=",
-        "number": "5",
-        "x": 100.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6OH0=",
-        "number": "4",
-        "x": 84.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6OX0=",
-        "number": "3",
-        "x": 68.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6MTB9",
-        "number": "2",
-        "x": 52.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      },
-      {
-        "id": "eyJhcmVhIjoxLCJyb3ciOjAsImNvbCI6MTF9",
-        "number": "1",
-        "x": 36.0,
-        "y": 96.0,
-        "seatTypeId": "Стандарт Б",
-        "isAvailable": true,
-        "seatStatus": "available"
-      }
-    ]
-  ],
-  "width": 248,
-  "height": 144,
-  "size": {
-    "width": 192.0,
-    "height": 64.0
-  },
-  "cinemaScreen": {
-    "start": {"x": 20.0, "y": 0.0},
-    "end": {"x": 212.0, "y": 0.0}
-  }
+    {
+      "x": 0,
+      "y": 0,
+      "width": 30,
+      "height": 30,
+      "id": 1001,
+      "row": 1,
+      "place": 1
+    },
+    {
+      "x": 50,
+      "y": 0,
+      "width": 30,
+      "height": 30,
+      "id": 1002,
+      "row": 1,
+      "place": 2
+    },
+    {
+      "x": 85,
+      "y": 0,
+      "width": 30,
+      "height": 30,
+      "id": 1003,
+      "row": 1,
+      "place": 3
+    },
+    {
+      "x": 120,
+      "y": 0,
+      "width": 30,
+      "height": 30,
+      "id": 1004,
+      "row": 1,
+      "place": 4
+    },
+    {
+      "x": 155,
+      "y": 0,
+      "width": 30,
+      "height": 30,
+      "id": 1005,
+      "row": 1,
+      "place": 5
+    },
+    {
+      "x": 190,
+      "y": 0,
+      "width": 30,
+      "height": 30,
+      "id": 1006,
+      "row": 1,
+      "place": 6
+    },
+    {
+      "x": 225,
+      "y": 0,
+      "width": 30,
+      "height": 30,
+      "id": 1007,
+      "row": 1,
+      "place": 7
+    },
+    {
+      "x": 275,
+      "y": 0,
+      "width": 30,
+      "height": 30,
+      "id": 1008,
+      "row": 1,
+      "place": 8
+    },
+    {
+      "x": 0,
+      "y": 35,
+      "width": 30,
+      "height": 30,
+      "id": 2001,
+      "row": 2,
+      "place": 1
+    },
+    {
+      "x": 50,
+      "y": 35,
+      "width": 30,
+      "height": 30,
+      "id": 2002,
+      "row": 2,
+      "place": 2
+    },
+    {
+      "x": 85,
+      "y": 35,
+      "width": 30,
+      "height": 30,
+      "id": 2003,
+      "row": 2,
+      "place": 3
+    },
+    {
+      "x": 120,
+      "y": 35,
+      "width": 30,
+      "height": 30,
+      "id": 2004,
+      "row": 2,
+      "place": 4
+    },
+    {
+      "x": 155,
+      "y": 35,
+      "width": 30,
+      "height": 30,
+      "id": 2005,
+      "row": 2,
+      "place": 5
+    },
+    {
+      "x": 190,
+      "y": 35,
+      "width": 30,
+      "height": 30,
+      "id": 2006,
+      "row": 2,
+      "place": 6
+    },
+    {
+      "x": 225,
+      "y": 35,
+      "width": 30,
+      "height": 30,
+      "id": 2007,
+      "row": 2,
+      "place": 7
+    },
+    {
+      "x": 275,
+      "y": 35,
+      "width": 30,
+      "height": 30,
+      "id": 2008,
+      "row": 2,
+      "place": 8
+    },
+    {
+      "x": 0,
+      "y": 80,
+      "width": 30,
+      "height": 30,
+      "id": 3001,
+      "row": 3,
+      "place": 1
+    },
+    {
+      "x": 50,
+      "y": 80,
+      "width": 30,
+      "height": 30,
+      "id": 3002,
+      "row": 3,
+      "place": 2
+    },
+    {
+      "x": 85,
+      "y": 80,
+      "width": 30,
+      "height": 30,
+      "id": 3003,
+      "row": 3,
+      "place": 3
+    },
+    {
+      "x": 120,
+      "y": 80,
+      "width": 30,
+      "height": 30,
+      "id": 3004,
+      "row": 3,
+      "place": 4
+    },
+    {
+      "x": 155,
+      "y": 80,
+      "width": 30,
+      "height": 30,
+      "id": 3005,
+      "row": 3,
+      "place": 5
+    },
+    {
+      "x": 190,
+      "y": 80,
+      "width": 30,
+      "height": 30,
+      "id": 3006,
+      "row": 3,
+      "place": 6
+    },
+    {
+      "x": 225,
+      "y": 80,
+      "width": 30,
+      "height": 30,
+      "id": 3007,
+      "row": 3,
+      "place": 7
+    },
+    {
+      "x": 275,
+      "y": 80,
+      "width": 30,
+      "height": 30,
+      "id": 3008,
+      "row": 3,
+      "place": 8
+    },
+    {
+      "x": 0,
+      "y": 115,
+      "width": 30,
+      "height": 30,
+      "id": 4001,
+      "row": 4,
+      "place": 1
+    },
+    {
+      "x": 50,
+      "y": 115,
+      "width": 30,
+      "height": 30,
+      "id": 4002,
+      "row": 4,
+      "place": 2
+    },
+    {
+      "x": 85,
+      "y": 115,
+      "width": 30,
+      "height": 30,
+      "id": 4003,
+      "row": 4,
+      "place": 3
+    },
+    {
+      "x": 120,
+      "y": 115,
+      "width": 30,
+      "height": 30,
+      "id": 4004,
+      "row": 4,
+      "place": 4
+    },
+    {
+      "x": 155,
+      "y": 115,
+      "width": 30,
+      "height": 30,
+      "id": 4005,
+      "row": 4,
+      "place": 5
+    },
+    {
+      "x": 190,
+      "y": 115,
+      "width": 30,
+      "height": 30,
+      "id": 4006,
+      "row": 4,
+      "place": 6
+    },
+    {
+      "x": 225,
+      "y": 115,
+      "width": 30,
+      "height": 30,
+      "id": 4007,
+      "row": 4,
+      "place": 7
+    },
+    {
+      "x": 275,
+      "y": 115,
+      "width": 30,
+      "height": 30,
+      "id": 4008,
+      "row": 4,
+      "place": 8
+    },
+    {
+      "x": 50,
+      "y": 160,
+      "width": 65,
+      "height": 30,
+      "id": 5002,
+      "row": 5,
+      "place": 1
+    },
+    {
+      "x": 120,
+      "y": 160,
+      "width": 65,
+      "height": 30,
+      "id": 5003,
+      "row": 5,
+      "place": 2
+    },
+    {
+      "x": 192,
+      "y": 160,
+      "width": 65,
+      "height": 30,
+      "id": 5004,
+      "row": 5,
+      "place": 3
+    },
+    {
+      "x": 335,
+      "y": 0,
+      "width": 65,
+      "height": 30,
+      "id": 5005,
+      "row": 1,
+      "place": 9
+    },
+    {
+      "x": 335,
+      "y": 35,
+      "width": 65,
+      "height": 30,
+      "id": 5006,
+      "row": 2,
+      "place": 9
+    }
+  ]
 }
