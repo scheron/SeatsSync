@@ -2,11 +2,12 @@
 import {tryOnBeforeUnmount} from "@vueuse/core"
 import AppLayout from "@/ui/common/AppLayout.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
+import SeatsScheme from "@/ui/features/cinemas/SeatsScheme.vue"
 import Header from "@/ui/sections/Header.vue"
 import {wsClient} from "@/modules/ws"
 import {toast, ToastsLiteProvider} from "@/shared/lib/toasts-lite"
-import Canvas from "./ui/features/cinemas/Canvas.vue"
 import Cinemas from "./ui/features/cinemas/Cinemas.vue"
+import Hall from "./ui/features/cinemas/Hall.vue"
 
 let toastID: string | undefined
 
@@ -37,7 +38,7 @@ tryOnBeforeUnmount(() => wsClient.destroy())
 
     <template #middle>
       <BaseCard class="flex-1">
-        <Canvas />
+        <Hall />
       </BaseCard>
       <BaseCard class="h-1/4">Center Bottom Section</BaseCard>
     </template>
