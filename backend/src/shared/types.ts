@@ -15,8 +15,6 @@ export type Hall = {
   created_at: Date
   cinema_id: number
   name: string
-  width: number
-  height: number
   rows: number
   places: number
   seats: Seat[]

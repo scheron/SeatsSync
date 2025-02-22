@@ -1,3 +1,4 @@
+// TODO: Replace all entities types with prisma types
 export type CinemaDB = {
   id: number
   name: string
@@ -9,8 +10,6 @@ export type CinemaDB = {
 export type HallDB = {
   id: number
   name: string
-  width: number
-  height: number
   rows: number
   places: number
   seats: {
@@ -29,8 +28,6 @@ export type Cinema = {
 export type Hall = {
   id: number
   name: string
-  width: number
-  height: number
   rows: number
   places: number
   seats_count: number

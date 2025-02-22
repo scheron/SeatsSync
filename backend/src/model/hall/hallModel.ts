@@ -16,8 +16,6 @@ class HallModel {
             status: true,
             x: true,
             y: true,
-            width: true,
-            height: true,
             rotation: true,
             seat_type_id: true,
           },

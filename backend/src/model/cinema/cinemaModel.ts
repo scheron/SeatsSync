@@ -13,8 +13,6 @@ class CinemaModel {
           select: {
             id: true,
             name: true,
-            width: true,
-            height: true,
             rows: true,
             places: true,
             seats: {
