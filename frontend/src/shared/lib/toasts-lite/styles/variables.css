@@ -1,10 +1,10 @@
 :root {
-  --toasts-lite-bg: hsl(var(--color-primary-100));
-  --toasts-lite-text: hsl(var(--color-content));
-  --toasts-lite-border: hsl(var(--color-primary-300));
-  --toasts-lite-shadow: hsl(var(--color-primary-300));
-  --toasts-lite-success: hsl(var(--color-success));
-  --toasts-lite-error: hsl(var(--color-error));
-  --toasts-lite-loading-border-main: hsl(var(--color-primary-900));
-  --toasts-lite-loading-border-bg: hsl(var(--color-primary-500));
+  --toasts-lite-bg: hsl(var(--primary-100));
+  --toasts-lite-text: hsl(var(--content));
+  --toasts-lite-border: hsl(var(--primary-300));
+  --toasts-lite-shadow: hsl(var(--primary-300));
+  --toasts-lite-success: hsl(var(--success));
+  --toasts-lite-error: hsl(var(--error));
+  --toasts-lite-loading-border-main: hsl(var(--primary-900));
+  --toasts-lite-loading-border-bg: hsl(var(--primary-500));
 }

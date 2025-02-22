@@ -12,13 +12,13 @@
 .v-popper--theme-dropdown .v-popper__arrow-inner,
 .v-popper--theme-tooltip .v-popper__arrow-inner {
   visibility: hidden;
-  border-color: hsl(var(--color-primary-300));
+  border-color: hsl(var(--primary-300));
 }
 
 .v-popper--theme-dropdown .v-popper__arrow-outer,
 .v-popper--theme-tooltip .v-popper__arrow-outer {
   visibility: hidden;
-  border-color: hsl(var(--color-primary-300));
+  border-color: hsl(var(--primary-300));
 }
 
 .v-popper--theme-dropdown.v-popper__popper--hidden,

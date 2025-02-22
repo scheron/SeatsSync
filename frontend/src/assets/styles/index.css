@@ -1,0 +1,81 @@
+@import "./fonts.css";
+@import "./theme.css";
+@import "tailwindcss";
+
+@theme {
+  --default-font-family: Rubik, system-ui, Arial, sans-serif;
+  --font-sans: Rubik, system-ui, Arial, sans-serif;
+  --font-serif: Rubik, system-ui, Arial, sans-serif;
+  --font-mono: Rubik, system-ui, Arial, sans-serif;
+
+  --color-accent: hsl(var(--c-450));
+  --color-tint: hsl(var(--c-50));
+  --color-shade: hsl(var(--c-850));
+
+  --color-white: hsl(var(--c-0));
+  --color-black: hsl(var(--c-900));
+
+  --color-warn: hsl(var(--warn));
+  --color-error: hsl(var(--error));
+  --color-success: hsl(var(--success));
+  --color-info: hsl(var(--info));
+
+  --color-content: hsl(var(--content));
+
+  --color-primary-100: hsl(var(--primary-100));
+  --color-primary-200: hsl(var(--primary-200));
+  --color-primary-300: hsl(var(--primary-300));
+  --color-primary-400: hsl(var(--primary-400));
+  --color-primary-500: hsl(var(--primary-500));
+  --color-primary-600: hsl(var(--primary-600));
+  --color-primary-700: hsl(var(--primary-700));
+  --color-primary-800: hsl(var(--primary-800));
+  --color-primary-900: hsl(var(--primary-900));
+}
+
+@utility absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@utility absolute-center-x {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@utility absolute-center-y {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+body {
+  background: hsl(var(--primary-100));
+  line-height: 1.5;
+}
+
+::-webkit-scrollbar {
+  background: hsl(var(--primary-100));
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary-300));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary-400));
+}
+
+::-webkit-scrollbar-corner {
+  background: hsl(var(--primary-100));
+}
+
+.no-scroll {
+  overflow: hidden;
+}

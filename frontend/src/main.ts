@@ -2,9 +2,8 @@
 import "floating-vue/dist/style.css";
 import "vue3-carousel/dist/carousel.css"
 /* prettier-ignore */
-import "@/assets/styles/global.css";
+import "@/assets/styles/index.css";
 import "@/assets/styles/rewrites/floating-vue.css"
-import "@/assets/styles/theme.css"
 /* prettier-ignore */
 import { createApp } from "vue";
 

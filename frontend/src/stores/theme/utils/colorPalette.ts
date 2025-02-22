@@ -46,6 +46,6 @@ export function updateCssVariables(palette: Record<string, [number, number, numb
 
   Object.entries(palette).forEach(([key, hsb]) => {
     const [h, s, l] = hsbToHsl(...hsb)
-    root.style.setProperty(`--color-${key}`, `${h} ${s}% ${l}%`)
+    root.style.setProperty(`--c-${key}`, `${h} ${s}% ${l}%`)
   })
 }

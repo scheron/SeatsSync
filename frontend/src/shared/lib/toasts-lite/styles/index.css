@@ -1,5 +1,5 @@
-@import "variables";
-@import "animations";
+@import "./variables";
+@import "./animations";
 
 .toasts-lite__toast-container {
   position: fixed;
