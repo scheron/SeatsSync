@@ -7,7 +7,7 @@ import {MessageRequest} from "@/shared/messages/types"
 const userSubscription = publisher.register({
   name: "user.subscribe",
 
-  async onSnapshot(ws: IWebSocketClient) {
+  async prepareSnapshot(ws: IWebSocketClient) {
     const isAuthenticated = ws.context.isAuthenticated()
     const username = ws.context.username()
 

@@ -32,7 +32,7 @@ export class Subscriber<T extends string = string, D = any> {
         return
       }
 
-      const snapshot = await this.handler.onSnapshot(ws, message)
+      const snapshot = await this.handler.prepareSnapshot(ws, message)
 
       ws.send(formatSuccess({eid: message.eid, status: "snapshot", type: this.handler.name, data: snapshot}))
 

@@ -9,5 +9,5 @@ export type Subscriber = {
 
 export type SubscriptionHandler<T extends string = string, D = any> = {
   name: Subscription
-  onSnapshot: (ws: IWebSocketClient, message: MessageRequest<T, D>) => Promise<any>
+  prepareSnapshot: (ws: IWebSocketClient, message: MessageRequest<T, D>) => Promise<any>
 }

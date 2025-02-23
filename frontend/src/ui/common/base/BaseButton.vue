@@ -17,7 +17,9 @@ const buttonVariant = defineVariant({
     variant: {
       primary: "hover:text-content text-content/60  focus-visible:border-accent",
       accent:
-        "flex w-full justify-center rounded-lg bg-primary-800 px-4 py-2 text-sm font-medium text-white hover:bg-accent active:bg-primary-800  focus-visible:bg-accent focus-visible:border-tint",
+        "flex w-full justify-center rounded-lg bg-primary-800 px-4 py-2 text-sm  text-white hover:bg-accent active:bg-primary-800  focus-visible:bg-accent focus-visible:border-tint",
+      outline:
+        "flex w-full justify-center rounded-lg border border-primary-800/70 px-4 py-2 text-sm  text-primary-800/70 hover:border-primary-800 hover:text-primary-800 active:border-primary-800  focus-visible:border-primary-800 focus-visible:text-primary-800",
     },
     disabled: "disabled:opacity-50 border-none  hover:text-content/80 text-content/80",
     loading: "",

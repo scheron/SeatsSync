@@ -8,7 +8,7 @@ import {Hall} from "@/shared/types"
 const subscription = publisher.register({
   name: "hall.subscribe",
 
-  async onSnapshot(ws: IWebSocketClient, message: MessageRequest<Subscription, {hall_id: number}>) {
+  async prepareSnapshot(_, message: MessageRequest<Subscription, {hall_id: number}>) {
     const {hall_id} = message.data
 
     const hall = await HallService.getHall(hall_id)

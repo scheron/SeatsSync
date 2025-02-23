@@ -1,24 +1,26 @@
 import type {Seat} from "@/types/cinema"
 
 /**
- * Get the character for a seat place
- * @param seatIndex - The index of the seat
- * @returns The character for the seat place
+ * Get the character for a row
+ * @param rowId - The id of the row; Starts from 1
+ * @returns The character for the row
  * @example
- * getSeatPlaceChar(0) // "A"
- * getSeatPlaceChar(25) // "Z"
- * getSeatPlaceChar(26) // "AA"
- * getSeatPlaceChar(51) // "AZ"
+ * getRowChar(1) // "A"
+ * getRowChar(26) // "Z"
+ * getRowChar(27) // "AA"
+ * getRowChar(52) // "AZ"
  */
-export function getSeatPlaceChar(seatIndex: number) {
-  let colId = ""
+export function getSeatRowChar(rowId: number) {
+  let rowChar = ""
 
-  while (seatIndex >= 0) {
-    colId = String.fromCharCode((seatIndex % 26) + 65) + colId
-    seatIndex = Math.floor(seatIndex / 26) - 1
+  rowId = rowId - 1
+
+  while (rowId >= 0) {
+    rowChar = String.fromCharCode((rowId % 26) + 65) + rowChar
+    rowId = Math.floor(rowId / 26) - 1
   }
 
-  return colId
+  return rowChar
 }
 
 /**

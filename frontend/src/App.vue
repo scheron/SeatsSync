@@ -2,14 +2,13 @@
 import {tryOnBeforeUnmount} from "@vueuse/core"
 import AppLayout from "@/ui/common/AppLayout.vue"
 import BaseCard from "@/ui/common/base/BaseCard.vue"
-import SeatsScheme from "@/ui/features/cinemas/SeatsScheme.vue"
+import Booking from "@/ui/sections/Booking/Booking.vue"
+import Hall from "@/ui/sections/Hall"
 import Header from "@/ui/sections/Header.vue"
 import {wsClient} from "@/modules/ws"
 import {toast, ToastsLiteProvider} from "@/shared/lib/toasts-lite"
-import Cinemas from "./ui/features/cinemas/Cinemas.vue"
-import Hall from "./ui/features/cinemas/Hall.vue"
 
-let toastID: string | undefined
+let toastID: string
 
 wsClient.connectionState.subscribe(({state, prevState}) => {
   if (state === "RECONNECTING") toastID = toast.loading("Connecting...", {id: toastID, autoClose: false})
@@ -31,20 +30,13 @@ tryOnBeforeUnmount(() => wsClient.destroy())
       <Header />
     </template>
 
-    <template #start>
-      <BaseCard class="h-1/5"> Left Top Content </BaseCard>
-      <BaseCard class="flex-1"> Left Center Content </BaseCard>
-    </template>
-
     <template #middle>
       <BaseCard class="flex-1">
         <Hall />
       </BaseCard>
-      <BaseCard class="h-1/4">Center Bottom Section</BaseCard>
-    </template>
-
-    <template #end>
-      <BaseCard> <Cinemas /></BaseCard>
+      <BaseCard class="h-1/4">
+        <Booking />
+      </BaseCard>
     </template>
   </AppLayout>
 
