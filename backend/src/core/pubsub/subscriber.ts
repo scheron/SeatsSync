@@ -45,7 +45,7 @@ export class Subscriber<T extends string = string, D = any> {
     }
   }
 
-  unsubscribe(clientId: string, eid: string) {
+  unsubscribe(clientId: string, eid?: string) {
     // NOTE: if eid is not provided, unsubscribe from all subscriptions
     if (!eid) {
       for (const key of this.subscribers.keys()) {

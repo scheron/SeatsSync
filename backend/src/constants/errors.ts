@@ -15,6 +15,7 @@ export const SystemErrors = {
   TooManyRequests: "TooManyRequests",
   TooManyConnections: "TooManyConnections",
   SubscriptionAlreadyExists: "SubscriptionAlreadyExists",
+  SubscriptionNotFound: "SubscriptionNotFound",
 } as const
 
 export const AuthErrors = {

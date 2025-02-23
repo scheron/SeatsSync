@@ -1,10 +1,12 @@
 import {UserStatus} from "model/user"
 import {publisher} from "@/core/pubsub"
 import {IWebSocketClient} from "@/core/ws"
+import {Errors} from "@/constants/errors"
 import {Subscription} from "@/constants/messageTypes"
+import {formatError} from "@/shared/messages/formatters"
 import {MessageRequest} from "@/shared/messages/types"
 
-const userSubscription = publisher.register({
+const subscription = publisher.register({
   name: "user.subscribe",
 
   async prepareSnapshot(ws: IWebSocketClient) {
@@ -16,15 +18,21 @@ const userSubscription = publisher.register({
 })
 
 export function subscribe(ws: IWebSocketClient, message: MessageRequest<Subscription>) {
-  return userSubscription.subscribe(ws, message)
+  return subscription.subscribe(ws, message)
 }
 
-export function unsubscribe(ws: IWebSocketClient, eid?: string) {
-  userSubscription.unsubscribe(ws.context.id, eid)
+export function unsubscribe(ws: IWebSocketClient, message: MessageRequest<Subscription, {sub_eid?: string}>) {
+  if (!message) {
+    subscription.unsubscribe(ws.context.id)
+    return
+  }
+
+  if (!message?.data?.sub_eid) ws.send(formatError({eid: message?.eid, error: Errors.SubscriptionNotFound}))
+  else subscription.unsubscribe(ws.context.id, message.data.sub_eid)
 }
 
 export function notifyUpdate({status, username}: {status: UserStatus; username?: string}) {
-  userSubscription.notify("update", serialize(status, username))
+  subscription.notify("update", serialize(status, username))
 }
 
 function serialize(status: UserStatus, username: string) {

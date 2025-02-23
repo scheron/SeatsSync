@@ -16,19 +16,7 @@ class CinemaModel {
             rows: true,
             places: true,
             seats: {
-              select: {
-                id: true,
-                // TODO: REMOVE AFTER CANVAS IS IMPLEMENTED
-                row: true,
-                place: true,
-                status: true,
-                x: true,
-                y: true,
-                width: true,
-                height: true,
-                rotation: true,
-                seat_type_id: true,
-              },
+              select: {id: true},
             },
           },
         },
@@ -45,8 +33,6 @@ class CinemaModel {
       halls: cinema.halls.map(({seats, ...hall}) => ({
         ...hall,
         seats_count: seats.length,
-        // TODO: REMOVE AFTER CANVAS IS IMPLEMENTED
-        seats,
       })),
     }))
   }

@@ -139,7 +139,6 @@ export class WebSocketClient {
         data: {
           messageId: parsedMessage.eid,
           messageType: parsedMessage.type,
-          length,
           payload: JSON.stringify(parsedMessage?.data).slice(0, 200),
         },
       })

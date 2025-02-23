@@ -12,7 +12,7 @@ export function handleSubscription(ws: IWebSocketClient, message: MessageRequest
     case Subscriptions["user.subscribe"]:
       return subscribe(ws, message)
     case Subscriptions["user.unsubscribe"]:
-      return unsubscribe(ws, message.eid)
+      return unsubscribe(ws, message)
     default: {
       ws.send(formatError({eid: message.eid, error: Errors.UnknownMessageType}))
     }

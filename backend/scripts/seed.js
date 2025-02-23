@@ -38,11 +38,11 @@ async function createHalls(cinema, count) {
   await sleepWithMessage(`Creating halls for cinema: ${cinema.name}`)
 
   const halls = [
-    {name: "Main Hall", cinema_id: cinema.id, width: 150, height: 100, places: 15, rows: 10},
-    {name: "VIP Lounge", cinema_id: cinema.id, width: 310, height: 350, places: 10, rows: 5},
-    {name: "Auditorium", cinema_id: cinema.id, width: 200, height: 300, places: 20, rows: 10},
-    {name: "Ocean View", cinema_id: cinema.id, width: 300, height: 300, places: 20, rows: 10},
-    {name: "Outer wall", cinema_id: cinema.id, width: 300, height: 300, places: 20, rows: 10},
+    {name: "Main Hall", cinema_id: cinema.id, places: 15, rows: 10},
+    {name: "VIP Lounge", cinema_id: cinema.id, places: 10, rows: 5},
+    {name: "Auditorium", cinema_id: cinema.id, places: 20, rows: 10},
+    {name: "Ocean View", cinema_id: cinema.id, places: 20, rows: 10},
+    {name: "Outer wall", cinema_id: cinema.id, places: 20, rows: 10},
   ]
 
   const _halls = []
@@ -128,20 +128,36 @@ async function createSeats(hall, seatTypeRecords) {
   await sleepWithMessage("Creating seats...")
 
   const seats = []
+  const REGULAR_SEAT_WIDTH = 30
+  const REGULAR_SEAT_HEIGHT = 30
+  const VIP_SEAT_WIDTH = 65
+  const VIP_SEAT_HEIGHT = 30
+  const ROW_SPACING = 35
+
+  const regularRowXPositions = [0, 50, 85, 120, 155, 190, 225, 275]
+  const vipRowXPositions = [50, 120, 192]
 
   for (let row = 1; row <= hall.rows; row++) {
-    for (let col = 1; col <= hall.places; col++) {
+    const isVipRow = row === hall.rows
+    const xPositions = isVipRow ? vipRowXPositions : regularRowXPositions
+    const maxPlacesInRow = isVipRow ? 3 : hall.places
+
+    const y = (row - 1) * ROW_SPACING + (isVipRow ? 10 : 0)
+
+    for (let place = 1; place <= maxPlacesInRow; place++) {
+      if (place > xPositions.length) break
+
       seats.push({
         hall_id: hall.id,
-        seat_type_id: col <= 5 ? seatTypeRecords[1].id : seatTypeRecords[0].id,
+        seat_type_id: isVipRow ? seatTypeRecords[1].id : seatTypeRecords[0].id,
         row,
-        place: col,
-        x: Math.min(col * 50, hall.width),
-        y: Math.min(row * 50, hall.height),
-        width: 45,
-        height: 45,
+        place,
+        x: xPositions[place - 1],
+        y,
+        width: isVipRow ? VIP_SEAT_WIDTH : REGULAR_SEAT_WIDTH,
+        height: isVipRow ? VIP_SEAT_HEIGHT : REGULAR_SEAT_HEIGHT,
         rotation: 0,
-        status: Math.random() > 0.7 ? "occupied" : "free",
+        status: Math.random() > 0.8 ? "occupied" : "free",
       })
     }
   }
