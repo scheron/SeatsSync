@@ -14,7 +14,7 @@ export function defineSubscription(ws: WebSocketClient) {
   const subscriptionEvents$ = new Subject<ResponseMessage>()
 
   class Subscription<T = any, D = any> {
-    readonly #destroyed$ = new Subject<boolean>()
+    readonly destroyed$ = new Subject<boolean>()
     state: SubscriptionState = "INIT"
 
     id: string
@@ -60,7 +60,7 @@ export function defineSubscription(ws: WebSocketClient) {
       subscriptionEvents$
         .pipe(
           filter((msg) => msg.eid === this.id),
-          takeUntil(this.#destroyed$),
+          takeUntil(this.destroyed$),
         )
         .subscribe((msg) => {
           if (this.state === "DESTROYED") return
@@ -159,8 +159,8 @@ export function defineSubscription(ws: WebSocketClient) {
 
       this.state = "DESTROYED"
 
-      this.#destroyed$.next(true)
-      this.#destroyed$.complete()
+      this.destroyed$.next(true)
+      this.destroyed$.complete()
     }
 
     /**
@@ -199,8 +199,12 @@ export function defineSubscription(ws: WebSocketClient) {
     if (state === "CONNECTED") {
       subscriptions.forEach((sub) => {
         if (sub.state === "DESTROYED") return
-        if (sub.isOnce) return
+        if (sub.state === "INIT") {
+          sub.subscribe()
+          return
+        }
 
+        if (sub.isOnce) return
         if (sub.isKeepAlive) sub.subscribe()
       })
     }

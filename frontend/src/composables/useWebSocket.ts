@@ -14,6 +14,7 @@ type UseWebSocketReturn = {
   unsubscribe: (id: string) => void
   resubscribe: (id: string) => void
   send: <T = any>(message: RequestMessage<T>) => Promise<T>
+  cleanup: () => void
 }
 
 export function useWebSocket(): UseWebSocketReturn {
@@ -76,5 +77,6 @@ export function useWebSocket(): UseWebSocketReturn {
     unsubscribe,
     resubscribe,
     send,
+    cleanup,
   }
 }

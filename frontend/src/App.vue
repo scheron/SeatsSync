@@ -7,7 +7,9 @@ import Hall from "@/ui/sections/Hall"
 import Header from "@/ui/sections/Header.vue"
 import {wsClient} from "@/modules/ws"
 import {toast, ToastsLiteProvider} from "@/shared/lib/toasts-lite"
+import {useCinemaStore} from "./stores/cinema/cinema.store"
 
+const cinemaStore = useCinemaStore()
 let toastID: string
 
 wsClient.connectionState.subscribe(({state, prevState}) => {
@@ -30,13 +32,17 @@ tryOnBeforeUnmount(() => wsClient.destroy())
       <Header />
     </template>
 
-    <template #middle>
+    <template #left>
       <BaseCard class="flex-1">
         <Hall />
       </BaseCard>
       <BaseCard class="h-1/4">
         <Booking />
       </BaseCard>
+    </template>
+
+    <template #right>
+      <BaseCard class=""> Logs </BaseCard>
     </template>
   </AppLayout>
 

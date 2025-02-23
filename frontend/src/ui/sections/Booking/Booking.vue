@@ -10,7 +10,7 @@ const seats = computed(() => cinemaStore.selectedSeats.map((seat) => `${getSeatR
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
+  <div v-if="cinemaStore.activeHall" class="flex flex-col gap-4">
     <div class="text-content/60 flex flex-col gap-2 text-sm">
       <div class="flex justify-between">
         <span class="">Hall</span>
@@ -31,4 +31,6 @@ const seats = computed(() => cinemaStore.selectedSeats.map((seat) => `${getSeatR
       <BaseButton variant="accent">Purchase</BaseButton>
     </div>
   </div>
+
+  <div v-else class="flex size-full items-center justify-center">Please choose a hall first</div>
 </template>

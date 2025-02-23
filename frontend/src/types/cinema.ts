@@ -3,7 +3,13 @@ export type Cinema = {
   name: string
   color: string
   created_at: Date
-  halls: Hall[]
+  halls: {
+    id: number
+    name: string
+    rows: number
+    places: number
+    seats_count: number
+  }[]
 }
 
 export type Hall = {

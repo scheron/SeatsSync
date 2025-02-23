@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import {computed, ref} from "vue"
+import {computed, ref, watch} from "vue"
 import BaseIcon from "@/ui/common/base/BaseIcon.vue"
+import BaseSelect from "@/ui/common/base/BaseSelect.vue"
 import {useCinemaStore} from "@/stores/cinema/cinema.store"
 import {toast} from "@/shared/lib/toasts-lite"
 import {calculateHallSize, createSeatsSchema} from "@/shared/utils/hall"
@@ -8,13 +9,20 @@ import RowName from "./RowName.vue"
 import SeatPlace from "./SeatPlace.vue"
 import SeatsSchemeInfo from "./SeatsSchemeInfo.vue"
 
+import type {Hall} from "@/types/cinema"
+
 const cinemaStore = useCinemaStore()
 
-const seatsSchema = createSeatsSchema(cinemaStore.activeHall?.seats ?? [])
-const {width, height} = calculateHallSize(cinemaStore.activeHall?.seats ?? [])
+const seatsSchema = computed(() => createSeatsSchema(cinemaStore.activeHall?.seats ?? []))
+const sizes = computed(() => calculateHallSize(cinemaStore.activeHall?.seats ?? []))
 
 const hoveredSeat = ref<{row: number; place: number} | null>(null)
 const selectedSeatsIds = computed(() => new Set(cinemaStore.selectedSeats.map((seat) => seat.id)))
+const availableHalls = computed(() => cinemaStore.cinema?.halls || [])
+
+function onHallChange(hall: Hall) {
+  cinemaStore.onSelectHall(hall)
+}
 
 function onRowMouseMove(e: MouseEvent) {
   const seatEl = (e.target as HTMLElement).closest("[data-seat]") as HTMLElement
@@ -54,14 +62,23 @@ function onSeatClick(e: MouseEvent) {
 </script>
 
 <template>
-  <div class="flex size-full flex-col items-center gap-2">
-    <h2 class="text-lg font-bold">{{ cinemaStore.activeHall?.name }}</h2>
+  <div v-if="cinemaStore.activeHall" class="flex size-full flex-col items-center gap-2">
+    <div class="flex w-1/2 items-center justify-center">
+      <BaseSelect
+        :model-value="cinemaStore.activeHall"
+        @update:model-value="onHallChange"
+        :options="availableHalls"
+        option-label="name"
+        option-value="id"
+        class="text-lg"
+      />
+    </div>
 
-    <div class="items-cente flex size-full justify-center rounded-md p-2">
+    <div class="flex size-full items-center justify-center rounded-md p-2">
       <div class="flex w-full flex-col items-center justify-center perspective-distant">
         <BaseIcon name="screen" class="text-content/60 h-20 w-full" />
 
-        <div class="relative mt-4 gap-1" :style="{width: width + 'px', height: height + 'px'}">
+        <div class="relative mt-4 gap-1" :style="{width: sizes.width + 'px', height: sizes.height + 'px'}">
           <div
             v-for="row in seatsSchema"
             :key="row[0].row"
@@ -90,4 +107,5 @@ function onSeatClick(e: MouseEvent) {
 
     <SeatsSchemeInfo />
   </div>
+  <div v-else class="flex size-full items-center justify-center">Please choose a cinema first</div>
 </template>
