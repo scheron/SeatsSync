@@ -13,7 +13,7 @@ export type IWebSocketClient = WebSocket & {
   }
 }
 
-export type WebSocketOnMessage = (ws: IWebSocketClient, message: MessageRequest<any, any>) => void
+export type OnMessageHandler = (ws: IWebSocketClient, message: MessageRequest<any, any>) => boolean
 
 export type WebSocketClientOptions = {
   pingMsg?: string | number
@@ -26,6 +26,6 @@ export type WebSocketCallbacks = {
   onConnect?: (ws: IWebSocketClient) => void
   onDisconnect?: (ws: IWebSocketClient) => void
   onDestroy?: () => void
-  onMessage?: WebSocketOnMessage
+  onMessage?: (ws: IWebSocketClient, message: MessageRequest<any, any>) => void
   onSend?: (ws: WebSocket, message: string) => void
 }

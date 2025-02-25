@@ -21,7 +21,7 @@ export function subscribe(ws: IWebSocketClient, message: MessageRequest<Subscrip
   return subscription.subscribe(ws, message)
 }
 
-export function unsubscribe(ws: IWebSocketClient, message: MessageRequest<Subscription, {sub_eid?: string}>) {
+export function unsubscribe(ws: IWebSocketClient, message?: MessageRequest<Subscription, {sub_eid?: string}>) {
   if (!message) {
     subscription.unsubscribe(ws.context.id)
     return

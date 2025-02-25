@@ -7,14 +7,16 @@ import {MessageRequest} from "@/shared/messages/types"
 
 export {notifyUpdate, unsubscribe}
 
-export function handleSubscriptions(ws: IWebSocketClient, message: MessageRequest<Subscription>) {
+export function onMessage(ws: IWebSocketClient, message: MessageRequest<Subscription>) {
   switch (message.type) {
     case Subscriptions["hall.subscribe"]:
-      return subscribe(ws, message as MessageRequest<Subscription, {hall_id: number}>)
+      subscribe(ws, message as MessageRequest<Subscription, {id: number}>)
+      return true
     case Subscriptions["hall.unsubscribe"]:
-      return unsubscribe(ws, message)
+      unsubscribe(ws, message)
+      return true
     default: {
-      ws.send(formatError({eid: message.eid, error: Errors.UnknownMessageType}))
+      return false
     }
   }
 }

@@ -23,6 +23,8 @@ class CinemaModel {
       },
     })
 
+    console.log("cinemas", result)
+
     if (!result.success) {
       logger.error({message: "Failed to fetch cinemas", error: result.error})
       return []

@@ -1,14 +1,7 @@
-import {Namespaces} from "@/constants/namespaces"
-
-import type {Namespace} from "@/shared/types"
 import type {MessageRequest} from "./types"
 
 const MAX_MESSAGE_SIZE = 1024 * 1024
 const MAX_DATA_SIZE = 100 * 1024
-
-export function isMessageType(type: string): type is keyof typeof Namespaces {
-  return Object.values(Namespaces).includes(type as Namespace)
-}
 
 export function validateMessage<T extends string, D>(message: unknown): message is MessageRequest<T, D> {
   if (!message || typeof message !== "object") return false

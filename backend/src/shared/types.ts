@@ -1,7 +1,3 @@
-import {Namespaces} from "@/constants/namespaces"
-
-export type Namespace = (typeof Namespaces)[keyof typeof Namespaces]
-
 export type Cinema = {
   id: number
   name: string

@@ -1,7 +1,5 @@
 import winston from "winston"
 
-import type {Namespace} from "./types"
-
 export enum LogMessageType {
   WS_INCOMING = "WS_INCOMING",
   WS_OUTGOING = "WS_OUTGOING",
@@ -13,7 +11,6 @@ export enum LogMessageType {
 
 export type WSLogData = {
   userId?: string
-  namespace?: Namespace
   messageType?: string
   messageId?: string
   length?: number
@@ -63,7 +60,6 @@ function formatWSMessage(params: LogParams) {
     timestamp,
     level?.toUpperCase(),
     type,
-    data.namespace && `ns=${data.namespace}`,
     data.messageType && `type=${data.messageType}`,
     data.messageId && `id=${data.messageId}`,
     data.length && `len=${data.length}b`,
