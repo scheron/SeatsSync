@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {useThemeStore} from "@/stores/theme"
 import {QrcodeCanvas} from "qrcode.vue"
+import {useThemeStore} from "@/stores/theme"
 
 import type {Level} from "qrcode.vue"
 

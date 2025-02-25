@@ -1,7 +1,7 @@
-import {Errors} from "@/constants/errors"
-import {Methods} from "@/constants/messageTypes"
 import {from, map} from "rxjs"
 import {switchMap} from "rxjs/operators"
+import {Errors} from "@/constants/errors"
+import {Methods} from "@/constants/messageTypes"
 
 import type {Method} from "@/constants/messageTypes"
 import type {Observable} from "rxjs"

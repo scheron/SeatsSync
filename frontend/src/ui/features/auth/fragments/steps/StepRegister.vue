@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import BaseButton from "@/ui/common/base/BaseButton.vue"
-import BaseCard from "@/ui/common/base/BaseCard.vue"
-import BaseLink from "@/ui/common/base/BaseLink.vue"
+import {toast} from "@/lib/toasts-lite"
+import {TWO_FA_DOCS} from "@/constants/common"
+import {useHttp} from "@/composables/useHttp"
+import BaseButton from "@/ui/base/BaseButton.vue"
+import BaseCard from "@/ui/base/BaseCard.vue"
+import BaseLink from "@/ui/base/BaseLink.vue"
 import CopyButton from "@/ui/common/CopyButton.vue"
 import PinInput from "@/ui/common/PinInput.vue"
 import QRCode from "@/ui/common/QRCode.vue"
-import {TWO_FA_DOCS} from "@/constants/common"
-import {useHttp} from "@/composables/useHttp"
-import {toast} from "@/shared/lib/toasts-lite"
 import AuthFormLayout from "../AuthFormLayout.vue"
 
 const emit = defineEmits<{submit: [code: string]; back: [void]}>()
@@ -39,16 +39,16 @@ function onBack() {
 <template>
   <AuthFormLayout title="Register" desc="Scan QR code with authenticator application and enter 6 digits 2FA-Key">
     <div class="mb-2 flex flex-col justify-between gap-1">
-      <span class="text-sm text-content/60">Username</span>
-      <span class="truncate text-content">{{ username }}</span>
+      <span class="text-content/60 text-sm">Username</span>
+      <span class="text-content truncate">{{ username }}</span>
     </div>
 
     <div class="mb-2 flex flex-col justify-between gap-2">
-      <span class="text-sm text-content/60">2FA-Key</span>
+      <span class="text-content/60 text-sm">2FA-Key</span>
       <PinInput size="sm" @verify="onSubmit" />
     </div>
 
-    <div class="mb-1 w-full border-b border-primary-300"></div>
+    <div class="border-primary-300 mb-1 w-full border-b"></div>
 
     <div class="flex justify-between text-sm">
       <BaseButton type="button" variant="primary" icon="arrow-left" class="w-1/3 justify-start gap-1" class-icon="size-4" @click="onBack">
@@ -59,11 +59,11 @@ function onBack() {
 
     <template #footer>
       <div class="mt-4">
-        <BaseCard class="size-52 bg-primary-200 p-0" loader-type="spinner">
+        <BaseCard class="bg-primary-200 size-52 p-0" loader-type="spinner">
           <QRCode :code="qrCode" :size="208" />
         </BaseCard>
 
-        <div class="mt-2 flex items-center justify-center text-center text-sm text-content/60">
+        <div class="text-content/60 mt-2 flex items-center justify-center text-center text-sm">
           <CopyButton :text="qrCode.split('secret=')[1]" type="button" class="text-accent"> Copy code to clipboard </CopyButton>
         </div>
       </div>

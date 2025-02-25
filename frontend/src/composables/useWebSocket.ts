@@ -2,9 +2,9 @@ import {ref} from "vue"
 import {tryOnBeforeUnmount} from "@vueuse/core"
 import {BehaviorSubject} from "rxjs"
 import {takeUntil} from "rxjs/operators"
-import {Subscription, wsClient} from "@/modules/ws"
+import {Subscription, wsClient} from "@/api/ws"
 
-import type {ConnectionState, RequestMessage, SubscriptionInstance, SubscriptionOptions} from "@/modules/ws"
+import type {ConnectionState, RequestMessage, SubscriptionInstance, SubscriptionOptions} from "@/api/ws"
 import type {Ref} from "vue"
 
 type UseWebSocketReturn = {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {cn} from "@/shared/utils/tailwindcss"
+import {cn} from "@/utils/tailwindcss"
 
 import type {Seat} from "@/types/cinema"
 

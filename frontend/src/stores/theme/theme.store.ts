@@ -1,6 +1,6 @@
 import {ref, watch} from "vue"
 import {defineStore} from "pinia"
-import {getItem, setItem} from "@/shared/utils/persistStore"
+import {getItem, setItem} from "@/utils/persistStore"
 import {generatePrimaryPalette, updateCssVariables} from "./utils/colorPalette"
 import {changeThemeSafari, setTransition, watchUserSystemTheme} from "./utils/darkMode"
 

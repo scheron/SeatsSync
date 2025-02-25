@@ -1,4 +1,4 @@
-import {hexToHsb, hsbToHsl} from "@/shared/utils/colors"
+import {hexToHsb, hsbToHsl} from "@/utils/colors"
 
 function calcStepValue(start: number, end: number, steps: number) {
   return Math.round(Math.abs(start - end) / steps)

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {computed} from "vue"
 import {Tooltip} from "floating-vue"
-import {cn, defineVariant} from "@/shared/utils/tailwindcss"
+import {cn, defineVariant} from "@/utils/tailwindcss"
 import BaseIcon from "./BaseIcon.vue"
 import BaseSpinner from "./BaseSpinner.vue"
 
-import type {VariantProps} from "@/shared/utils/tailwindcss"
 import type {IconName} from "@/types/icons"
+import type {VariantProps} from "@/utils/tailwindcss"
 import type {Placement} from "floating-vue"
 import type {HTMLAttributes} from "vue"
 

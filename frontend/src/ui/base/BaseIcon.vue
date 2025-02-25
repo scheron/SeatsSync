@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {spriteInfo} from "@/types/icons"
-import {cn} from "@/shared/utils/tailwindcss"
+import {cn} from "@/utils/tailwindcss"
 
 import type {IconName} from "@/types/icons"
 import type {ClassNameValue} from "tailwind-merge"

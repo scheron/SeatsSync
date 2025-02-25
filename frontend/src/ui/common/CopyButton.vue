@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {refAutoReset, useClipboard} from "@vueuse/core"
-import {toast} from "@/shared/lib/toasts-lite"
-import BaseButton from "./base/BaseButton.vue"
+import {toast} from "@/lib/toasts-lite"
+import BaseButton from "@/ui/base/BaseButton.vue"
 
 const props = defineProps<{text: string}>()
 

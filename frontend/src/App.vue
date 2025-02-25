@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import {tryOnBeforeUnmount} from "@vueuse/core"
-import AppLayout from "@/ui/common/AppLayout.vue"
-import BaseCard from "@/ui/common/base/BaseCard.vue"
+import {wsClient} from "@/api/ws"
+import {toast, ToastsLiteProvider} from "@/lib/toasts-lite"
+import BaseCard from "@/ui/base/BaseCard.vue"
+import AppLayout from "@/ui/layouts/AppLayout.vue"
 import Booking from "@/ui/sections/Booking/Booking.vue"
 import Hall from "@/ui/sections/Hall"
 import Header from "@/ui/sections/Header.vue"
-import {wsClient} from "@/modules/ws"
-import {toast, ToastsLiteProvider} from "@/shared/lib/toasts-lite"
 import {useCinemaStore} from "./stores/cinema/cinema.store"
 
 const cinemaStore = useCinemaStore()

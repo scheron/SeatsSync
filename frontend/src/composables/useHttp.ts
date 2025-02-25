@@ -1,5 +1,5 @@
 import {onUnmounted} from "vue"
-import {httpClient} from "@/modules/http"
+import {httpClient} from "@/api/http"
 
 import type {ErrorCode} from "@/constants/errors"
 import type {Method} from "@/constants/messageTypes"

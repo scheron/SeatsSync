@@ -1,6 +1,6 @@
 import {filter, Subject, takeUntil} from "rxjs"
-import {Logger} from "@/shared/lib/logger"
-import {randomUUID} from "@/shared/utils/random"
+import {Logger} from "@/lib/logger"
+import {randomUUID} from "@/utils/random"
 
 import type {RequestMessage, ResponseMessage, ResponseMessageError, ResponseMessageSuccess, SubscriptionOptions} from "./types"
 import type {WebSocketClient} from "./wsClient"

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {computed} from "vue"
-import BaseButton from "@/ui/common/base/BaseButton.vue"
+import {getSeatRowChar} from "@/utils/hall"
 import {useCinemaStore} from "@/stores/cinema/cinema.store"
-import {getSeatRowChar} from "@/shared/utils/hall"
+import BaseButton from "@/ui/base/BaseButton.vue"
 
 const cinemaStore = useCinemaStore()
 const hallName = computed(() => `${cinemaStore.activeHall?.name} ${cinemaStore.cinema?.name}`)

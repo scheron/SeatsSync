@@ -1,5 +1,5 @@
-import type {VariantProps} from "@/shared/utils/tailwindcss"
 import type {IconName} from "@/types/icons"
+import type {VariantProps} from "@/utils/tailwindcss"
 import type {containerVariants, sizesVariants} from "./variants"
 
 export type Props = {

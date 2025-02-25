@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import BaseIcon from "@/ui/common/base/BaseIcon.vue"
+import BaseIcon from "@/ui/base/BaseIcon.vue"
 import {containerVariants, inputVariants, sizesVariants} from "./variants"
 
 import type {Emits, Props} from "./types"
@@ -25,7 +25,7 @@ const sizeClass = sizesVariants(props)
 
 <template>
   <label class="flex w-full flex-col gap-1" :class="$attrs.class">
-    <span v-if="label" class="block text-sm font-medium text-content/60"> {{ label }} </span>
+    <span v-if="label" class="text-content/60 block text-sm font-medium"> {{ label }} </span>
 
     <div :class="[containerClass, sizeClass]">
       <slot name="before">

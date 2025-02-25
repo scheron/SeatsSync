@@ -1,10 +1,10 @@
 <script setup lang="ts">
 // TODO: This is should be as a modal after the user is logged in
 import {ref} from "vue"
-import BaseButton from "@/ui/common/base/BaseButton.vue"
-import BaseInput from "@/ui/common/base/BaseInput"
+import {toast} from "@/lib/toasts-lite"
 import {useHttp} from "@/composables/useHttp"
-import {toast} from "@/shared/lib/toasts-lite"
+import BaseButton from "@/ui/base/BaseButton.vue"
+import BaseInput from "@/ui/base/BaseInput"
 import AuthFormLayout from "./AuthFormLayout.vue"
 
 const emit = defineEmits<{submit: [phrase: string]; skip: [void]}>()

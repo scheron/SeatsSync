@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {getSeatRowChar} from "@/shared/utils/hall"
+import {getSeatRowChar} from "@/utils/hall"
 
 import type {Seat} from "@/types/cinema"
 

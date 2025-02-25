@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import {nextTick, onMounted, ref, watch} from "vue"
-import {defineVariant} from "@/shared/utils/tailwindcss"
+import {defineVariant} from "@/utils/tailwindcss"
 
 const props = withDefaults(
   defineProps<{

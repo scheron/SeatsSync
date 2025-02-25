@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed} from "vue"
-import {cn} from "@/shared/utils/tailwindcss"
+import {cn} from "@/utils/tailwindcss"
 import BaseSpinner from "./BaseSpinner.vue"
 
 import type {HtmlHTMLAttributes} from "vue"
@@ -24,12 +24,12 @@ const classes = computed(() => {
 
 <template>
   <div :class="classes">
-    <div v-if="loading" class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-primary-300">
+    <div v-if="loading" class="bg-primary-300 absolute inset-0 z-10 flex items-center justify-center rounded-lg">
       <div v-if="loaderType === 'skeleton'" class="size-full">
-        <div class="size-full animate-pulse rounded bg-primary-500"></div>
+        <div class="bg-primary-500 size-full animate-pulse rounded"></div>
       </div>
 
-      <BaseSpinner v-else-if="loaderType === 'spinner'" class="size-10 text-primary-900" />
+      <BaseSpinner v-else-if="loaderType === 'spinner'" class="text-primary-900 size-10" />
     </div>
 
     <slot v-else />
