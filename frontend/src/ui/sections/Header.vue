@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import {onMounted, onUnmounted, ref, watch} from "vue"
+import {onMounted, onUnmounted, ref} from "vue"
 import {useHttp} from "@/composables/useHttp"
 import {useWebSocket} from "@/composables/useWebSocket"
 import {useCinemaStore} from "@/stores/cinema/cinema.store"
 import {useThemeStore} from "@/stores/theme"
 import BaseButton from "@/ui/base/BaseButton.vue"
 import BasePopover from "@/ui/base/BasePopover.vue"
+import BaseSelect from "@/ui/base/BaseSelect.vue"
 import Logo from "@/ui/common/Logo.vue"
 import AuthForm from "@/ui/features/auth"
-import BaseSelect from "../base/BaseSelect.vue"
 
 import type {Cinema} from "@/types/cinema"
 
@@ -16,7 +16,6 @@ const cinemaStore = useCinemaStore()
 const themeStore = useThemeStore()
 
 const isUserLoggedIn = ref(false)
-const cinemas = ref<Cinema[]>([])
 
 const {subscribe} = useWebSocket()
 const request = useHttp()
@@ -43,9 +42,15 @@ onMounted(() => {
 
 <template>
   <header class="bg-primary-100 relative flex items-center justify-between rounded-lg p-4 shadow-md">
-    <div>
-      <BaseButton icon="map-pin" class="text-lg"></BaseButton>
-      <!-- <BaseSelect v-model="cinemaStore.activeCinema" option-value="id" option-label="name" :options="cinemas" /> -->
+    <div v-if="cinemaStore.activeCinema" class="flex items-center gap-2">
+      <BaseSelect
+        :model-value="cinemaStore.activeCinema"
+        option-value="id"
+        icon-before="map-pin"
+        option-label="name"
+        :options="cinemaStore.cinemas"
+        @update:model-value="cinemaStore.onSelectCinema"
+      />
     </div>
 
     <Logo class="absolute-center" />

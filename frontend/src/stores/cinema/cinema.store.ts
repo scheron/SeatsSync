@@ -17,14 +17,14 @@ export const useCinemaStore = defineStore("cinema", () => {
   const activeCinema = ref<Cinema | null>(null)
   const activeHall = ref<Hall | null>(null)
   const selectedSeats = ref<Seat[]>([])
-  const selectionLimit = ref<number>(5)
+  const selectionLimit = ref<number>(10)
 
   function onSelectCinema(cinema: Cinema) {
     activeCinema.value = cinema
 
     themeStore.setPrimaryColor(cinema.color)
 
-    onSelectHall(cinema.halls[0])
+    onSelectHall(cinema.halls[0].id)
   }
 
   function onSelectSeat(seat: Seat) {
@@ -35,12 +35,13 @@ export const useCinemaStore = defineStore("cinema", () => {
     selectedSeats.value = []
   }
 
-  function onSelectHall(hall: Hall) {
+  function onSelectHall(hallId: Hall["id"]) {
     unsubscribe(SUB_ID)
 
     subscribe({
-      msg: {type: "hall.subscribe", data: {id: hall.id}, eid: SUB_ID},
+      msg: {type: "hall.subscribe", data: {id: hallId}, eid: SUB_ID},
       onSnapshot: (data) => {
+        console.log("snapshot hall", data)
         activeHall.value = data
       },
       onUpdate: (data) => {

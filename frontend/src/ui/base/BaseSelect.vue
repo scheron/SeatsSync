@@ -1,8 +1,13 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
+import BaseIcon from "@/ui/base/BaseIcon.vue"
+
+import type {IconName} from "@/types/icons"
+
 const props = withDefaults(
   defineProps<{
     modelValue: string | number | Array<any> | Record<string, any>
-    options: Array<any>
+    iconBefore?: IconName
+    options: Array<T>
     optionLabel?: string
     optionValue?: string
     placeholder?: string
@@ -16,7 +21,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  "update:modelValue": [typeof props.modelValue]
+  "update:modelValue": [T]
 }>()
 
 function getValue(option: any): any {
@@ -32,22 +37,28 @@ function onChange(event: Event) {
   const value = selectEl.value
 
   const selectedOption = props.options.find((opt) => String(getValue(opt)) === value)
-  emit("update:modelValue", selectedOption ?? value)
+  emit("update:modelValue", selectedOption ?? (value as T))
 }
 </script>
 
 <template>
-  <select
-    :value="typeof modelValue === 'object' ? getValue(modelValue) : modelValue"
-    @change="onChange"
-    :disabled="isDisabled"
-    class="border-content/20 focus:border-primary w-full rounded-md border bg-transparent px-3 py-1.5 text-base font-medium outline-none disabled:opacity-50"
+  <label
+    class="focus:border-primary relative flex w-full items-center gap-2 rounded-md border-none bg-transparent px-2 outline-none disabled:opacity-50"
   >
-    <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
-    <option v-for="option in options" :key="getValue(option)" :value="getValue(option)">
-      {{ getLabel(option) }}
-    </option>
-  </select>
+    <BaseIcon v-if="iconBefore" :name="iconBefore" class="size-5" />
+
+    <select
+      :value="typeof modelValue === 'object' ? getValue(modelValue) : modelValue"
+      @change="onChange"
+      :disabled="isDisabled"
+      class="outline-none focus:outline-none"
+    >
+      <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
+      <option v-for="option in options" :key="getValue(option)" :value="getValue(option)">
+        {{ getLabel(option) }}
+      </option>
+    </select>
+  </label>
 </template>
 
 <style scoped>
