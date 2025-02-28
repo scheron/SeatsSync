@@ -6,6 +6,34 @@ dotenv.config()
 
 const prisma = new PrismaClient()
 
+async function main() {
+  await clearDatabase()
+
+  await sleepWithMessage("Seeding database...")
+
+  const cinemaRecords = await createCinemas()
+  const seatTypeRecords = await createSeatTypes()
+
+  await createTicketTypes(seatTypeRecords)
+  await createPricing(seatTypeRecords)
+
+  for (const cinema of cinemaRecords) {
+    const hallRecords = await createHalls(cinema)
+
+    for (const hall of hallRecords) {
+      await createSeats(hall, seatTypeRecords)
+    }
+  }
+
+  await sleepWithMessage("Seeding completed!")
+  await prisma.$disconnect()
+}
+
+main().catch((e) => {
+  console.error(e)
+  process.exit(1)
+})
+
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
@@ -31,13 +59,13 @@ async function createCinemas() {
   const createdCinemas = await prisma.cinema.createMany({data: cinemas})
 
   await sleepWithMessage(`Created ${createdCinemas.count} cinemas.`)
+
   return await prisma.cinema.findMany()
 }
 
 async function createHalls(cinema) {
   await sleepWithMessage(`Creating halls for cinema: ${cinema.name}`)
 
-  // Выбираем случайное количество залов (от 2 до 4) для каждого кинотеатра
   const shuffledHalls = halls.sort(() => Math.random() - 0.5).slice(0, getRandomNumber(2, 4))
 
   const hallsToCreate = shuffledHalls.map((hall) => {
@@ -57,6 +85,7 @@ async function createHalls(cinema) {
   const createdHalls = await prisma.hall.createMany({data: hallsToCreate})
 
   await sleepWithMessage(`Created ${createdHalls.length} halls for cinema: ${cinema.name}.`)
+
   return await prisma.hall.findMany({where: {cinema_id: cinema.id}})
 }
 
@@ -66,6 +95,7 @@ async function createSeatTypes() {
   const createdSeatTypes = await prisma.seatType.createMany({data: seatTypes})
 
   await sleepWithMessage(`Created ${createdSeatTypes.count} seat types.`)
+
   return await prisma.seatType.findMany()
 }
 
@@ -97,6 +127,7 @@ async function createPricing(seatTypeRecords) {
   const validPricingData = pricingData.filter((p) => p.ticket_type_id)
 
   await prisma.pricing.createMany({data: validPricingData})
+
   await sleepWithMessage("Pricing data seeded.")
 }
 
@@ -119,38 +150,11 @@ async function createSeats(hall, seatTypeRecords) {
   }))
 
   await prisma.seat.createMany({data: seats})
+
   await sleepWithMessage(`Added ${seats.length} seats to hall: ${hall.name}`)
 }
 
-async function main() {
-  await clearDatabase()
-
-  await sleepWithMessage("Seeding database...")
-
-  const cinemaRecords = await createCinemas()
-  const seatTypeRecords = await createSeatTypes()
-
-  await createTicketTypes(seatTypeRecords)
-  await createPricing(seatTypeRecords)
-
-  for (const cinema of cinemaRecords) {
-    const hallRecords = await createHalls(cinema)
-
-    for (const hall of hallRecords) {
-      await createSeats(hall, seatTypeRecords)
-    }
-  }
-
-  await sleepWithMessage("Seeding completed!")
-  await prisma.$disconnect()
-}
-
-main().catch((e) => {
-  console.error(e)
-  process.exit(1)
-})
-
-function sleepWithMessage(message, ms = 100) {
+function sleepWithMessage(message, ms = 50) {
   console.log(message)
   return new Promise((resolve) => setTimeout(resolve, ms))
 }

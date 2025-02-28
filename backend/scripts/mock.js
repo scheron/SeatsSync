@@ -1,5 +1,4 @@
 export const seatLayouts = [
-  // Layout 1: 4 rows of 4 seats
   [
     {row: 1, place: 1, x: 0, y: 0, width: 30, height: 30, rotation: 0},
     {row: 1, place: 2, x: 40, y: 0, width: 30, height: 30, rotation: 0},
@@ -18,7 +17,7 @@ export const seatLayouts = [
     {row: 4, place: 3, x: 80, y: 120, width: 30, height: 30, rotation: 0},
     {row: 4, place: 4, x: 120, y: 120, width: 30, height: 30, rotation: 0},
   ],
-  // Layout 2: 6 rows of 5 seats
+
   [
     {row: 1, place: 1, x: 0, y: 0, width: 30, height: 30, rotation: 0},
     {row: 1, place: 2, x: 40, y: 0, width: 30, height: 30, rotation: 0},
@@ -50,7 +49,6 @@ export const seatLayouts = [
     {row: 6, place: 3, x: 190, y: 200, width: 65, height: 30, rotation: 0},
   ],
 
-  // Layout 3: Arena 5 rows, seats go in a semicircle
   [
     {row: 1, place: 1, x: 90, y: 0, width: 30, height: 30, rotation: 0},
     {row: 1, place: 2, x: 130, y: 0, width: 30, height: 30, rotation: 0},
@@ -78,7 +76,6 @@ export const seatLayouts = [
     {row: 5, place: 6, x: 260, y: 160, width: 40, height: 30, rotation: 0},
   ],
 
-  // Layout 4: Small hall 2 rows of 4 seats
   [
     {row: 1, place: 1, x: 0, y: 0, width: 30, height: 30, rotation: 0},
     {row: 1, place: 2, x: 50, y: 0, width: 30, height: 30, rotation: 0},
