@@ -7,6 +7,8 @@ import {formatError} from "@/shared/messages/formatters"
 import {MessageRequest} from "@/shared/messages/types"
 import {Hall} from "@/shared/types"
 
+import type {PartialDeep} from "type-fest"
+
 const subscription = publisher.register({
   name: "hall.subscribe",
 
@@ -33,6 +35,6 @@ export function unsubscribe(ws: IWebSocketClient, message?: MessageRequest<Subsc
   else subscription.unsubscribe(ws.context.id, message.data.sub_eid)
 }
 
-export function notifyUpdate(hall: Hall) {
+export function notifyUpdate(hall: PartialDeep<Hall>) {
   subscription.notify("update", hall)
 }

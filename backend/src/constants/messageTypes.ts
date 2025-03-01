@@ -9,6 +9,7 @@ export const Methods = {
 
   "cinema.get_cinemas": "cinema.get_cinemas",
   "seat-type.get_seat_types": "seat-type.get_seat_types",
+  "booking.purchase": "booking.purchase",
 } as const
 
 export const Subscriptions = {

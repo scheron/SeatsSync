@@ -1,5 +1,6 @@
 import {createServer} from "http"
 import {resolveMessage} from "./core/ws/resolveMessages"
+import * as bookingMethods from "./methods/booking"
 import * as cinemaMethods from "./methods/cinema"
 import * as seatTypeMethods from "./methods/seat-types"
 import * as hallSubscription from "./subscriptions/hall"
@@ -37,8 +38,9 @@ const ws = new WebSocketClient(server, {
   onMessage: resolveMessage([
     cinemaMethods.onMessage,
     seatTypeMethods.onMessage,
+    bookingMethods.onMessage,
     userSubscription.onMessage,
-    hallSubscription.onMessage, //
+    hallSubscription.onMessage,
   ]),
   onDisconnect: (ws) => {
     userSubscription.unsubscribe(ws)
