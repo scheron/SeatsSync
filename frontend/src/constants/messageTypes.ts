@@ -12,6 +12,7 @@ export const Methods = {
   "user.logout": "user/logout",
 
   "cinema.get_cinemas": "cinema.get_cinemas",
+  "booking.purchase": "booking.purchase",
 } as const
 
 export type Method = keyof typeof Methods

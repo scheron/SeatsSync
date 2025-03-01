@@ -44,6 +44,7 @@
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+  min-width: 80vw;
 }
 
 .toasts-lite__top-right {

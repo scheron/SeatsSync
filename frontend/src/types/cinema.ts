@@ -23,6 +23,10 @@ export type Hall = {
 }
 
 export type SeatStatus = "free" | "occupied"
+export type SeatType = {
+  name: string
+  price: number
+}
 
 export type Seat = {
   id: number
@@ -36,4 +40,5 @@ export type Seat = {
   height: number
   rotation: number
   status: SeatStatus
+  seat_type: SeatType
 }

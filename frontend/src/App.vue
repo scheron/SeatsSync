@@ -6,6 +6,7 @@ import BaseCard from "@/ui/base/BaseCard.vue"
 import AppLayout from "@/ui/layouts/AppLayout.vue"
 import Booking from "@/ui/sections/Booking/Booking.vue"
 import Hall from "@/ui/sections/Hall"
+import HallList from "@/ui/sections/HallList/HallList.vue"
 import Header from "@/ui/sections/Header.vue"
 import {useCinemaStore} from "./stores/cinema/cinema.store"
 
@@ -42,7 +43,9 @@ tryOnBeforeUnmount(() => wsClient.destroy())
     </template>
 
     <template #right>
-      <BaseCard class=""> Logs </BaseCard>
+      <BaseCard class="">
+        <HallList />
+      </BaseCard>
     </template>
   </AppLayout>
 

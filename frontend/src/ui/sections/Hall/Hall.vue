@@ -20,8 +20,8 @@ const hoveredSeat = ref<{row: number; place: number} | null>(null)
 const selectedSeatsIds = computed(() => new Set(cinemaStore.selectedSeats.map((seat) => seat.id)))
 const availableHalls = computed(() => cinemaStore.activeCinema?.halls || [])
 
-function onHallChange(hall: Hall) {
-  cinemaStore.onSelectHall(hall.id)
+function onHallChange(hall: Partial<Hall>) {
+  if (hall.id) cinemaStore.onSelectHall(hall.id)
 }
 
 function onRowMouseMove(e: MouseEvent) {
@@ -70,7 +70,7 @@ function onSeatClick(e: MouseEvent) {
         :options="availableHalls"
         option-label="name"
         option-value="id"
-        class="text-lg"
+        class="justify-center text-lg"
       />
     </div>
 

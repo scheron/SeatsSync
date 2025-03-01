@@ -4,10 +4,10 @@
  */
 
 /* prettier-ignore */
-export type IconName = "arrow-left" | "clipboard-doc-check" | "clipboard-doc" | "close" | "default" | "enter" | "eye-slash" | "eye" | "filter" | "key" | "lock-closed" | "lock-open" | "logout" | "map-pin" | "moon" | "register" | "screen" | "search" | "seat" | "spinner" | "sun";
+export type IconName = "arrow-left" | "chevron-down" | "clipboard-doc-check" | "clipboard-doc" | "close" | "default" | "enter" | "eye-slash" | "eye" | "filter" | "key" | "lock-closed" | "lock-open" | "logout" | "map-pin" | "moon" | "register" | "screen" | "search" | "seat" | "spinner" | "sun";
 
 /* prettier-ignore */
 export const spriteInfo = {
-  filename: "icons.45f511ca.svg",
-  hash: "45f511ca"
+  filename: "icons.114d83a5.svg",
+  hash: "114d83a5"
 } as const;
