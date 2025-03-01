@@ -40,4 +40,4 @@ class CinemaModel {
   }
 }
 
-export const cinemaModel = new CinemaModel(new DB("cinema"))
+export const cinemaModel = new CinemaModel(new DB("Cinema"))

@@ -5,22 +5,17 @@ export type Seat = {
   row: number
   place: number
   status: SeatStatus
-  seat_type_id: number
+  seat_type: {
+    name: string
+    price: number
+  }
 }
 
-export type SeatStatusResponse = {
-  hallId: number
+export type Hall = {
+  id: number
+  name: string
+  created_at: string
+  rows: number
+  places: number
   seats: Seat[]
-}
-
-export type ReservationRequest = {
-  hallId: number
-  seatIds: number[]
-  sessionId: string
-}
-
-export type ReservationResponse = {
-  success: boolean
-  message?: string
-  reservationId?: string
 }

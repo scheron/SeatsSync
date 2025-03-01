@@ -8,6 +8,7 @@ export const Methods = {
   "user.save_recovery_phrase": "/user/save_recovery_phrase",
 
   "cinema.get_cinemas": "cinema.get_cinemas",
+  "seat-type.get_seat_types": "seat-type.get_seat_types",
 } as const
 
 export const Subscriptions = {

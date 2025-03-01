@@ -105,5 +105,12 @@ export const halls = [
   {name: "Outer wall"},
   {name: "Sci-Fi Hall"},
 ]
-export const seatTypes = [{name: "Standard"}, {name: "VIP"}]
-export const ticketTypes = [{name: "Adult"}, {name: "Child"}, {name: "VIP Adult"}, {name: "VIP Child"}]
+
+export const seatTypes = [
+  {name: "Standard", price: 10.0},
+  {name: "VIP", price: 25.0},
+  {name: "Premium", price: 18.0},
+  {name: "Comfort", price: 15.0},
+  {name: "Luxury", price: 30.0},
+  {name: "Couples", price: 22.0},
+]

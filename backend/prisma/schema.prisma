@@ -59,29 +59,8 @@ model Seat {
 model SeatType {
   id              Int          @id @default(autoincrement())
   name            String
-  price           Pricing[]
-  ticket_types    TicketType[] 
-  seats           Seat[]
-}
-
-model TicketType {
-  id              Int      @id @default(autoincrement())              
-  name            String
-  price           Pricing[]
-  seat_type       SeatType @relation(fields: [seat_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  seat_type_id    Int
-}
-
-model Pricing {
-  id              Int         @id @default(autoincrement())
-  seat_type_id    Int         
-  ticket_type_id  Int       
   price           Float       
-
-  seat_type       SeatType    @relation(fields: [seat_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  ticket_type     TicketType  @relation(fields: [ticket_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-
-  @@unique([seat_type_id, ticket_type_id]) 
+  seats           Seat[]
 }
 
 model BookingSeat {

@@ -1,5 +1,5 @@
 import {PrismaClient} from "@prisma/client"
-import {cinemas, halls, seatLayouts, seatTypes, ticketTypes} from "./mock.js"
+import {cinemas, halls, seatLayouts, seatTypes} from "./mock.js"
 import dotenv from "dotenv"
 
 dotenv.config()
@@ -13,9 +13,6 @@ async function main() {
 
   const cinemaRecords = await createCinemas()
   const seatTypeRecords = await createSeatTypes()
-
-  await createTicketTypes(seatTypeRecords)
-  await createPricing(seatTypeRecords)
 
   for (const cinema of cinemaRecords) {
     const hallRecords = await createHalls(cinema)
@@ -35,7 +32,7 @@ main().catch((e) => {
 })
 
 function getRandomNumber(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min
+  return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 async function clearDatabase() {
@@ -43,8 +40,6 @@ async function clearDatabase() {
 
   await prisma.bookingSeat.deleteMany()
   await prisma.booking.deleteMany()
-  await prisma.pricing.deleteMany()
-  await prisma.ticketType.deleteMany()
   await prisma.seat.deleteMany()
   await prisma.seatType.deleteMany()
   await prisma.hall.deleteMany()
@@ -99,46 +94,69 @@ async function createSeatTypes() {
   return await prisma.seatType.findMany()
 }
 
-async function createTicketTypes(seatTypeRecords) {
-  await sleepWithMessage("Creating ticket types...")
-
-  const ticketTypesWithSeatIds = ticketTypes.map((type, index) => ({
-    name: type.name,
-    seat_type_id: seatTypeRecords[index % seatTypeRecords.length].id,
-  }))
-
-  const createdTicketTypes = await prisma.ticketType.createMany({data: ticketTypesWithSeatIds})
-
-  await sleepWithMessage(`Created ${createdTicketTypes.count} ticket types.`)
-}
-
-async function createPricing(seatTypeRecords) {
-  await sleepWithMessage("Creating pricing...")
-
-  const ticketTypes = await prisma.ticketType.findMany()
-
-  const pricingData = [
-    {seat_type_id: seatTypeRecords[0].id, ticket_type_id: ticketTypes.find((tt) => tt.name === "Adult")?.id, price: getRandomNumber(8, 15)},
-    {seat_type_id: seatTypeRecords[0].id, ticket_type_id: ticketTypes.find((tt) => tt.name === "Child")?.id, price: getRandomNumber(5, 10)},
-    {seat_type_id: seatTypeRecords[1].id, ticket_type_id: ticketTypes.find((tt) => tt.name === "VIP Adult")?.id, price: getRandomNumber(20, 30)},
-    {seat_type_id: seatTypeRecords[1].id, ticket_type_id: ticketTypes.find((tt) => tt.name === "VIP Child")?.id, price: getRandomNumber(15, 25)},
-  ]
-
-  const validPricingData = pricingData.filter((p) => p.ticket_type_id)
-
-  await prisma.pricing.createMany({data: validPricingData})
-
-  await sleepWithMessage("Pricing data seeded.")
-}
-
 async function createSeats(hall, seatTypeRecords) {
   await sleepWithMessage(`Creating seats for hall: ${hall.name}`)
 
   const seatMock = seatLayouts[Math.floor(Math.random() * seatLayouts.length)]
 
+  let seatDistribution
+  const randomPattern = Math.floor(Math.random() * 5)
+
+  switch (randomPattern) {
+    case 0:
+      seatDistribution = () => seatTypeRecords[Math.floor(Math.random() * seatTypeRecords.length)].id
+      break
+    case 1:
+      seatDistribution = (seat) => {
+        const totalRows = Math.max(...seatMock.map((s) => s.row))
+        const frontRows = Math.ceil(totalRows * 0.3)
+        const middleRows = Math.ceil(totalRows * 0.5)
+
+        if (seat.row <= frontRows) return seatTypeRecords.find((st) => st.name === "Premium" || st.name === "VIP").id
+        if (seat.row <= middleRows) return seatTypeRecords.find((st) => st.name === "Comfort").id
+        return seatTypeRecords.find((st) => st.name === "Standard").id
+      }
+      break
+    case 2:
+      seatDistribution = (seat) => {
+        const totalPlaces = Math.max(...seatMock.map((s) => s.place))
+        const centerStart = Math.floor(totalPlaces * 0.3)
+        const centerEnd = Math.floor(totalPlaces * 0.7)
+
+        if (seat.place > centerStart && seat.place < centerEnd) {
+          return seatTypeRecords.find((st) => st.name === "Premium" || st.name === "Luxury").id
+        }
+        return seatTypeRecords.find((st) => st.name === "Standard" || st.name === "Comfort").id
+      }
+      break
+    case 3:
+      seatDistribution = (seat) => {
+        if (seat.row % 2 === 0 && seat.place % 3 === 0) {
+          return seatTypeRecords.find((st) => st.name === "VIP" || st.name === "Luxury").id
+        }
+        if (seat.row === Math.max(...seatMock.map((s) => s.row))) {
+          return seatTypeRecords.find((st) => st.name === "Couples").id
+        }
+        return seatTypeRecords.find((st) => st.name === "Standard" || st.name === "Comfort").id
+      }
+      break
+    case 4:
+      seatDistribution = (seat) => {
+        if (seat.row === Math.max(...seatMock.map((s) => s.row))) {
+          return seatTypeRecords.find((st) => st.name === "Couples").id
+        }
+
+        const rand = Math.random()
+        if (rand < 0.7) return seatTypeRecords.find((st) => st.name === "Standard").id
+        if (rand < 0.9) return seatTypeRecords.find((st) => st.name === "Comfort").id
+        return seatTypeRecords.find((st) => st.name === "VIP" || st.name === "Premium").id
+      }
+      break
+  }
+
   const seats = seatMock.map((seat) => ({
     hall_id: hall.id,
-    seat_type_id: seat.row > 4 ? seatTypeRecords[1].id : seatTypeRecords[0].id,
+    seat_type_id: seatDistribution(seat),
     row: seat.row,
     place: seat.place,
     x: seat.x,

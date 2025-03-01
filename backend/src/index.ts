@@ -1,6 +1,7 @@
 import {createServer} from "http"
 import {resolveMessage} from "./core/ws/resolveMessages"
 import * as cinemaMethods from "./methods/cinema"
+import * as seatTypeMethods from "./methods/seat-types"
 import * as hallSubscription from "./subscriptions/hall"
 import * as userSubscription from "./subscriptions/user"
 import cookieParser from "cookie-parser"
@@ -35,6 +36,7 @@ const ws = new WebSocketClient(server, {
   enablePingPong: true,
   onMessage: resolveMessage([
     cinemaMethods.onMessage,
+    seatTypeMethods.onMessage,
     userSubscription.onMessage,
     hallSubscription.onMessage, //
   ]),

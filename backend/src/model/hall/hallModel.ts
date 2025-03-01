@@ -1,3 +1,4 @@
+import {Hall} from "./types"
 import {DB} from "@/core/db"
 import {logger} from "@/shared/logger"
 
@@ -19,7 +20,12 @@ class HallModel {
             width: true,
             height: true,
             rotation: true,
-            seat_type_id: true,
+            seat_type: {
+              select: {
+                name: true,
+                price: true,
+              },
+            },
           },
         },
       },
@@ -30,8 +36,8 @@ class HallModel {
       return null
     }
 
-    return result.data
+    return result.data as Hall
   }
 }
 
-export const hallModel = new HallModel(new DB("hall"))
+export const hallModel = new HallModel(new DB("Hall"))
