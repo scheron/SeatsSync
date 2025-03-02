@@ -1,76 +1,52 @@
 <script setup lang="ts">
-import {onMounted, onUnmounted, ref} from "vue"
+import {onUnmounted, ref} from "vue"
 import {useHttp} from "@/composables/useHttp"
 import {useWebSocket} from "@/composables/useWebSocket"
-import {useCinemaStore} from "@/stores/cinema/cinema.store"
 import {useThemeStore} from "@/stores/theme"
 import BaseButton from "@/ui/base/BaseButton.vue"
 import BasePopover from "@/ui/base/BasePopover.vue"
-import BaseSelect from "@/ui/base/BaseSelect.vue"
 import Logo from "@/ui/common/Logo.vue"
 import AuthForm from "@/ui/features/auth"
 
-import type {Cinema} from "@/types/cinema"
-
-const cinemaStore = useCinemaStore()
 const themeStore = useThemeStore()
 
 const isUserLoggedIn = ref(false)
 
-const {subscribe} = useWebSocket()
+const {subscribe, cleanup} = useWebSocket()
 const request = useHttp()
 
-const cleanUserSub = subscribe<{status: "user" | "guest"}, null>({
+subscribe<{status: "user" | "guest"}, null>({
   msg: {type: "user.subscribe", data: null, eid: "1234"},
   onResult: ({data}) => {
     isUserLoggedIn.value = data.status === "user"
   },
 })
 
-onUnmounted(() => {
-  cleanUserSub()
-})
+onUnmounted(cleanup)
 
 function onLogout() {
   request({method: "POST", url: "user.logout"})
 }
-
-onMounted(() => {
-  cinemaStore.fetchCinemas()
-})
 </script>
 
 <template>
   <header class="bg-primary-100 relative flex items-center justify-between rounded-lg p-4 shadow-md">
-    <div v-if="cinemaStore.activeCinema" class="flex items-center gap-2">
-      <BaseSelect
-        :model-value="cinemaStore.activeCinema"
-        option-value="id"
-        icon-before="map-pin"
-        option-label="name"
-        :options="cinemaStore.cinemas"
-        @update:model-value="cinemaStore.onSelectCinema"
-      />
-    </div>
+    <BaseButton :icon="themeStore.isDarkMode ? 'sun' : 'moon'" @click="themeStore.toggleDarkMode" />
 
     <Logo class="absolute-center" />
 
-    <div class="flex items-center gap-2">
-      <BaseButton :icon="themeStore.isDarkMode ? 'sun' : 'moon'" @click="themeStore.toggleDarkMode" />
+    <BaseButton v-if="isUserLoggedIn" icon="enter" class="flex-row-reverse text-lg" @click="onLogout">Logout</BaseButton>
 
-      <BaseButton v-if="isUserLoggedIn" icon="enter" class="flex-row-reverse text-lg" @click="onLogout">Logout</BaseButton>
+    <BasePopover v-else>
+      <template #trigger="{show}">
+        <BaseButton icon="enter" class="flex-row-reverse text-lg" @click="show">Login</BaseButton>
+      </template>
 
-      <BasePopover v-else>
-        <template #trigger="{show}">
-          <BaseButton icon="enter" class="flex-row-reverse text-lg" @click="show">Login</BaseButton>
-        </template>
-
-        <template #content>
-          <div class="border-primary-400 bg-primary-100 flex flex-col rounded-lg border shadow-lg">
-            <AuthForm />
-          </div>
-        </template>
-      </BasePopover>
-    </div>
+      <template #content>
+        <div class="border-primary-400 bg-primary-100 flex flex-col rounded-lg border shadow-lg">
+          <AuthForm />
+        </div>
+      </template>
+    </BasePopover>
   </header>
 </template>

@@ -1,4 +1,5 @@
 export const Subscriptions = {
+  "cinemas.subscribe": "cinemas.subscribe",
   "user.subscribe": "user.subscribe",
   "hall.subscribe": "hall.subscribe",
 } as const

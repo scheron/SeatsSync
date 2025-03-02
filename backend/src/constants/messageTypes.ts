@@ -13,6 +13,9 @@ export const Methods = {
 } as const
 
 export const Subscriptions = {
+  "cinemas.subscribe": "cinemas.subscribe",
+  "cinemas.unsubscribe": "cinemas.unsubscribe",
+
   "user.subscribe": "user.subscribe",
   "user.unsubscribe": "user.unsubscribe",
 

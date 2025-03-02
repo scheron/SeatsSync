@@ -16,14 +16,12 @@ class CinemaModel {
             rows: true,
             places: true,
             seats: {
-              select: {id: true},
+              select: {id: true, status: true},
             },
           },
         },
       },
     })
-
-    console.log("cinemas", result)
 
     if (!result.success) {
       logger.error({message: "Failed to fetch cinemas", error: result.error})
@@ -34,7 +32,7 @@ class CinemaModel {
       ...cinema,
       halls: cinema.halls.map(({seats, ...hall}) => ({
         ...hall,
-        seats_count: seats.length,
+        seats_count: seats.reduce((acc, seat) => ({...acc, [seat.status]: (acc[seat.status] || 0) + 1}), {free: 0, occupied: 0}),
       })),
     }))
   }

@@ -40,13 +40,13 @@
   transform: translate(-50%, -50%);
 }
 
-@utility absolute-center-x {
+@utility absolute-x-center {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
 }
 
-@utility absolute-center-y {
+@utility absolute-y-center {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);

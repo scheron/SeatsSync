@@ -14,6 +14,7 @@ export type Seat = {
 export type Hall = {
   id: number
   name: string
+  cinema_id: number
   created_at: string
   rows: number
   places: number

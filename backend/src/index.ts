@@ -3,6 +3,7 @@ import {resolveMessage} from "./core/ws/resolveMessages"
 import * as bookingMethods from "./methods/booking"
 import * as cinemaMethods from "./methods/cinema"
 import * as seatTypeMethods from "./methods/seat-types"
+import * as cinemaSubscription from "./subscriptions/cinema"
 import * as hallSubscription from "./subscriptions/hall"
 import * as userSubscription from "./subscriptions/user"
 import cookieParser from "cookie-parser"
@@ -39,12 +40,14 @@ const ws = new WebSocketClient(server, {
     cinemaMethods.onMessage,
     seatTypeMethods.onMessage,
     bookingMethods.onMessage,
+    cinemaSubscription.onMessage,
     userSubscription.onMessage,
     hallSubscription.onMessage,
   ]),
   onDisconnect: (ws) => {
     userSubscription.unsubscribe(ws)
     hallSubscription.unsubscribe(ws)
+    cinemaSubscription.unsubscribe(ws)
   },
 })
 

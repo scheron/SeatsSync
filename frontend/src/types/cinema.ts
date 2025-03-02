@@ -8,7 +8,10 @@ export type Cinema = {
     name: string
     rows: number
     places: number
-    seats_count: number
+    seats_count: {
+      free: number
+      occupied: number
+    }
   }[]
 }
 

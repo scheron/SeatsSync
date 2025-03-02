@@ -5,16 +5,19 @@ withDefaults(
   defineProps<{
     items: T[]
     itemId: (item: T, index: number) => string | number
-    defaultOpened: (item: T, index: number) => boolean
+    defaultOpened?: ((item: T, index: number) => boolean) | boolean
+    activeItemId?: string | number
     group?: string
+    closeActive?: boolean
     multiple?: boolean
   }>(),
   {
     items: () => [],
     itemId: (_, index: number) => index.toString(),
-    opened: () => false,
+    defaultOpened: false,
     group: "default",
     multiple: false,
+    closeActive: true,
   },
 )
 </script>
@@ -23,9 +26,11 @@ withDefaults(
   <BaseAccordionItem
     v-for="(item, index) in items"
     :key="itemId(item, index)"
-    :opened="defaultOpened(item, index)"
+    :opened="typeof defaultOpened === 'function' ? defaultOpened(item, index) : defaultOpened"
+    :active="activeItemId === itemId(item, index)"
     :group="group"
     :multiple="multiple"
+    :close-active="closeActive"
   >
     <template #header>
       <slot name="header" :item="item" />

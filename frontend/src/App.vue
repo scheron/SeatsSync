@@ -3,14 +3,13 @@ import {tryOnBeforeUnmount} from "@vueuse/core"
 import {wsClient} from "@/api/ws"
 import {toast, ToastsLiteProvider} from "@/lib/toasts-lite"
 import BaseCard from "@/ui/base/BaseCard.vue"
+import AuthForm from "@/ui/features/auth"
 import AppLayout from "@/ui/layouts/AppLayout.vue"
 import Booking from "@/ui/sections/Booking/Booking.vue"
 import Hall from "@/ui/sections/Hall"
 import HallList from "@/ui/sections/HallList/HallList.vue"
 import Header from "@/ui/sections/Header.vue"
-import {useCinemaStore} from "./stores/cinema/cinema.store"
 
-const cinemaStore = useCinemaStore()
 let toastID: string
 
 wsClient.connectionState.subscribe(({state, prevState}) => {
@@ -43,7 +42,7 @@ tryOnBeforeUnmount(() => wsClient.destroy())
     </template>
 
     <template #right>
-      <BaseCard class="">
+      <BaseCard class="flex-1">
         <HallList />
       </BaseCard>
     </template>

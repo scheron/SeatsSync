@@ -1,3 +1,5 @@
+import {SeatStatus} from "../../shared/types"
+
 // TODO: Replace all entities types with prisma types
 export type CinemaDB = {
   id: number
@@ -14,6 +16,7 @@ export type HallDB = {
   places: number
   seats: {
     id: number
+    status: SeatStatus
   }[]
 }
 
@@ -30,5 +33,5 @@ export type Hall = {
   name: string
   rows: number
   places: number
-  seats_count: number
+  seats_count: Record<SeatStatus, number>
 }

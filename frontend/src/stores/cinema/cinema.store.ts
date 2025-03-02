@@ -1,13 +1,15 @@
 import {ref} from "vue"
-import {tryOnBeforeUnmount} from "@vueuse/core"
+import {tryOnBeforeUnmount, tryOnMounted} from "@vueuse/core"
 import {defineStore} from "pinia"
+import {deepMerge} from "@/utils/merges"
 import {useWebSocket} from "@/composables/useWebSocket"
 import {useThemeStore} from "@/stores/theme"
 
 import type {Cinema, Hall, Seat} from "@/types/cinema"
 
 export const useCinemaStore = defineStore("cinema", () => {
-  const SUB_ID = "hall-sub"
+  const HALL_SUB_ID = "hall-sub"
+  const CINEMAS_SUB_ID = "cinemas-sub"
 
   const themeStore = useThemeStore()
   const {subscribe, unsubscribe, cleanup} = useWebSocket()
@@ -23,8 +25,6 @@ export const useCinemaStore = defineStore("cinema", () => {
     activeCinema.value = cinema
 
     themeStore.setPrimaryColor(cinema.color)
-
-    onSelectHall(cinema.halls[0].id)
   }
 
   function onSelectSeat(seat: Seat) {
@@ -36,37 +36,45 @@ export const useCinemaStore = defineStore("cinema", () => {
   }
 
   function onSelectHall(hallId: Hall["id"]) {
-    unsubscribe(SUB_ID)
+    if (activeHall.value?.id === hallId) return
+    selectedSeats.value = []
+
+    unsubscribe(HALL_SUB_ID)
 
     subscribe({
-      msg: {type: "hall.subscribe", data: {id: hallId}, eid: SUB_ID},
+      msg: {type: "hall.subscribe", data: {id: hallId}, eid: HALL_SUB_ID},
       onSnapshot: (data) => {
-        console.log("snapshot hall", data)
         activeHall.value = data
       },
       onUpdate: (data) => {
-        // activeHall.value = data
-        console.log("update hall", data)
+        activeHall.value = deepMerge(activeHall.value, data)
       },
     })
   }
 
   function onClearActiveHall() {
     activeHall.value = null
+    selectedSeats.value = []
   }
 
-  function fetchCinemas() {
-    subscribe<Cinema[], null>({
-      msg: {type: "cinema.get_cinemas", data: null},
-      isOnce: true,
-      onResult: ({data}) => {
-        console.log("cinemas", data)
+  function onSubscribeCinemas() {
+    unsubscribe(CINEMAS_SUB_ID)
 
+    subscribe({
+      msg: {type: "cinemas.subscribe", data: null, eid: CINEMAS_SUB_ID},
+      onSnapshot: (data) => {
         cinemas.value = data
-        onSelectCinema(data[0])
+      },
+      onUpdate: (data) => {
+        cinemas.value.forEach((cinema) => {
+          if (cinema.id !== data.id) return
+          cinema = deepMerge(cinema, data)
+        })
       },
     })
   }
+
+  tryOnMounted(onSubscribeCinemas)
 
   tryOnBeforeUnmount(() => cleanup())
 
@@ -82,7 +90,5 @@ export const useCinemaStore = defineStore("cinema", () => {
     onClearSelectedSeats,
     onSelectHall,
     onClearActiveHall,
-
-    fetchCinemas,
   }
 })

@@ -1,12 +1,15 @@
 import {Hall} from "@prisma/client"
 import {PartialDeep} from "type-fest"
 import {IWebSocketClient} from "@/core/ws"
+import {notifyUpdate as notifyCinemaUpdate} from "@/subscriptions/cinema"
 import {notifyUpdate as notifyHallUpdate} from "@/subscriptions/hall"
 import * as BookingService from "@/services/booking"
+import {Cinema} from "@/model/cinema"
 import {Errors} from "@/constants/errors"
 import {Methods} from "@/constants/messageTypes"
 import {formatError, formatSuccess} from "@/shared/messages/formatters"
 import {MessageRequest} from "@/shared/messages/types"
+import {SeatStatus} from "@/shared/types"
 
 export type PurchaseTicketsRequest = MessageRequest<(typeof Methods)["booking.purchase"], {hall_id: number; seat_ids: number[]}>
 
@@ -27,10 +30,25 @@ export async function purchaseTickets(ws: IWebSocketClient, message: PurchaseTic
     })
     if (!result) return ws.send(formatError({eid: message.eid, error: Errors.InternalServerError}))
 
-    notifyHallUpdate({
-      id: hall_id,
-      seats: seat_ids.map((id) => ({id, status: "occupied"})),
-    } as PartialDeep<Hall>)
+    const hallUpdate = {id: hall_id, seats: seat_ids.map((id) => ({id, status: "occupied"}))}
+
+    notifyHallUpdate(hallUpdate as PartialDeep<Hall>)
+
+    notifyCinemaUpdate({
+      id: result.cinema_id,
+      halls: [
+        {
+          id: hall_id,
+          seats_count: result.seats.reduce(
+            (acc, seat) => {
+              acc[seat.status] = (acc[seat.status] || 0) + 1
+              return acc
+            },
+            {free: 0, occupied: 0} as Record<SeatStatus, number>,
+          ),
+        },
+      ],
+    } as PartialDeep<Cinema>)
 
     ws.send(formatSuccess({eid: message.eid, data: result, status: "success"}))
   } catch (error) {

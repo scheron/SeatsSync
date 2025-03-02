@@ -4,12 +4,13 @@ import {toast} from "@/lib/toasts-lite"
 import {calculateHallSize, createSeatsSchema} from "@/utils/hall"
 import {useCinemaStore} from "@/stores/cinema/cinema.store"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
-import BaseSelect from "@/ui/base/BaseSelect.vue"
+import BaseTransitions from "@/ui/base/BaseTransitions.vue"
 import RowName from "./RowName.vue"
 import SeatPlace from "./SeatPlace.vue"
 import SeatsSchemeInfo from "./SeatsSchemeInfo.vue"
+import SeatTooltip from "./SeatTooltip.vue"
 
-import type {Hall} from "@/types/cinema"
+import type {Seat} from "@/types/cinema"
 
 const cinemaStore = useCinemaStore()
 
@@ -17,27 +18,68 @@ const seatsSchema = computed(() => createSeatsSchema(cinemaStore.activeHall?.sea
 const sizes = computed(() => calculateHallSize(cinemaStore.activeHall?.seats ?? []))
 
 const hoveredSeat = ref<{row: number; place: number} | null>(null)
+const hoveredSeatFull = ref<Seat | null>(null)
 const selectedSeatsIds = computed(() => new Set(cinemaStore.selectedSeats.map((seat) => seat.id)))
-const availableHalls = computed(() => cinemaStore.activeCinema?.halls || [])
 
-function onHallChange(hall: Partial<Hall>) {
-  if (hall.id) cinemaStore.onSelectHall(hall.id)
+const showSeatTooltip = ref(false)
+
+const mousePosition = ref({x: 0, y: 0})
+const tooltipElement = ref<HTMLElement | null>(null)
+
+function onContainerMouseMove(e: MouseEvent) {
+  mousePosition.value = {x: e.clientX, y: e.clientY}
+
+  updateTooltipPosition()
 }
 
+function updateTooltipPosition() {
+  if (showSeatTooltip.value && tooltipElement.value) {
+    const tooltip = tooltipElement.value
+
+    tooltip.style.position = "fixed"
+    tooltip.style.left = `${mousePosition.value.x}px`
+    tooltip.style.top = `${mousePosition.value.y - 20}px`
+    tooltip.style.transform = "translate(-50%, -100%)"
+    tooltip.style.zIndex = "9999"
+  }
+}
+
+let timeout: NodeJS.Timeout | null = null
+
 function onRowMouseMove(e: MouseEvent) {
+  if (timeout) clearTimeout(timeout)
   const seatEl = (e.target as HTMLElement).closest("[data-seat]") as HTMLElement
 
   if (seatEl) {
     const seatRow = Number(seatEl.dataset.row)
     const seatPlace = Number(seatEl.dataset.place)
+    const seatId = Number(seatEl.dataset.seatId)
+
     hoveredSeat.value = {row: seatRow, place: seatPlace}
+
+    const seat = cinemaStore.activeHall?.seats.find((s) => s.id === seatId)
+    if (seat) {
+      hoveredSeatFull.value = seat
+      showSeatTooltip.value = true
+
+      requestAnimationFrame(updateTooltipPosition)
+    }
   } else {
-    hoveredSeat.value = null
+    timeout = setTimeout(() => {
+      hoveredSeat.value = null
+      hoveredSeatFull.value = null
+      showSeatTooltip.value = false
+    }, 200)
   }
 }
 
 function onRowMouseLeave() {
-  hoveredSeat.value = null
+  if (timeout) clearTimeout(timeout)
+  timeout = setTimeout(() => {
+    hoveredSeat.value = null
+    hoveredSeatFull.value = null
+    showSeatTooltip.value = false
+  }, 200)
 }
 
 function onSeatClick(e: MouseEvent) {
@@ -62,23 +104,16 @@ function onSeatClick(e: MouseEvent) {
 </script>
 
 <template>
-  <div v-if="cinemaStore.activeHall" class="flex size-full flex-col items-center gap-2">
-    <div class="flex w-1/2 items-center justify-center">
-      <BaseSelect
-        :model-value="cinemaStore.activeHall"
-        @update:model-value="onHallChange"
-        :options="availableHalls"
-        option-label="name"
-        option-value="id"
-        class="justify-center text-lg"
-      />
-    </div>
-
+  <div v-if="cinemaStore.activeHall" class="flex size-full flex-col items-center justify-center gap-2">
     <div class="flex size-full items-center justify-center rounded-md p-2">
       <div class="flex w-full flex-col items-center justify-center perspective-distant">
         <BaseIcon name="screen" class="text-content/60 h-20 w-full" />
 
-        <div class="relative mt-4 gap-1" :style="{width: sizes.width + 'px', height: sizes.height + 'px'}">
+        <div
+          class="relative mt-4 cursor-default gap-1"
+          :style="{width: sizes.width + 'px', height: sizes.height + 'px'}"
+          @mousemove="onContainerMouseMove"
+        >
           <div
             v-for="row in seatsSchema"
             :key="row[0].row"
@@ -106,6 +141,19 @@ function onSeatClick(e: MouseEvent) {
     </div>
 
     <SeatsSchemeInfo />
+
+    <Teleport to="body">
+      <BaseTransitions name="fade">
+        <div
+          v-if="showSeatTooltip && hoveredSeatFull"
+          ref="tooltipElement"
+          class="pointer-events-none fixed"
+          style="z-index: 9999; will-change: transform"
+        >
+          <SeatTooltip :seat="hoveredSeatFull" />
+        </div>
+      </BaseTransitions>
+    </Teleport>
   </div>
-  <div v-else class="flex size-full items-center justify-center">Please choose a cinema first</div>
+  <div v-else class="flex size-full items-center justify-center">Please choose a hall first</div>
 </template>
