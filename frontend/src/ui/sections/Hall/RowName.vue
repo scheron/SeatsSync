@@ -13,7 +13,7 @@ defineProps<{
 
 <template>
   <span
-    class="absolute text-sm transition-colors duration-200"
+    class="absolute text-sm transition-colors duration-200 select-none"
     :class="{
       'text-content font-bold': hoveredSeat?.row === row[0].row,
       'text-content/50': hoveredSeat?.row !== row[0].row,

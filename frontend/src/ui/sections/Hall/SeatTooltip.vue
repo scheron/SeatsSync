@@ -32,14 +32,14 @@ const statusClass = computed(() => {
 </script>
 
 <template>
-  <div v-if="seat" class="bg-primary-100 dark:bg-primary-800 border-primary-300 dark:border-primary-700 min-w-40 rounded-md border p-3 shadow-md">
+  <div v-if="seat" class="bg-primary-200/10 border-primary-300 min-w-40 rounded-md border p-3 shadow-md">
     <div class="flex flex-col gap-1.5">
       <div class="border-content/60 flex items-center justify-between gap-2 border-b pb-2">
         <span class="text-content/70 flex items-center justify-center gap-1">
           <BaseIcon name="chair" class="size-4" />
           Seat
         </span>
-        <h3 class="text-primary-700 font-bold">{{ seatInfo?.row }}{{ seatInfo?.place }}</h3>
+        <h3 class="text-accent font-bold">{{ seatInfo?.row }}{{ seatInfo?.place }}</h3>
       </div>
 
       <div class="flex items-center justify-between gap-4 text-sm">

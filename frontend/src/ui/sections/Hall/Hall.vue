@@ -147,7 +147,7 @@ function onSeatClick(e: MouseEvent) {
         <div
           v-if="showSeatTooltip && hoveredSeatFull"
           ref="tooltipElement"
-          class="pointer-events-none fixed"
+          class="fixed; pointer-events-none backdrop-blur-md"
           style="z-index: 9999; will-change: transform"
         >
           <SeatTooltip :seat="hoveredSeatFull" />
