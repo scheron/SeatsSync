@@ -17,10 +17,11 @@ import type {IWebSocketClient, WebSocketCallbacks, WebSocketClientOptions} from 
 const MAX_MESSAGE_SIZE = 1024 * 1024
 
 export class WebSocketClient {
-  id: string
+  private id: string
   private ws: WebSocketServer
   private callbacks: WebSocketCallbacks
   private heartbeat?: Heartbeat
+  private clients: Map<string, IWebSocketClient> = new Map()
 
   constructor(server: Server, options: WebSocketClientOptions) {
     this.ws = new WebSocketServer({server, maxPayload: MAX_MESSAGE_SIZE, clientTracking: true})
@@ -47,41 +48,65 @@ export class WebSocketClient {
     this.setupServerHandlers()
   }
 
-  private setupServerHandlers() {
-    this.ws.on("connection", (ws: IWebSocketClient, req: IncomingMessage) => {
-      this.handleConnection(ws, req)
-    })
+  public getConnectedClientCount(): number {
+    return this.clients.size
+  }
 
-    this.ws.on("error", (error: Error) => {
-      this.handleServerError(error)
-    })
+  public getConnectedClientIds(): string[] {
+    return Array.from(this.clients.keys())
   }
 
   public async send(message: string, filter?: (ws: WebSocket) => boolean) {
     this.ws.clients.forEach((ws) => {
-      if (filter && !filter(ws)) return
-      if (ws.readyState !== WebSocket.OPEN) return
+      if (filter && !filter(ws)) return false
+      if (ws.readyState !== WebSocket.OPEN) return false
 
       try {
         logger.info("", {type: LogMessageType.WS_OUTGOING, data: {messageLength: message.length}})
 
         ws.send(message)
         this.callbacks.onSend?.(ws, message)
+        return true
       } catch (error) {
         logger.error("Failed to send WS message", {error: error instanceof Error ? error.message : String(error)})
 
         this.handleError(ws, error as Error)
+        return false
       }
     })
   }
 
+  public async sendToClient(clientId: string, message: string): Promise<boolean> {
+    const client = this.clients.get(clientId)
+    if (!client || client.readyState !== WebSocket.OPEN) return false
+
+    try {
+      logger.info("", {type: LogMessageType.WS_OUTGOING, data: {clientId, messageLength: message.length}})
+
+      client.send(message)
+      this.callbacks.onSend?.(client, message)
+      return true
+    } catch (error) {
+      logger.error("Failed to send WS message to client", {clientId, error: error instanceof Error ? error.message : String(error)})
+
+      this.handleError(client, error as Error)
+      return false
+    }
+  }
+
   public destroy() {
     this.heartbeat?.stop()
+    this.clients.clear()
 
     this.ws.close(() => {
       this.callbacks.onDestroy?.()
       logger.info("", {type: LogMessageType.WS_DISCONNECT})
     })
+  }
+
+  private setupServerHandlers() {
+    this.ws.on("connection", (ws: IWebSocketClient, req: IncomingMessage) => this.handleConnection(ws, req))
+    this.ws.on("error", (error: Error) => this.handleServerError(error))
   }
 
   private validateToken(token: string | null): boolean {
@@ -96,11 +121,24 @@ export class WebSocketClient {
   }
 
   private handleConnection(ws: IWebSocketClient, req: IncomingMessage) {
-    logger.info("", {type: LogMessageType.WS_CONNECT, data: {}})
+    const clientId = nanoid()
+    ws.id = clientId
+
+    logger.info("", {
+      type: LogMessageType.WS_CONNECT,
+      data: {clientId, serverInstanceId: this.id},
+    })
 
     const token = this.extractToken(req)
 
-    ws.context = {id: this.id, token, username: () => decodeJWT(token)?.username ?? null, isAuthenticated: () => this.validateToken(token)}
+    ws.context = {
+      id: clientId,
+      token,
+      username: () => decodeJWT(token)?.username ?? null,
+      isAuthenticated: () => this.validateToken(token),
+    }
+
+    this.clients.set(clientId, ws)
 
     this.setupClientHandlers(ws)
     this.callbacks.onConnect?.(ws)
@@ -137,6 +175,7 @@ export class WebSocketClient {
       logger.info("", {
         type: LogMessageType.WS_INCOMING,
         data: {
+          clientId: ws.id,
           messageId: parsedMessage.eid,
           messageType: parsedMessage.type,
           payload: JSON.stringify(parsedMessage?.data).slice(0, 200),
@@ -156,7 +195,8 @@ export class WebSocketClient {
   }
 
   private handleError(ws: WebSocket, error: Error) {
-    logger.error("", {type: LogMessageType.WS_ERROR, data: {error: error.message}})
+    const clientId = (ws as IWebSocketClient).id
+    logger.error("", {type: LogMessageType.WS_ERROR, data: {clientId, error: error.message}})
 
     if (error instanceof ApiError) {
       ws.send(formatError({error: error.code}))
@@ -167,11 +207,14 @@ export class WebSocketClient {
   }
 
   private handleServerError(error: Error) {
-    logger.error("", {type: LogMessageType.WS_SERVER_ERROR, data: {error: error.message}})
+    logger.error("", {type: LogMessageType.WS_SERVER_ERROR, data: {serverInstanceId: this.id, error: error.message}})
   }
 
   private handleDisconnect(ws: IWebSocketClient) {
-    logger.info("", {type: LogMessageType.WS_DISCONNECT, data: {}})
+    const clientId = ws.id
+    logger.info("", {type: LogMessageType.WS_DISCONNECT, data: {clientId}})
+
+    if (clientId) this.clients.delete(clientId)
 
     this.heartbeat?.removeClient(ws)
     this.callbacks.onDisconnect?.(ws)
