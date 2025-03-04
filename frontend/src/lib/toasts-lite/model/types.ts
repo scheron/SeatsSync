@@ -1,4 +1,4 @@
-export type ToastType = "success" | "loading" | "error"
+export type ToastType = "success" | "loading" | "error" | "warn"
 export type ToastPosition = "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right" | "middle-center"
 
 export type ToastProps = {

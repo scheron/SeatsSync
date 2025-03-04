@@ -44,10 +44,8 @@ defineExpose({
 </script>
 <template>
   <div class="toasts-lite__toast" :style="`--toast-duration: ${duration}s;`" @click.prevent="close">
-    <div v-if="['success', 'error', 'loading'].includes(type)" class="toasts-lite__icon">
-      <div v-if="type === 'success'" class="toasts-lite__success" />
-      <div v-else-if="type === 'error'" class="toasts-lite__error" />
-      <div v-else-if="type === 'loading'" class="toasts-lite__loading" />
+    <div v-if="['success', 'error', 'loading', 'warn'].includes(type)" class="toasts-lite__icon">
+      <div :class="`toasts-lite__${type}`" />
     </div>
     <div class="toasts-lite__content">
       <div class="toasts-lite__content-message">{{ message }}</div>

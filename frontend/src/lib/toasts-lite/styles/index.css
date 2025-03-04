@@ -21,10 +21,11 @@
   background: var(--toasts-lite-bg);
   color: var(--toasts-lite-text);
   border: 1px solid var(--toasts-lite-border);
-  box-shadow: var(--toasts-lite-shadow) 0px 4px 12px;
-  min-width: 200px;
+  box-shadow: var(--toasts-lite-shadow) 0px 0px 10px;
+  backdrop-filter: blur(10px);
+  min-width: 100px;
   max-width: 1200px;
-  padding: 14px 8px;
+  padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
   pointer-events: auto;
@@ -77,63 +78,86 @@
 /* ICONS */
 .toasts-lite__success {
   width: 20px;
-  opacity: 0;
   height: 20px;
   border-radius: 10px;
-  background: var(--toasts-lite-success);
+  background-color: var(--toasts-lite-success);
   position: relative;
-  transform: rotate(45deg);
-  animation: successCircleAnimation 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  animation-delay: 100ms;
-}
-
-.toasts-lite__success:after {
-  content: "";
-  box-sizing: border-box;
-  animation: Animation 0.2s ease-out forwards;
   opacity: 0;
-  animation-delay: 200ms;
-  position: absolute;
-  border-right: 2px solid;
-  border-bottom: 2px solid;
-  border-color: var(--toasts-lite-bg);
-  bottom: 6px;
-  left: 6px;
-  height: 10px;
-  width: 6px;
+  animation: scaleAnimation 0.3s cubic-bezier(0.75, 0.885, 0.32, 1.275) forwards;
+  animation-delay: 100ms;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="black"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>');
+    -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="black"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" /></svg>');
+
+    background-color: var(--toasts-lite-icon-color);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 }
 
 .toasts-lite__error {
   width: 20px;
-  opacity: 0;
   height: 20px;
   border-radius: 10px;
-  background: var(--toasts-lite-error);
+  background-color: var(--toasts-lite-error);
   position: relative;
-  transform: rotate(45deg);
-  animation: errorCircleAnimation 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  animation-delay: 100ms;
-}
-
-.toasts-lite__error:after,
-.toasts-lite__error:before {
-  content: "";
-  animation: errorFirstLineAnimation 0.15s ease-out forwards;
-  animation-delay: 150ms;
-  position: absolute;
-  border-radius: 3px;
   opacity: 0;
-  background: var(--toasts-lite-bg);
-  bottom: 9px;
-  left: 4px;
-  height: 2px;
-  width: 12px;
+  animation: scaleAnimation 0.3s cubic-bezier(0.75, 0.885, 0.32, 1.275) forwards;
+  animation-delay: 100ms;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="black"><path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6l-12 12" /></svg>');
+    -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="4" stroke="black"><path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6l-12 12" /></svg>');
+
+    background-color: var(--toasts-lite-icon-color);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 }
 
-.toasts-lite__error:before {
-  animation: errorSecondLineAnimation 0.15s ease-out forwards;
-  animation-delay: 180ms;
-  transform: rotate(90deg);
+.toasts-lite__warn {
+  width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  background-color: var(--toasts-lite-warn);
+  position: relative;
+  opacity: 0;
+  animation: scaleAnimation 0.3s cubic-bezier(0.75, 0.885, 0.32, 1.275) forwards;
+  animation-delay: 100ms;
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="5" stroke="currentColor" ><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg>');
+    -webkit-mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="5" stroke="currentColor" ><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg>');
+
+    background-color: var(--toasts-lite-icon-color);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 }
 
 .toasts-lite__loading {

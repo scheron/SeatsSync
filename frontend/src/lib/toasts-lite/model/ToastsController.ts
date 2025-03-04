@@ -92,6 +92,16 @@ class ToastsController implements Toast {
   }
 
   /**
+   * Add a warning toast
+   * @param message - The message to display in the toast
+   * @param options - The options for the toast
+   * @returns The id of the toast
+   */
+  public warn(message: string, options?: Omit<ToastSimpleOptions, "type">) {
+    return this.addOrUpdate({...options, message, type: "warn"})
+  }
+
+  /**
    * Add a loading toast
    * @param message - The message to display in the toast
    * @param options - The options for the toast
