@@ -36,10 +36,10 @@ function onSubmit(code: string) {
     <div class="border-primary-300 mb-1 w-full border-b"></div>
 
     <div class="flex justify-between text-sm">
-      <BaseButton type="button" variant="primary" icon="arrow-left" class="w-1/3 justify-start gap-1" class-icon="size-4" @click="emit('back')">
+      <BaseButton type="button" variant="primary" icon="arrow-left" class="w-1/3 justify-start gap-1 p-1" class-icon="size-4" @click="emit('back')">
         Back
       </BaseButton>
-      <BaseButton type="button" icon="key" class-icon="size-4" class="gap-1" @click="emit('recoveryAccess')">Problem with key? </BaseButton>
+      <BaseButton type="button" icon="key" class-icon="size-4" class="gap-1 p-1" @click="emit('recoveryAccess')">Problem with key? </BaseButton>
     </div>
   </AuthFormLayout>
 </template>

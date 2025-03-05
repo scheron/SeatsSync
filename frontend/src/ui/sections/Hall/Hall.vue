@@ -3,6 +3,7 @@ import {computed, ref} from "vue"
 import {toast} from "@/lib/toasts-lite"
 import {calculateHallSize, createSeatsSchema} from "@/utils/hall"
 import {useCinemaStore} from "@/stores/cinema/cinema.store"
+import BaseButton from "@/ui/base/BaseButton.vue"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 import BaseTransitions from "@/ui/base/BaseTransitions.vue"
 import RowName from "./RowName.vue"
@@ -105,7 +106,12 @@ function onSeatClick(e: MouseEvent) {
 
 <template>
   <div v-if="cinemaStore.activeHall" class="flex size-full flex-col items-center justify-center gap-2">
-    <div class="flex size-full items-center justify-center rounded-md p-2">
+    <div class="flex w-full flex-col items-center gap-1">
+      <span class="text-content/60">{{ cinemaStore.activeCinema?.name }}</span>
+      <span class="text-content">{{ cinemaStore.activeHall?.name }}</span>
+    </div>
+
+    <div class="flex size-full flex-col items-center justify-center gap-6">
       <div class="flex w-full flex-col items-center justify-center perspective-distant">
         <BaseIcon name="screen" class="text-content/60 h-20 w-full" />
 
@@ -138,9 +144,14 @@ function onSeatClick(e: MouseEvent) {
           </template>
         </div>
       </div>
+
+      <SeatsSchemeInfo />
     </div>
 
-    <SeatsSchemeInfo />
+    <div class="flex gap-4">
+      <BaseButton variant="outline" size="sm">Cancel</BaseButton>
+      <BaseButton variant="accent" size="sm">Purchase</BaseButton>
+    </div>
 
     <Teleport to="body">
       <BaseTransitions name="fade">

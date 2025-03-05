@@ -16,7 +16,7 @@ const {subscribe, cleanup} = useWebSocket()
 const request = useHttp()
 
 subscribe<{status: "user" | "guest"}, null>({
-  msg: {type: "user.subscribe", data: null, eid: "1234"},
+  msg: {type: "user.subscribe", data: null},
   onResult: ({data}) => {
     isUserLoggedIn.value = data.status === "user"
   },

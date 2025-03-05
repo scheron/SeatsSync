@@ -38,6 +38,6 @@ function onSubmit() {
 <template>
   <AuthFormLayout desc="For enter to the system, you need the authenticator application" @submit="onSubmit">
     <BaseInput v-model="username" label="Username" size="sm" placeholder="Enter username" />
-    <BaseButton variant="accent" type="submit" class="mt-2">Enter</BaseButton>
+    <BaseButton variant="accent" type="submit" class="mt-2 w-full">Enter</BaseButton>
   </AuthFormLayout>
 </template>

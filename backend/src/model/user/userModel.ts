@@ -32,7 +32,10 @@ class UserModel {
   }
 
   async get(username: User["username"]): Promise<User | null> {
-    const result = await this.db.findOne<User>({username})
+    const result = await this.db.findOne<User>({
+      where: {username},
+    })
+    console.log(result)
 
     return result.success ? result.data! : null
   }

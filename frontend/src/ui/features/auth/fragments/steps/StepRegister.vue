@@ -51,7 +51,7 @@ function onBack() {
     <div class="border-primary-300 mb-1 w-full border-b"></div>
 
     <div class="flex justify-between text-sm">
-      <BaseButton type="button" variant="primary" icon="arrow-left" class="w-1/3 justify-start gap-1" class-icon="size-4" @click="onBack">
+      <BaseButton type="button" variant="primary" icon="arrow-left" class="w-1/3 justify-start gap-1 p-1" class-icon="size-4" @click="onBack">
         Back
       </BaseButton>
       <BaseLink icon="key" class-icon="size-4" class="gap-1" :to="TWO_FA_DOCS"> What is 2FA-Key?</BaseLink>

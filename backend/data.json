@@ -1,279 +1,238 @@
 {
   "cinemas": [
     {
-      "id": 4,
+      "id": 7,
       "name": "Grand Cinema",
       "color": "#FF4500",
-      "created_at": "2025-03-01T15:48:23.482Z"
+      "created_at": "2025-03-04T14:10:27.232Z"
     },
     {
-      "id": 5,
+      "id": 8,
       "name": "City Center Multiplex",
       "color": "#1E90FF",
-      "created_at": "2025-03-01T15:48:23.482Z"
+      "created_at": "2025-03-04T14:10:27.232Z"
     },
     {
-      "id": 6,
+      "id": 9,
       "name": "Downtown Filmhouse",
       "color": "#32CD32",
-      "created_at": "2025-03-01T15:48:23.482Z"
+      "created_at": "2025-03-04T14:10:27.232Z"
     }
   ],
   "halls": [
     {
-      "id": 8,
-      "created_at": "2025-03-01T15:48:23.715Z",
-      "cinema_id": 4,
-      "name": "Auditorium",
-      "rows": 6,
-      "places": 5
-    },
-    {
-      "id": 9,
-      "created_at": "2025-03-01T15:48:23.715Z",
-      "cinema_id": 4,
-      "name": "VIP Lounge",
-      "rows": 5,
-      "places": 6
-    },
-    {
-      "id": 10,
-      "created_at": "2025-03-01T15:48:23.715Z",
-      "cinema_id": 4,
-      "name": "Outer wall",
+      "id": 20,
+      "created_at": "2025-03-04T14:10:27.471Z",
+      "cinema_id": 7,
+      "name": "Main Hall",
       "rows": 4,
       "places": 4
     },
     {
-      "id": 11,
-      "created_at": "2025-03-01T15:48:24.175Z",
-      "cinema_id": 5,
-      "name": "Ocean View",
-      "rows": 2,
-      "places": 8
-    },
-    {
-      "id": 12,
-      "created_at": "2025-03-01T15:48:24.175Z",
-      "cinema_id": 5,
-      "name": "VIP Lounge",
+      "id": 21,
+      "created_at": "2025-03-04T14:10:27.471Z",
+      "cinema_id": 7,
+      "name": "Outer wall",
       "rows": 6,
       "places": 5
     },
     {
-      "id": 13,
-      "created_at": "2025-03-01T15:48:24.175Z",
-      "cinema_id": 5,
-      "name": "Main Hall",
-      "rows": 2,
-      "places": 8
+      "id": 22,
+      "created_at": "2025-03-04T14:10:27.806Z",
+      "cinema_id": 8,
+      "name": "Auditorium",
+      "rows": 6,
+      "places": 5
     },
     {
-      "id": 14,
-      "created_at": "2025-03-01T15:48:24.618Z",
-      "cinema_id": 6,
-      "name": "Auditorium",
+      "id": 23,
+      "created_at": "2025-03-04T14:10:27.806Z",
+      "cinema_id": 8,
+      "name": "Ocean View",
       "rows": 5,
       "places": 6
     },
     {
-      "id": 15,
-      "created_at": "2025-03-01T15:48:24.618Z",
-      "cinema_id": 6,
+      "id": 24,
+      "created_at": "2025-03-04T14:10:27.806Z",
+      "cinema_id": 8,
+      "name": "VIP Lounge",
+      "rows": 2,
+      "places": 8
+    },
+    {
+      "id": 25,
+      "created_at": "2025-03-04T14:10:27.806Z",
+      "cinema_id": 8,
+      "name": "Outer wall",
+      "rows": 2,
+      "places": 8
+    },
+    {
+      "id": 26,
+      "created_at": "2025-03-04T14:10:28.362Z",
+      "cinema_id": 9,
       "name": "Ocean View",
       "rows": 6,
       "places": 5
     },
     {
-      "id": 16,
-      "created_at": "2025-03-01T15:48:24.618Z",
-      "cinema_id": 6,
-      "name": "Sci-Fi Hall",
-      "rows": 6,
-      "places": 5
+      "id": 27,
+      "created_at": "2025-03-04T14:10:28.362Z",
+      "cinema_id": 9,
+      "name": "VIP Lounge",
+      "rows": 4,
+      "places": 4
     }
   ],
   "seatTypes": [
     {
-      "id": 7,
+      "id": 13,
       "name": "Standard",
       "price": 10
     },
     {
-      "id": 8,
+      "id": 14,
       "name": "VIP",
       "price": 25
     },
     {
-      "id": 9,
+      "id": 15,
       "name": "Premium",
       "price": 18
     },
     {
-      "id": 10,
+      "id": 16,
       "name": "Comfort",
       "price": 15
     },
     {
-      "id": 11,
+      "id": 17,
       "name": "Luxury",
       "price": 30
     },
     {
-      "id": 12,
+      "id": 18,
       "name": "Couples",
       "price": 22
     }
   ],
   "seats": [
     {
-      "id": 103,
-      "hall_id": 8,
-      "seat_type_id": 7,
+      "id": 346,
+      "hall_id": 20,
+      "seat_type_id": 14,
       "row": 1,
       "place": 1,
-      "x": 0,
+      "x": 90,
       "y": 0,
       "width": 30,
       "height": 30,
       "rotation": 0,
       "status": "free",
       "seat_type": {
-        "id": 7,
-        "name": "Standard",
-        "price": 10
+        "id": 14,
+        "name": "VIP",
+        "price": 25
       },
       "hall": {
-        "id": 8,
-        "name": "Auditorium",
-        "cinema_id": 4
+        "id": 20,
+        "name": "Main Hall",
+        "cinema_id": 7
       }
     },
     {
-      "id": 104,
-      "hall_id": 8,
-      "seat_type_id": 11,
+      "id": 347,
+      "hall_id": 20,
+      "seat_type_id": 14,
       "row": 1,
       "place": 2,
-      "x": 40,
+      "x": 130,
       "y": 0,
       "width": 30,
       "height": 30,
       "rotation": 0,
       "status": "free",
       "seat_type": {
-        "id": 11,
-        "name": "Luxury",
-        "price": 30
+        "id": 14,
+        "name": "VIP",
+        "price": 25
       },
       "hall": {
-        "id": 8,
-        "name": "Auditorium",
-        "cinema_id": 4
+        "id": 20,
+        "name": "Main Hall",
+        "cinema_id": 7
       }
     },
     {
-      "id": 105,
-      "hall_id": 8,
-      "seat_type_id": 9,
+      "id": 348,
+      "hall_id": 20,
+      "seat_type_id": 14,
       "row": 1,
       "place": 3,
-      "x": 80,
+      "x": 170,
       "y": 0,
       "width": 30,
       "height": 30,
       "rotation": 0,
       "status": "free",
       "seat_type": {
-        "id": 9,
-        "name": "Premium",
-        "price": 18
+        "id": 14,
+        "name": "VIP",
+        "price": 25
       },
       "hall": {
-        "id": 8,
-        "name": "Auditorium",
-        "cinema_id": 4
+        "id": 20,
+        "name": "Main Hall",
+        "cinema_id": 7
       }
     },
     {
-      "id": 106,
-      "hall_id": 8,
-      "seat_type_id": 9,
-      "row": 1,
-      "place": 4,
-      "x": 120,
-      "y": 0,
+      "id": 349,
+      "hall_id": 20,
+      "seat_type_id": 14,
+      "row": 2,
+      "place": 1,
+      "x": 70,
+      "y": 40,
       "width": 30,
       "height": 30,
       "rotation": 0,
       "status": "free",
       "seat_type": {
-        "id": 9,
-        "name": "Premium",
-        "price": 18
+        "id": 14,
+        "name": "VIP",
+        "price": 25
       },
       "hall": {
-        "id": 8,
-        "name": "Auditorium",
-        "cinema_id": 4
+        "id": 20,
+        "name": "Main Hall",
+        "cinema_id": 7
       }
     },
     {
-      "id": 107,
-      "hall_id": 8,
-      "seat_type_id": 9,
-      "row": 1,
-      "place": 5,
-      "x": 160,
-      "y": 0,
+      "id": 350,
+      "hall_id": 20,
+      "seat_type_id": 14,
+      "row": 2,
+      "place": 2,
+      "x": 110,
+      "y": 40,
       "width": 30,
       "height": 30,
       "rotation": 0,
       "status": "free",
       "seat_type": {
-        "id": 9,
-        "name": "Premium",
-        "price": 18
+        "id": 14,
+        "name": "VIP",
+        "price": 25
       },
       "hall": {
-        "id": 8,
-        "name": "Auditorium",
-        "cinema_id": 4
+        "id": 20,
+        "name": "Main Hall",
+        "cinema_id": 7
       }
     }
   ],
-  "bookings": [
-    {
-      "id": 1,
-      "hall_id": 8,
-      "session_id": "Fg7-EDQb1heBt7SszoavS",
-      "status": "completed",
-      "created_at": "2025-03-01T16:57:02.433Z",
-      "expires_at": null,
-      "hall": {
-        "id": 8,
-        "name": "Auditorium",
-        "cinema_id": 4
-      },
-      "booking_seats": [
-        {
-          "seat_id": 127,
-          "booking_id": 1,
-          "seat": {
-            "id": 127,
-            "hall_id": 8,
-            "seat_type_id": 9,
-            "row": 5,
-            "place": 5,
-            "x": 160,
-            "y": 160,
-            "width": 30,
-            "height": 30,
-            "rotation": 0,
-            "status": "occupied"
-          }
-        }
-      ]
-    }
-  ]
+  "bookings": []
 }
