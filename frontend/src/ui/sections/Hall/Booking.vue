@@ -52,9 +52,9 @@ function onPurchase() {
       </div>
 
       <div class="flex w-full items-center justify-between gap-2">
-        <BaseButton variant="outline" icon="minus-circle" class="w-1/3" size="sm" @click="cinemaStore.onClearSelectedSeats" :disabled="isDisabled"
-          >Cancel</BaseButton
-        >
+        <BaseButton variant="outline" icon="minus-circle" class="w-1/3" size="sm" @click="cinemaStore.onClearSelectedSeats" :disabled="isDisabled">
+          Cancel
+        </BaseButton>
         <BaseButton variant="accent" icon="ticket" class="w-2/3" size="sm" @click="onPurchase" :disabled="isDisabled">Purchase</BaseButton>
       </div>
     </div>
