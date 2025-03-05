@@ -3,9 +3,9 @@ import {computed, ref} from "vue"
 import {toast} from "@/lib/toasts-lite"
 import {calculateHallSize, createSeatsSchema} from "@/utils/hall"
 import {useCinemaStore} from "@/stores/cinema/cinema.store"
-import BaseButton from "@/ui/base/BaseButton.vue"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 import BaseTransitions from "@/ui/base/BaseTransitions.vue"
+import Booking from "./Booking.vue"
 import RowName from "./RowName.vue"
 import SeatPlace from "./SeatPlace.vue"
 import SeatsSchemeInfo from "./SeatsSchemeInfo.vue"
@@ -148,10 +148,7 @@ function onSeatClick(e: MouseEvent) {
       <SeatsSchemeInfo />
     </div>
 
-    <div class="flex gap-4">
-      <BaseButton variant="outline" size="sm">Cancel</BaseButton>
-      <BaseButton variant="accent" size="sm">Purchase</BaseButton>
-    </div>
+    <Booking class="w-1/2" />
 
     <Teleport to="body">
       <BaseTransitions name="fade">

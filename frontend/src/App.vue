@@ -3,9 +3,7 @@ import {tryOnBeforeUnmount} from "@vueuse/core"
 import {wsClient} from "@/api/ws"
 import {toast, ToastsLiteProvider} from "@/lib/toasts-lite"
 import BaseCard from "@/ui/base/BaseCard.vue"
-import AuthForm from "@/ui/features/auth"
 import AppLayout from "@/ui/layouts/AppLayout.vue"
-import Booking from "@/ui/sections/Booking/Booking.vue"
 import Hall from "@/ui/sections/Hall"
 import HallList from "@/ui/sections/HallList/HallList.vue"
 import Header from "@/ui/sections/Header.vue"
@@ -35,9 +33,6 @@ tryOnBeforeUnmount(() => wsClient.destroy())
     <template #left>
       <BaseCard class="flex-1">
         <Hall />
-      </BaseCard>
-      <BaseCard class="h-1/4">
-        <Booking />
       </BaseCard>
     </template>
 

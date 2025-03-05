@@ -17,11 +17,11 @@ const buttonVariant = defineVariant({
     variant: {
       primary: "hover:text-content text-content/60  focus-visible:border-accent",
       accent:
-        "flex justify-center rounded-lg bg-primary-800  text-white hover:bg-accent active:bg-primary-800  focus-visible:bg-accent focus-visible:border-tint",
+        "flex justify-center  bg-primary-800 disabled:bg-primary-800/50  text-white hover:bg-accent active:bg-primary-800  focus-visible:bg-accent focus-visible:border-tint",
       outline:
-        "flex justify-center rounded-lg border border-primary-800/70 text-primary-800/70 hover:border-primary-800 hover:text-primary-800 active:border-primary-800  focus-visible:border-primary-800 focus-visible:text-primary-800",
+        "flex justify-center  border border-primary-800/70 text-primary-800/70 hover:border-primary-800 hover:text-primary-800 active:border-primary-800  focus-visible:border-primary-800 focus-visible:text-primary-800",
     },
-    disabled: "disabled:opacity-50 border-none  hover:text-content/80 text-content/80",
+    disabled: "disabled:opacity-50 border-none hover:text-content/80 text-content/80",
     loading: "",
   },
   defaultVariants: {
@@ -33,9 +33,9 @@ const buttonSize = defineVariant({
   baseClass: "size-auto",
   variants: {
     size: {
-      sm: "px-5 py-2 text-sm",
-      md: "px-5 py-2",
-      lg: "px-7 py-3 text-lg",
+      sm: "px-4 py-1 text-sm rounded-md",
+      md: "px-5 py-2 rounded-md",
+      lg: "px-7 py-3 text-lg rounded-lg",
     },
   },
   defaultVariants: {
