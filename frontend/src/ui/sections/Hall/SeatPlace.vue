@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {cn} from "@/utils/tailwindcss"
+import BaseIcon from "@/ui/base/BaseIcon.vue"
 
 import type {Seat} from "@/types/cinema"
 
@@ -42,5 +43,6 @@ defineProps<{
     >
       {{ seat.place }}
     </span>
+    <BaseIcon v-if="seat.status === 'occupied'" name="close" class="text-primary-700 size-4" />
   </div>
 </template>

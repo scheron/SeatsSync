@@ -4,11 +4,12 @@ import {getSeatRowChar} from "@/utils/hall"
 import {useWebSocket} from "@/composables/useWebSocket"
 import {useCinemaStore} from "@/stores/cinema/cinema.store"
 import BaseButton from "@/ui/base/BaseButton.vue"
-import BaseTransitions from "@/ui/base/BaseTransitions.vue"
+import {useBookingTicketsModal} from "@/ui/modals/BookingTickets"
 
 const cinemaStore = useCinemaStore()
 
 const {subscribe} = useWebSocket()
+const {open} = useBookingTicketsModal()
 
 const isBooking = ref(false)
 const seats = computed(() => cinemaStore.selectedSeats.map((seat) => `${getSeatRowChar(seat.row)}${seat.place}`).join(", "))
@@ -17,46 +18,46 @@ const isDisabled = computed(() => isBooking.value || !cinemaStore.selectedSeats.
 
 function onPurchase() {
   isBooking.value = true
+  open(cinemaStore.selectedSeats)
+  isBooking.value = false
 
-  subscribe({
-    msg: {
-      type: "booking.purchase",
-      data: {
-        hall_id: cinemaStore.activeHall?.id,
-        seat_ids: cinemaStore.selectedSeats.map((seat) => seat.id),
-      },
-    },
-    onResult: () => {
-      cinemaStore.onClearSelectedSeats()
-      isBooking.value = false
-    },
-    onError: () => {
-      isBooking.value = false
-    },
-  })
+  // subscribe({
+  //   msg: {
+  //     type: "booking.purchase",
+  //     data: {
+  //       hall_id: cinemaStore.activeHall?.id,
+  //       seat_ids: cinemaStore.selectedSeats.map((seat) => seat.id),
+  //     },
+  //   },
+  //   onResult: () => {
+  //     cinemaStore.onClearSelectedSeats()
+  //     isBooking.value = false
+  //   },
+  //   onError: () => {
+  //     isBooking.value = false
+  //   },
+  // })
 }
 </script>
 
 <template>
-  <BaseTransitions name="fade">
-    <div class="flex flex-col gap-4">
-      <div class="text-content/60 flex flex-col gap-2 text-sm">
-        <div class="flex justify-between">
-          <span class="">Seats</span>
-          <span class="text-content font-bold">{{ seats.length ? seats : "-" }}</span>
-        </div>
-        <div class="flex justify-between">
-          <span class="">Total</span>
-          <span class="text-content font-bold">${{ total }}</span>
-        </div>
+  <div class="flex flex-col gap-4" data-testid="booking-section">
+    <div class="text-content/60 flex flex-col gap-2 text-sm">
+      <div class="flex justify-between">
+        <span class="">Seats</span>
+        <span class="text-content font-bold">{{ seats.length ? seats : "-" }}</span>
       </div>
-
-      <div class="flex w-full items-center justify-between gap-2">
-        <BaseButton variant="outline" icon="minus-circle" class="w-1/3" size="sm" @click="cinemaStore.onClearSelectedSeats" :disabled="isDisabled">
-          Cancel
-        </BaseButton>
-        <BaseButton variant="accent" icon="ticket" class="w-2/3" size="sm" @click="onPurchase" :disabled="isDisabled">Purchase</BaseButton>
+      <div class="flex justify-between">
+        <span class="">Total</span>
+        <span class="text-content font-bold">${{ total }}</span>
       </div>
     </div>
-  </BaseTransitions>
+
+    <div class="flex w-full items-center justify-between gap-2">
+      <BaseButton variant="outline" icon="minus-circle" class="w-1/3" size="sm" @click="cinemaStore.onClearSelectedSeats" :disabled="isDisabled">
+        Cancel
+      </BaseButton>
+      <BaseButton variant="accent" icon="ticket" class="w-2/3" size="sm" @click="onPurchase" :disabled="isDisabled">Purchase</BaseButton>
+    </div>
+  </div>
 </template>

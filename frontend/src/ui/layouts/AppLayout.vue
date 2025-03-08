@@ -12,13 +12,13 @@ const slides = ["left", "right"]
     <slot name="header" />
 
     <Carousel v-if="isTablet" class="layout-carousel" height="100%" :perPage="1">
-      <Slide v-for="slide in slides" :key="slide" class="flex h-full flex-col gap-4">
+      <Slide v-for="slide in slides" :key="slide" class="relative flex h-full flex-col gap-4">
         <slot :name="slide" />
       </Slide>
     </Carousel>
 
     <div v-else class="grid h-full grid-cols-[2fr_1fr] gap-4">
-      <div v-for="slide in slides" :key="slide" class="flex flex-col gap-4">
+      <div v-for="slide in slides" :data-layout-section="slide" :key="slide" class="relative">
         <slot :name="slide" />
       </div>
     </div>
