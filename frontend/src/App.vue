@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {tryOnBeforeUnmount} from "@vueuse/core"
 import {wsClient} from "@/api/ws"
+import {ModalsLiteContainer} from "@/lib/modals-lite"
 import {toast, ToastsLiteProvider} from "@/lib/toasts-lite"
 import BaseCard from "@/ui/base/BaseCard.vue"
 import AppLayout from "@/ui/layouts/AppLayout.vue"
@@ -44,4 +45,5 @@ tryOnBeforeUnmount(() => wsClient.destroy())
   </AppLayout>
 
   <ToastsLiteProvider />
+  <ModalsLiteContainer />
 </template>

@@ -12,6 +12,7 @@
     "lint": "eslint . --fix --ignore-pattern .gitignore"
   },
   "dependencies": {
+    "@pdanpdan/vue-keyboard-trap": "^1.2.0",
     "@vueuse/core": "^12.4.0",
     "@vueuse/rxjs": "^12.4.0",
     "@xstate/vue": "^4.0.0",
