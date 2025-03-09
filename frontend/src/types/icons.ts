@@ -4,10 +4,10 @@
  */
 
 /* prettier-ignore */
-export type IconName = "arrow-left" | "arrow-right-long" | "chair" | "chevron-down" | "cinema" | "clipboard-doc-check" | "clipboard-doc" | "close" | "default" | "enter" | "eye-slash" | "eye" | "filter" | "key" | "lock-closed" | "lock-open" | "logout" | "map-pin" | "minus-circle" | "moon" | "paint-brush" | "register" | "screen" | "search" | "seat" | "spinner" | "sun" | "ticket";
+export type IconName = "arrow-left" | "arrow-right-long" | "cash" | "chair" | "chevron-down" | "cinema" | "clipboard-doc-check" | "clipboard-doc" | "close" | "crown" | "default" | "enter" | "eye-slash" | "eye" | "filter" | "gem" | "heart" | "key" | "lock-closed" | "lock-open" | "logout" | "map-pin" | "minus-circle" | "moon" | "paint-brush" | "register" | "screen" | "search" | "seat" | "sofa" | "spinner" | "sun" | "ticket" | "vip";
 
 /* prettier-ignore */
 export const spriteInfo = {
-  filename: "icons.857af81c.svg",
-  hash: "857af81c"
+  filename: "icons.69de7fc0.svg",
+  hash: "69de7fc0"
 } as const;

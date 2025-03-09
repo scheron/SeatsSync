@@ -4,13 +4,18 @@ import {useCinemaStore} from "@/stores/cinema/cinema.store"
 import BaseAccordion from "@/ui/base/BaseAccordion"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 import BasePanel from "@/ui/base/BasePanel.vue"
+import {useBookingTicketsModal} from "@/ui/modals/BookingTickets"
 
 import type {Cinema} from "@/types/cinema"
 
 const cinemaStore = useCinemaStore()
 const availableCinemas = computed(() => cinemaStore.cinemas)
+const {hideAll} = useBookingTicketsModal()
 
 function onSelectHall(cinema: Cinema, hall: Cinema["halls"][number]) {
+  if (hall.id === cinemaStore.activeHall?.id) return
+
+  hideAll()
   cinemaStore.onSelectCinema(cinema)
   if (hall.id) cinemaStore.onSelectHall(hall.id)
 }

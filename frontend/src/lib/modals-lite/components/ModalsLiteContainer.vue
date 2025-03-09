@@ -78,16 +78,30 @@ useEventListener(document, "keydown", handleEscape)
 <template>
   <template v-for="modal in allModals" :key="modal.id">
     <Teleport :to="modal.options.teleport || 'body'">
-      <div :ref="(el) => setModalRef(el as HTMLElement | null, modal.id)">
-        <ModalsLiteWrapper
-          :modal="modal"
-          v-kbd-trap
-          :style="{
-            position: getTeleportStrategy(modal.options.teleport || 'body').strategy,
-            zIndex: 1000 + allModals.indexOf(modal),
-          }"
-        />
-      </div>
+      <Transition name="fade" appear>
+        <div :ref="(el) => setModalRef(el as HTMLElement | null, modal.id)">
+          <ModalsLiteWrapper
+            :modal="modal"
+            v-kbd-trap
+            :style="{
+              position: getTeleportStrategy(modal.options.teleport || 'body').strategy,
+              zIndex: 1000 + allModals.indexOf(modal),
+            }"
+          />
+        </div>
+      </Transition>
     </Teleport>
   </template>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

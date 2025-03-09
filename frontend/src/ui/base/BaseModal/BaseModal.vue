@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const containerClass = computed(() => cn(containerVariants(props).value, props.classContainer))
 const contentClass = computed(() => cn(contentVariants(props).value, props.classContent))
-const overlayClass = computed(() => cn("bg-primary-100/60", props.classOverlay))
+const overlayClass = computed(() => cn("bg-primary-100/90", props.classOverlay))
 </script>
 
 <template>

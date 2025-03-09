@@ -12,7 +12,7 @@ const props = defineProps<{
 
 const modalContext = inject<ModalContext>(MODAL_CONTEXT)!
 
-const classesOverlay = computed(() => cn("fixed inset-0 flex items-center justify-center bg-black/60  backdrop-blur-sm", props.classOverlay))
+const classesOverlay = computed(() => cn("fixed inset-0 flex items-center justify-center", props.classOverlay))
 
 function handleOverlayClick(event: MouseEvent) {
   if (event.target !== event.currentTarget) return

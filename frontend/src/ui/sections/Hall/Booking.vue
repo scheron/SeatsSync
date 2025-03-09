@@ -16,27 +16,29 @@ const seats = computed(() => cinemaStore.selectedSeats.map((seat) => `${getSeatR
 const total = computed(() => cinemaStore.selectedSeats.reduce((acc, seat) => acc + seat.seat_type.price, 0))
 const isDisabled = computed(() => isBooking.value || !cinemaStore.selectedSeats.length)
 
-function onPurchase() {
+async function onPurchase() {
   isBooking.value = true
-  open(cinemaStore.selectedSeats)
+  const {isCanceled} = await open()
   isBooking.value = false
 
-  // subscribe({
-  //   msg: {
-  //     type: "booking.purchase",
-  //     data: {
-  //       hall_id: cinemaStore.activeHall?.id,
-  //       seat_ids: cinemaStore.selectedSeats.map((seat) => seat.id),
-  //     },
-  //   },
-  //   onResult: () => {
-  //     cinemaStore.onClearSelectedSeats()
-  //     isBooking.value = false
-  //   },
-  //   onError: () => {
-  //     isBooking.value = false
-  //   },
-  // })
+  if (!isCanceled) {
+    subscribe({
+      msg: {
+        type: "booking.purchase",
+        data: {
+          hall_id: cinemaStore.activeHall?.id,
+          seat_ids: cinemaStore.selectedSeats.filter((seat) => seat.status === "free").map((seat) => seat.id),
+        },
+      },
+      onResult: () => {
+        cinemaStore.onClearSelectedSeats()
+        isBooking.value = false
+      },
+      onError: () => {
+        isBooking.value = false
+      },
+    })
+  }
 }
 </script>
 

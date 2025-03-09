@@ -2,33 +2,29 @@ import {tryOnBeforeUnmount} from "@vueuse/core"
 import {useModalsLite} from "@/lib/modals-lite"
 import BookingTicketsModal from "./BookingTicketsModal.vue"
 
-import type {Seat} from "@/types/cinema"
-
 export default function useBookingTicketsModal() {
   let modalId: string | null = null
-  const {show, hide} = useModalsLite()
+  const {show, hide, hideAll} = useModalsLite()
 
-  function open(seats: Seat[]) {
-    const {hide, id} = show(
-      BookingTicketsModal,
-      {
-        seats,
-        onSuccess: () => {
-          hide()
+  async function open(): Promise<{isCanceled: boolean}> {
+    return new Promise((resolve) => {
+      const {hide, id} = show(
+        BookingTicketsModal,
+        {
+          onConfirm: () => {
+            hide()
+            resolve({isCanceled: false})
+          },
+          onCancel: () => {
+            hide()
+            resolve({isCanceled: true})
+          },
         },
-        onError: () => {
-          hide()
-        },
-        onCancel: () => {
-          hide()
-        },
-      },
-      {
-        teleport: '[data-layout-section="left"]',
-      },
-    )
+        {teleport: '[data-layout-section="left"]'},
+      )
 
-    modalId = id
+      modalId = id
+    })
   }
 
   function close() {
@@ -42,5 +38,6 @@ export default function useBookingTicketsModal() {
   return {
     open,
     close,
+    hideAll,
   }
 }
