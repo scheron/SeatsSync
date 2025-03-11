@@ -23,7 +23,6 @@ class HallModel {
             seat_type: {
               select: {
                 name: true,
-                price: true,
               },
             },
           },

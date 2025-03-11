@@ -38,8 +38,6 @@ function getRandomNumber(min, max) {
 async function clearDatabase() {
   await sleepWithMessage("Clearing existing data...")
 
-  await prisma.bookingSeat.deleteMany()
-  await prisma.booking.deleteMany()
   await prisma.seat.deleteMany()
   await prisma.seatType.deleteMany()
   await prisma.hall.deleteMany()
@@ -164,7 +162,7 @@ async function createSeats(hall, seatTypeRecords) {
     width: seat.width,
     height: seat.height,
     rotation: seat.rotation,
-    status: Math.random() > 0.8 ? "occupied" : "free",
+    status: Math.random() > 0.8 ? "OCCUPIED" : "VACANT",
   }))
 
   await prisma.seat.createMany({data: seats})

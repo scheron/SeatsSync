@@ -10,7 +10,7 @@ class SeatModel {
       where: {
         id: {in: seatIds},
         hall_id: hallId,
-        status: "free",
+        status: "VACANT",
       },
     })
 

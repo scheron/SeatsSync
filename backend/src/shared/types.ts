@@ -16,7 +16,7 @@ export type Hall = {
   seats: Seat[]
 }
 
-export type SeatStatus = "free" | "occupied"
+export type SeatStatus = "VACANT" | "OCCUPIED" | "MAINTENANCE"
 
 export type Seat = {
   id: number

@@ -107,10 +107,11 @@ export const halls = [
 ]
 
 export const seatTypes = [
-  {name: "Standard", price: 10.0},
-  {name: "VIP", price: 25.0},
-  {name: "Premium", price: 18.0},
-  {name: "Comfort", price: 15.0},
-  {name: "Luxury", price: 30.0},
-  {name: "Couples", price: 22.0},
+  //
+  {name: "Standard"},
+  {name: "VIP"},
+  {name: "Premium"},
+  {name: "Comfort"},
+  {name: "Luxury"},
+  {name: "Couples"},
 ]

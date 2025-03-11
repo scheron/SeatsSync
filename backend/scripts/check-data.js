@@ -22,29 +22,11 @@ async function main() {
     },
   })
 
-  const bookings = await prisma.booking.findMany({
-    include: {
-      hall: {
-        select: {
-          id: true,
-          name: true,
-          cinema_id: true,
-        },
-      },
-      booking_seats: {
-        include: {
-          seat: true,
-        },
-      },
-    },
-  })
-
   const data = {
     cinemas,
     halls,
     seatTypes,
     seats,
-    bookings,
   }
 
   const filePath = path.join(process.cwd(), "data.json")

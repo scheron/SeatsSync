@@ -1,8 +1,6 @@
 import {createServer} from "http"
 import {resolveMessage} from "./core/ws/resolveMessages"
-import * as bookingMethods from "./methods/booking"
 import * as cinemaMethods from "./methods/cinema"
-import * as seatTypeMethods from "./methods/seat-types"
 import * as cinemaSubscription from "./subscriptions/cinema"
 import * as hallSubscription from "./subscriptions/hall"
 import * as userSubscription from "./subscriptions/user"
@@ -37,9 +35,8 @@ const ws = new WebSocketClient(server, {
   autoCloseTimeout: 15_000,
   enablePingPong: true,
   onMessage: resolveMessage([
+    //
     cinemaMethods.onMessage,
-    seatTypeMethods.onMessage,
-    bookingMethods.onMessage,
     cinemaSubscription.onMessage,
     userSubscription.onMessage,
     hallSubscription.onMessage,

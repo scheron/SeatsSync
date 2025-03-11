@@ -33,7 +33,6 @@ model Hall {
   rows        Int
   places      Int
   seats       Seat[]                                              
-  bookings    Booking[]                                           
 
   cinema      Cinema          @relation(fields: [cinema_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
@@ -49,36 +48,21 @@ model Seat {
   width           Int
   height          Int
   rotation        Float
-  status          String?         @default("free") @db.VarChar(20)     
-  booking_seats         BookingSeat[]
+  status          SeatStatus      @default(VACANT)     
+  last_updated    DateTime        @default(now()) @db.Timestamptz(6)
 
-  hall            Hall?        @relation(fields: [hall_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  seat_type       SeatType     @relation(fields: [seat_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  hall            Hall?           @relation(fields: [hall_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  seat_type       SeatType        @relation(fields: [seat_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model SeatType {
   id              Int          @id @default(autoincrement())
   name            String
-  price           Float       
   seats           Seat[]
 }
 
-model BookingSeat {
-  seat_id     Int
-  booking_id  Int
-
-  seat        Seat         @relation(fields: [seat_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  booking     Booking      @relation(fields: [booking_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  @@id([booking_id, seat_id]) 
-}
-
-model Booking {
-  id              Int       @id @default(autoincrement())            
-  hall_id         Int                                                 
-  session_id      String                                              
-
-  created_at      DateTime  @default(now()) @db.Timestamptz(6)        
-
-  hall            Hall @relation(fields: [hall_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  booking_seats   BookingSeat[]
+enum SeatStatus {
+  VACANT         
+  OCCUPIED       
+  MAINTENANCE     
 }
