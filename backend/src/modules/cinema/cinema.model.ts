@@ -1,5 +1,5 @@
+import {logger} from "@/lib/logger"
 import {DB} from "@/core/db"
-import {logger} from "@/shared/logger"
 
 import type {Cinema, CinemaDB} from "./cinema.types"
 

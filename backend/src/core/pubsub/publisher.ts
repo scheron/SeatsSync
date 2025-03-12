@@ -2,7 +2,7 @@ import {Subscriber} from "./subscriber"
 
 import type {ErrorCode} from "@/constants/errors"
 import type {Subscription} from "@/constants/messageTypes"
-import type {ResponseStatus} from "@/shared/messages/types"
+import type {ResponseStatus} from "@/core/ws/messages"
 import type {SubscriptionHandler} from "./types"
 
 export class Publisher {

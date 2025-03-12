@@ -10,7 +10,7 @@ Real-time hall occupancy monitoring system backend service.
 src/
 ├── core/           # Application core
 ├── modules/        # Business modules
-├── shared/         # Shared utilities
+├── utils/         # Shared utilities
 ├── constants/      # Constants
 └── index.ts        # Entry point
 ```

@@ -1,10 +1,10 @@
+import {logger} from "@/lib/logger"
 import {WebSocket} from "ws"
+import {formatError, formatSuccess} from "@/core/ws/messages"
 import {ErrorCode, Errors} from "@/constants/errors"
-import {logger} from "@/shared/logger"
-import {formatError, formatSuccess} from "@/shared/messages/formatters"
 
 import type {IWebSocketClient} from "@/core/ws"
-import type {MessageRequest, ResponseStatus} from "@/shared/messages/types"
+import type {MessageRequest, ResponseStatus} from "@/core/ws/messages"
 import type {Subscriber as ISubscriber, SubscriptionHandler} from "./types"
 
 export class Subscriber<T extends string = string, D = any> {

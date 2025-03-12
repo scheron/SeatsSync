@@ -1,8 +1,8 @@
+import {hash, verify} from "@/lib/crypto"
+import {logger} from "@/lib/logger"
 import speakeasy from "speakeasy"
 import {Errors} from "@/constants/errors"
-import {hash, verify} from "@/shared/crypto"
-import {ApiError} from "@/shared/errors/ApiError"
-import {logger} from "@/shared/logger"
+import {ApiError} from "@/utils/errors/ApiError"
 import {
   CODE_REGEX,
   LOGIN_ATTEMPTS_WINDOW,

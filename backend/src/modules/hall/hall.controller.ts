@@ -1,6 +1,6 @@
 import {IWebSocketClient} from "@/core/ws"
+import {MessageRequest} from "@/core/ws/messages"
 import {Subscription, Subscriptions} from "@/constants/messageTypes"
-import {MessageRequest} from "@/shared/messages/types"
 import {subscribe, unsubscribe} from "./hall.subscription"
 
 import type {HallMessage} from "./hall.types"

@@ -1,11 +1,10 @@
+import {createJWT, verifyJWT} from "@/lib/jwt"
+import {logger} from "@/lib/logger"
 import cookie from "cookie"
 import cookieParser from "cookie-parser"
 import {WS_TOKEN_NAME} from "@/core/ws"
 import {Errors} from "@/constants/errors"
-import {ApiError} from "@/shared/errors/ApiError"
-import {createJWT, verifyJWT} from "@/shared/jwt"
-import {logger} from "@/shared/logger"
-import {sendError, sendSuccess} from "@/shared/messages/responses"
+import {ApiError} from "@/utils/errors/ApiError"
 import {COOKIE_OPTIONS} from "./user.constants"
 import * as UserService from "./user.service"
 import {notifyUpdate} from "./user.subscription"
@@ -138,4 +137,12 @@ export async function saveRecoveryPhrase(req: Request<{}, {}, {phrase: string}>,
   } catch (error) {
     sendError(res, error.message ?? Errors.InternalServerError)
   }
+}
+
+export function sendSuccess<T = any>(res: Response, data: T, statusCode: number = 200): void {
+  res.status(statusCode).json({data, status: "success", error: null})
+}
+
+export function sendError(res: Response, error: string, statusCode: number = 200): void {
+  res.status(statusCode).json({error, data: null, status: "error"})
 }

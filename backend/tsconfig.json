@@ -26,7 +26,7 @@
       "@/methods/*": ["methods/*"],
       "@/services/*": ["services/*"],
       "@/constants/*": ["constants/*"],
-      "@/shared/*": ["shared/*"]
+      "@/utils/*": ["utils/*"]
 
     },
     "noEmitOnError": false

@@ -1,5 +1,5 @@
+import {logger} from "@/lib/logger"
 import {ErrorCode} from "@/constants/errors"
-import {logger} from "@/shared/logger"
 
 export type ErrorDetails = Record<string, unknown>
 

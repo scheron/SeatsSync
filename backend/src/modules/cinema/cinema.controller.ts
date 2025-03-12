@@ -1,6 +1,6 @@
 import {IWebSocketClient} from "@/core/ws"
+import {MessageRequest} from "@/core/ws/messages"
 import {Methods, Subscription, Subscriptions} from "@/constants/messageTypes"
-import {MessageRequest} from "@/shared/messages/types"
 import {getCinemas} from "./cinema.methods"
 import {subscribe, unsubscribe} from "./cinema.subscription"
 

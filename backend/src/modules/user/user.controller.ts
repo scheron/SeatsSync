@@ -1,6 +1,6 @@
 import {IWebSocketClient} from "@/core/ws"
+import {MessageRequest} from "@/core/ws/messages"
 import {Methods, Subscription, Subscriptions} from "@/constants/messageTypes"
-import {MessageRequest} from "@/shared/messages/types"
 import {authReset, authStart, login, logout, register, saveRecoveryPhrase} from "./user.methods"
 import {subscribe, unsubscribe} from "./user.subscription"
 

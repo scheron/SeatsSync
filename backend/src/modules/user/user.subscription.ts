@@ -1,10 +1,10 @@
 import {publisher} from "@/core/pubsub"
 import {IWebSocketClient} from "@/core/ws"
+import {formatError} from "@/core/ws/messages"
 import {Errors} from "@/constants/errors"
 import {Subscription} from "@/constants/messageTypes"
-import {formatError} from "@/shared/messages/formatters"
-import {MessageRequest} from "@/shared/messages/types"
 
+import type {MessageRequest} from "@/core/ws/messages"
 import type {UserStatus} from "./user.types"
 
 const subscription = publisher.register({
