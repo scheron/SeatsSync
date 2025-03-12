@@ -10,7 +10,7 @@ const props = defineProps<{
   seat: Seat
 }>()
 
-const isFree = computed(() => props.seat.status === "free")
+const isFree = computed(() => props.seat.status === "VACANT")
 </script>
 
 <template>

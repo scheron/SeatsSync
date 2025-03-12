@@ -31,8 +31,8 @@ const statusClass = computed(() => {
   if (!props.seat) return ""
 
   return {
-    "text-green-500": props.seat.status === "free",
-    "text-content/40": props.seat.status === "occupied",
+    "text-green-500": props.seat.status === "VACANT",
+    "text-content/40": props.seat.status === "OCCUPIED",
   }
 })
 

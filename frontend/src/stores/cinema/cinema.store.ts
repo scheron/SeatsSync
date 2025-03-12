@@ -67,7 +67,7 @@ export const useCinemaStore = defineStore("cinema", () => {
         if (!activeHall.value) return
 
         activeHall.value.seats.forEach((seat) => {
-          if (selectedSeats.value.has(seat.id) && seat.status === "occupied") {
+          if (selectedSeats.value.has(seat.id) && seat.status === "OCCUPIED") {
             selectedSeats.value.delete(seat.id)
           }
         })

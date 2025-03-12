@@ -58,8 +58,8 @@ function onSelectHall(cinema: Cinema, hall: Cinema["halls"][number]) {
               <span class="">{{ hall.name }}</span>
 
               <div class="flex items-center gap-2">
-                <span v-if="!hall.seats_count.free" class="rounded-md border px-1 py-0.5 text-[8px] uppercase">Sold out</span>
-                <span v-else class="text-sm"> {{ hall.seats_count.free }} / {{ hall.seats_count.occupied + hall.seats_count.free }} </span>
+                <span v-if="!hall.seats_count.VACANT" class="rounded-md border px-1 py-0.5 text-[8px] uppercase">Sold out</span>
+                <span v-else class="text-sm"> {{ hall.seats_count.VACANT }} / {{ hall.seats_count.OCCUPIED + hall.seats_count.VACANT }} </span>
 
                 <BaseIcon name="chair" class="size-4" />
               </div>

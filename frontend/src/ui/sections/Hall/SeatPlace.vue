@@ -22,8 +22,8 @@ defineProps<{
     }"
     :class="
       cn({
-        'bg-primary-700/50 cursor-pointer': seat.status === 'free',
-        'bg-primary-300/50 cursor-default': seat.status === 'occupied',
+        'bg-primary-700/50 cursor-pointer': seat.status === 'VACANT',
+        'bg-primary-300/50 cursor-default': seat.status === 'OCCUPIED',
         'bg-primary-700 cursor-pointer': selected,
       })
     "
@@ -34,7 +34,7 @@ defineProps<{
     :data-status="seat.status"
   >
     <span
-      v-if="seat.status === 'free'"
+      v-if="seat.status === 'VACANT'"
       class="text-content pointer-events-none flex cursor-default items-center justify-center transition-opacity duration-200 select-none"
       :class="{
         'opacity-100': hovered || selected,
@@ -43,6 +43,6 @@ defineProps<{
     >
       {{ seat.place }}
     </span>
-    <BaseIcon v-if="seat.status === 'occupied'" name="close" class="text-primary-700 size-4" />
+    <BaseIcon v-if="seat.status === 'OCCUPIED'" name="close" class="text-primary-700 size-4" />
   </div>
 </template>

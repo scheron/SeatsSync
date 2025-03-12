@@ -1,5 +1,5 @@
 :root {
-  --toasts-lite-bg: hsla(var(--primary-100), 0.3);
+  --toasts-lite-bg: hsl(var(--primary-200));
   --toasts-lite-text: hsl(var(--content));
   --toasts-lite-border: hsl(var(--primary-300));
   --toasts-lite-shadow: hsl(var(--primary-300));

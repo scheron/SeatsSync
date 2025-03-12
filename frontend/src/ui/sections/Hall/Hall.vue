@@ -6,7 +6,6 @@ import {useTooltip} from "@/composables/useTooltip"
 import {useCinemaStore} from "@/stores/cinema/cinema.store"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 import SeatTooltip from "@/ui/tooltips/SeatTooltip.vue"
-import Booking from "./Booking.vue"
 import RowName from "./RowName.vue"
 import SeatPlace from "./SeatPlace.vue"
 import SeatsSchemeInfo from "./SeatsSchemeInfo.vue"
@@ -55,7 +54,7 @@ function onSeatClick(e: MouseEvent) {
 
   const seatId = Number(seatEl.dataset.seatId)
   const seatStatus = seatEl.dataset.status
-  if (seatStatus === "occupied") return
+  if (seatStatus === "OCCUPIED") return
 
   cinemaStore.onSelectSeat(seatId)
 }
@@ -100,8 +99,6 @@ function onSeatClick(e: MouseEvent) {
 
       <SeatsSchemeInfo />
     </div>
-
-    <Booking class="w-1/2" />
 
     <SeatTooltip ref="tooltipRef" :tooltip-visible="isTooltipVisible" :seat="hoveredSeatFull" />
   </div>

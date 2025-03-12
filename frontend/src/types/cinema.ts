@@ -9,8 +9,9 @@ export type Cinema = {
     rows: number
     places: number
     seats_count: {
-      free: number
-      occupied: number
+      VACANT: number
+      OCCUPIED: number
+      MAINTENANCE: number
     }
   }[]
 }
@@ -25,10 +26,10 @@ export type Hall = {
   seats: Seat[]
 }
 
-export type SeatStatus = "free" | "occupied"
+export type SeatStatus = "VACANT" | "OCCUPIED" | "MAINTENANCE"
+
 export type SeatType = {
   name: string
-  price: number
 }
 
 export type Seat = {
@@ -44,4 +45,5 @@ export type Seat = {
   rotation: number
   status: SeatStatus
   seat_type: SeatType
+  last_updated: Date
 }
