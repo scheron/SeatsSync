@@ -1,12 +1,108 @@
 # Seats Sync Backend
 
-## Architecture Overview
+Real-time hall occupancy monitoring system backend service.
 
-The BE use a modular architecture with two main abstractions: Methods and Subscriptions.
+## 🏗 Architecture
 
-### Core Concepts
+### Module Structure
 
-#### 0. Authorization
+```
+src/
+├── core/           # Application core
+├── modules/        # Business modules
+├── shared/         # Shared utilities
+├── constants/      # Constants
+└── index.ts        # Entry point
+```
+
+### Database Entities
+
+#### Cinema
+
+- Main entity representing a cinema
+- Contains basic information: name and color scheme
+- Has one-to-many relationship with halls
+
+#### Hall
+
+- Represents a cinema hall
+- Contains size information (rows and seats)
+- Connected to cinema and contains seats
+
+#### Seat
+
+- Detailed information about each seat in the hall
+- Includes coordinates and dimensions for display
+- Has status (vacant/occupied/maintenance)
+- Linked to seat type
+
+#### SeatType
+
+- Defines the type of seat (standard, VIP, etc.)
+- Used for seat categorization
+
+#### User
+
+- System user information
+- Two-factor authentication support
+- Token and recovery management
+
+### Business Modules
+
+Each module is organized according to Domain-Driven Design (DDD) principles and contains:
+
+```
+modules/
+├── cinema/                 # Cinema module
+│   ├── cinema.types.ts    # Types and interfaces
+│   ├── cinema.model.ts    # Database operations
+│   ├── cinema.service.ts  # Business logic
+│   ├── cinema.methods.ts  # API methods
+│   ├── cinema.controller.ts # Request handling
+│   ├── cinema.subscription.ts # WebSocket subscriptions
+│   └── index.ts          # Public API
+├── hall/                  # Hall module
+└── user/                  # User module
+```
+
+## 🔧 Tech Stack
+
+- **Runtime**: Node.js with Bun
+- **Language**: TypeScript
+- **Database**: PostgreSQL with Prisma ORM
+- **WebSocket**: Custom implementation based on ws
+- **Containerization**: Docker
+
+## 📐 Architectural Decisions
+
+### 1. Modular Architecture
+
+- Each module is independent and self-contained
+- Clear separation of responsibilities within modules
+- Business logic encapsulation
+
+### 2. Data Operations
+
+- **Model**: Direct database interaction
+- **Service**: Business logic and validation
+- **Controller**: HTTP/WebSocket request handling
+- **Types**: Strong typing
+
+### 3. Real-time Communication
+
+- WebSocket for real-time updates
+- Publisher/Subscriber pattern for notifications
+- Multiple connection support
+
+### 4. Error Handling
+
+- Centralized error handling
+- Typed errors for different cases
+- Error logging with context
+
+## 🔄 Data Flows
+
+### Authentication
 
 > FE - Frontend | BE - Backend
 
@@ -17,7 +113,7 @@ The BE use a modular architecture with two main abstractions: Methods and Subscr
 
 ---
 
-## Login
+### Login
 
 0. FE start to auth.
 1. FE send request with username to BE.
@@ -29,7 +125,7 @@ The BE use a modular architecture with two main abstractions: Methods and Subscr
 
 ---
 
-## Register
+### Register
 
 0. FE start to auth.
 1. FE send request with username to BE.
@@ -39,11 +135,13 @@ The BE use a modular architecture with two main abstractions: Methods and Subscr
 5. BE returns a token to FE.
 6. FE should recreate the socket connection.
 
+---
+
 ### WebSocket Communication
 
 The protocol is message-based:
 
-```typescript
+````typescript
 // Client -> Server (Request)
 {
   type: "name",             // Method to call
@@ -60,96 +158,35 @@ The protocol is message-based:
   ts: 1234567890,              // Timestamp
   error?:  "ERROR_CODE",       // Error code
 }
-```
 
-## Docker and Deployment
 
-### Using Makefile
+### Seat Status Update
+```mermaid
+sequenceDiagram
+    Client->>WebSocket: Hall subscription
+    WebSocket->>HallController: Subscription handling
+    HallController->>HallService: Data retrieval
+    HallService->>HallModel: Database query
+    HallModel-->>HallService: Hall data
+    HallService-->>Client: Initial state
 
-The project includes a Makefile to simplify Docker operations. Here are the available commands:
+    Note over Client,HallModel: Real-time updates
+    HallModel->>HallSubscription: Status change
+    HallSubscription-->>Client: Notification
+````
 
-#### Basic Commands
-
-- `make build V=1.0.0` - Build Docker image with specified version
-- `make push V=1.0.0` - Push image to Docker Hub
-- `make run` - Run project in production mode
-- `make dev` - Run project in development mode with logs
-- `make stop` - Stop all containers
-
-#### Maintenance Commands
-
-- `make clean` - Clean Docker (containers, volumes)
-- `make rebuild` - Rebuild and restart project
-- `make deploy V=1.0.0` - Full deployment (build + push + run)
-- `make version V=1.0.0` - Set new version in docker-compose.yml
-
-#### Development Workflow
-
-1. Make changes to the code
-2. Build new version:
-   ```bash
-   make build V=1.0.0
-   ```
-
-3. Push to Docker Hub:
-   ```bash
-   make push V=1.0.0
-   ```
-
-4. Deploy changes:
-   ```bash
-   make deploy V=1.0.0
-   ```
-
-#### Quick Start for Development
+## 🛠 Deployment
 
 ```bash
-# Start project in development mode
-make dev
+# Install dependencies
+bun install
 
-# Stop project
-make stop
+# Setup database
+bun prisma migrate dev
 
-# Rebuild and restart
-make rebuild
+# Run in development mode
+bun dev
+
+# Build and run in Docker
+make up
 ```
-
-#### Production Deployment
-
-```bash
-# Full deployment with version
-make deploy V=1.0.0
-
-# Or step by step:
-make build V=1.0.0
-make push V=1.0.0
-make run
-```
-
-### Docker Image Structure
-
-The project uses a multi-stage build process:
-1. Builder stage - compiles TypeScript and generates Prisma client
-2. Production stage - contains only necessary files for running the application
-
-### Environment Variables
-
-Make sure to set up your `.env` file with the following variables:
-```env
-PORT=3001
-JWT_SECRET=your_secret
-COOKIE_SECRET=your_cookie_secret
-POSTGRES_USER=your_db_user
-POSTGRES_PASSWORD=your_db_password
-POSTGRES_DB=your_db_name
-POSTGRES_PORT=5432
-DATABASE_URL=postgresql://user:password@postgres:5432/dbname?schema=public
-```
-
-### Container Health Checks
-
-The application includes health checks for both the backend and database services:
-- PostgreSQL health is checked every 5 seconds
-- Backend health is verified through Prisma database connectivity
-
-For more information about the project architecture and features, see the sections above.

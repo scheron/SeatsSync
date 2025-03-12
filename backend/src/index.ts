@@ -1,14 +1,11 @@
 import {createServer} from "http"
-import {resolveMessage} from "./core/ws/resolveMessages"
-import * as cinemaMethods from "./methods/cinema"
-import * as cinemaSubscription from "./subscriptions/cinema"
-import * as hallSubscription from "./subscriptions/hall"
-import * as userSubscription from "./subscriptions/user"
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import express from "express"
-import {WebSocketClient} from "@/core/ws"
-import {initUserMethods} from "@/methods/user"
+import {resolveMessage, WebSocketClient} from "@/core/ws"
+import {CinemaController, CinemaSubscription} from "@/modules/cinema"
+import {HallController, HallSubscription} from "@/modules/hall"
+import {UserController, UserSubscription} from "@/modules/user"
 import {env} from "@/constants/env"
 
 const app = express()
@@ -28,7 +25,7 @@ app.use(
 )
 app.use("/api", router)
 
-initUserMethods(router)
+UserController.initUserMethods(router)
 
 const ws = new WebSocketClient(server, {
   pingInterval: 5_000,
@@ -36,15 +33,14 @@ const ws = new WebSocketClient(server, {
   enablePingPong: true,
   onMessage: resolveMessage([
     //
-    cinemaMethods.onMessage,
-    cinemaSubscription.onMessage,
-    userSubscription.onMessage,
-    hallSubscription.onMessage,
+    CinemaController.onMessage,
+    UserController.onMessage,
+    HallController.onMessage,
   ]),
   onDisconnect: (ws) => {
-    userSubscription.unsubscribe(ws)
-    hallSubscription.unsubscribe(ws)
-    cinemaSubscription.unsubscribe(ws)
+    UserSubscription.unsubscribe(ws)
+    HallSubscription.unsubscribe(ws)
+    CinemaSubscription.unsubscribe(ws)
   },
 })
 

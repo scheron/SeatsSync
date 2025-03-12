@@ -1,1 +1,0 @@
-export {hallModel} from "./hallModel"

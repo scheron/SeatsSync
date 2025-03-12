@@ -9,12 +9,8 @@
   "trailingComma": "all",
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
-    "^(?!@).*",
     "^@/core(.*)$",
-    "^@/methods(.*)$",
-    "^@/subscriptions(.*)$",
-    "^@/services(.*)$",
-    "^@/model(.*)$",
+    "^@/modules(.*)$",
     "^@/constants(.*)$",
     "^@/shared(.*)$",
     "^(?!.*)[./].*$",

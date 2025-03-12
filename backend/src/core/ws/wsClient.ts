@@ -1,7 +1,5 @@
-import {Heartbeat} from "./heartbeat"
 import cookie from "cookie"
 import cookieParser from "cookie-parser"
-import {TOKEN_NAME} from "model/user"
 import {nanoid} from "nanoid"
 import {WebSocket, WebSocketServer} from "ws"
 import {Errors} from "@/constants/errors"
@@ -9,6 +7,8 @@ import {ApiError} from "@/shared/errors/ApiError"
 import {decodeJWT, verifyJWT} from "@/shared/jwt"
 import {logger, LogMessageType} from "@/shared/logger"
 import {formatError, formatRequest} from "@/shared/messages/formatters"
+import {WS_TOKEN_NAME} from "./constants"
+import {Heartbeat} from "./heartbeat"
 
 import type {IncomingMessage, Server} from "http"
 import type {RawData} from "ws"
@@ -224,6 +224,6 @@ export class WebSocketClient {
     const parsedCookies = cookie.parse(req.headers.cookie || "")
     const cookies = cookieParser.signedCookies(parsedCookies, process.env.COOKIE_SECRET || "")
 
-    return cookies[TOKEN_NAME] || null
+    return cookies[WS_TOKEN_NAME] || null
   }
 }
