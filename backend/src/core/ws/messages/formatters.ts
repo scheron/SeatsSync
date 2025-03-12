@@ -1,5 +1,5 @@
 import {nanoid} from "nanoid"
-import {filterObject} from "../objects"
+import {objectFilter} from "@/utils/objects"
 import {validateMessage} from "./validators"
 
 import type {RawData} from "ws"
@@ -29,7 +29,7 @@ export function formatSuccess<T extends string, D = unknown>(msg: {
   data: D
   status: Exclude<ResponseStatus, "error">
 }) {
-  const response = filterObject(
+  const response = objectFilter(
     {
       status: msg.status,
       type: msg.type,
@@ -45,7 +45,7 @@ export function formatSuccess<T extends string, D = unknown>(msg: {
 }
 
 export function formatError<T extends string>(msg: {eid?: string | number; type?: T; error: string}) {
-  const response = filterObject(
+  const response = objectFilter(
     {
       status: "error",
       type: msg.type,

@@ -1,7 +1,7 @@
-import {IWebSocketClient, OnMessageHandler, WebSocketOnMessage} from "./types"
+import {formatError, MessageRequest} from "@/core/ws/messages"
 import {Errors} from "@/constants/errors"
-import {formatError} from "@/shared/messages/formatters"
-import {MessageRequest} from "@/shared/messages/types"
+
+import type {IWebSocketClient, OnMessageHandler, WebSocketOnMessage} from "./types"
 
 export function resolveMessage(handlers: OnMessageHandler[]): WebSocketOnMessage {
   return (ws: IWebSocketClient, message: MessageRequest<any, any>) => {
