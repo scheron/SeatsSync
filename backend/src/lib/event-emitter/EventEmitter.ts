@@ -1,6 +1,6 @@
 import {DebugHelper} from "./DebugHelper"
 
-import type {EventCallback, EventMap} from "./types"
+import type {CleanUpFn, EventCallback, EventMap} from "./types"
 
 export class EventEmitter<Events extends EventMap = EventMap> {
   private subscriptions: Map<keyof Events, EventSubscription<Events[keyof Events]>>
@@ -23,7 +23,7 @@ export class EventEmitter<Events extends EventMap = EventMap> {
     this.subscriptions.clear()
   }
 
-  on<E extends keyof Events>(event: E, callback: EventCallback<Events[E]>): () => void {
+  on<E extends keyof Events>(event: E, callback: EventCallback<Events[E]>): CleanUpFn {
     if (!this.subscriptions.has(event)) this.subscriptions.set(event, new EventSubscription<Events[E]>(String(event)))
 
     const subscription = this.subscriptions.get(event)!
@@ -90,7 +90,7 @@ class EventSubscription<T> {
     return this.subscribers.size === 0
   }
 
-  addSubscriber(subscriber: EventCallback<T>): () => void {
+  addSubscriber(subscriber: EventCallback<T>): CleanUpFn {
     this.subscribers.add(subscriber)
     return () => this.removeSubscriber(subscriber)
   }

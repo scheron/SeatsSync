@@ -67,11 +67,31 @@ modules/
 
 ## 🔧 Tech Stack
 
-- **Runtime**: Node.js with Bun
-- **Language**: TypeScript
+- **Runtime**: Node.js with TypeScript
+- **Language**: TypeScript 5.6
 - **Database**: PostgreSQL with Prisma ORM
-- **WebSocket**: Custom implementation based on ws
+- **API Framework**: Express.js
+- **WebSocket**: ws library with custom implementation
+- **Authentication**: Two-factor auth with speakeasy
+- **Logging**: Winston
 - **Containerization**: Docker
+
+### Core Dependencies
+
+- **@prisma/client**: ^5.22.0 - Database ORM
+- **express**: ^4.21.1 - Web framework
+- **ws**: ^8.18.0 - WebSocket server
+- **jsonwebtoken**: ^9.0.2 - JWT authentication
+- **speakeasy**: ^2.0.0 - Two-factor authentication
+- **winston**: ^3.17.0 - Logging
+- **node-cache**: ^5.1.2 - In-memory caching
+
+### Development Tools
+
+- **nodemon**: Hot reloading for development
+- **tsx**: TypeScript execution
+- **typescript**: ^5.6.3
+- **prettier**: Code formatting
 
 ## 📐 Architectural Decisions
 
@@ -141,7 +161,7 @@ modules/
 
 The protocol is message-based:
 
-````typescript
+```typescript
 // Client -> Server (Request)
 {
   type: "name",             // Method to call
@@ -173,20 +193,44 @@ sequenceDiagram
     Note over Client,HallModel: Real-time updates
     HallModel->>HallSubscription: Status change
     HallSubscription-->>Client: Notification
-````
+```
 
-## 🛠 Deployment
+## 🛠 Development & Deployment
+
+### Available Scripts
 
 ```bash
 # Install dependencies
-bun install
+npm install
 
-# Setup database
-bun prisma migrate dev
+# Run in development mode with hot reload
+npm run dev
 
-# Run in development mode
-bun dev
+# Build the project
+npm run build
 
-# Build and run in Docker
-make up
+# Run in production mode
+npm run start
 ```
+
+### Docker Deployment
+
+```bash
+# Build and run with Docker Compose
+make up
+
+# Stop containers
+make down
+
+# View logs
+make logs
+```
+
+### Environment Setup
+
+1. Copy `.env.example` to `.env`
+2. Configure the following variables:
+   - `DATABASE_URL` - PostgreSQL connection string
+   - `JWT_SECRET` - Secret for JWT tokens
+   - `PORT` - Server port (default: 3000)
+   - `WS_PORT` - WebSocket port (default: 3001)
