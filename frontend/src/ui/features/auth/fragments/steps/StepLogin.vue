@@ -8,7 +8,7 @@ import AuthFormLayout from "../AuthFormLayout.vue"
 const emit = defineEmits<{recoveryAccess: [void]; submit: [code: string]; back: [void]}>()
 const props = defineProps<{username: string}>()
 
-const request = useHttp()
+const {request} = useHttp()
 
 function onSubmit(code: string) {
   request<{username: string}, {username: string; code: string}>({

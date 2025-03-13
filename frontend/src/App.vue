@@ -3,11 +3,6 @@ import {tryOnBeforeUnmount} from "@vueuse/core"
 import {wsClient} from "@/api/ws"
 import {ModalsLiteContainer} from "@/lib/modals-lite"
 import {toast, ToastsLiteProvider} from "@/lib/toasts-lite"
-import BaseCard from "@/ui/base/BaseCard.vue"
-import AppLayout from "@/ui/layouts/AppLayout.vue"
-import Hall from "@/ui/sections/Hall"
-import HallList from "@/ui/sections/HallList/HallList.vue"
-import Header from "@/ui/sections/Header.vue"
 
 let toastID: string
 
@@ -26,23 +21,7 @@ tryOnBeforeUnmount(() => wsClient.destroy())
 </script>
 
 <template>
-  <AppLayout>
-    <template #header>
-      <Header />
-    </template>
-
-    <template #left>
-      <BaseCard class="flex-1">
-        <Hall />
-      </BaseCard>
-    </template>
-
-    <template #right>
-      <BaseCard class="flex-1">
-        <HallList />
-      </BaseCard>
-    </template>
-  </AppLayout>
+  <RouterView />
 
   <ToastsLiteProvider />
   <ModalsLiteContainer />

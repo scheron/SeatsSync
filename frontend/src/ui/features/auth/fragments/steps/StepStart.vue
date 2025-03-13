@@ -13,7 +13,7 @@ const emit = defineEmits<{
   startCandidate: [{username: string; qrUrl: string}]
 }>()
 
-const request = useHttp()
+const {request} = useHttp()
 
 const username = ref("")
 

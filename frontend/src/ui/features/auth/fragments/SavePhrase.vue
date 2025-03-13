@@ -8,7 +8,7 @@ import BaseInput from "@/ui/base/BaseInput"
 import AuthFormLayout from "./AuthFormLayout.vue"
 
 const emit = defineEmits<{submit: [phrase: string]; skip: [void]}>()
-const request = useHttp()
+const {request} = useHttp()
 
 const phrase = ref("")
 

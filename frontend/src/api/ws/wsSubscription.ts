@@ -13,22 +13,22 @@ export function defineSubscription(ws: WebSocketClient) {
   const subscriptions = new Map<string, Subscription>()
   const subscriptionEvents$ = new Subject<ResponseMessage>()
 
-  class Subscription<T = any, D = any> {
+  class Subscription<DataRes = any, DataReq = any> {
     readonly destroyed$ = new Subject<boolean>()
     state: SubscriptionState = "INIT"
 
     id: string
-    msg: RequestMessage<D>
-    onSnapshot: (data: T) => void
-    onUpdate: (data: T) => void
-    onResult: (msg: ResponseMessageSuccess<T>) => void
+    msg: RequestMessage<DataReq>
+    onSnapshot: (data: DataRes) => void
+    onUpdate: (data: DataRes) => void
+    onResult: (msg: ResponseMessageSuccess<DataRes>) => void
     onError: (msg: ResponseMessageError) => void
     onDelete: () => void
     isOnce: boolean
     isKeepAlive: boolean
 
     constructor({
-      msg = {type: "*"} as RequestMessage<D>,
+      msg = {type: "*"} as RequestMessage<DataReq>,
       onSnapshot = () => {},
       onUpdate = () => {},
       onResult = () => {},
@@ -36,7 +36,7 @@ export function defineSubscription(ws: WebSocketClient) {
       onDelete = () => {},
       isKeepAlive = true,
       isOnce = false,
-    }: SubscriptionOptions<T, D>) {
+    }: SubscriptionOptions<DataRes, DataReq>) {
       this.id = msg?.eid ?? `${++_counter}`
       this.msg = {...msg, eid: this.id}
       this.onSnapshot = onSnapshot
@@ -74,9 +74,9 @@ export function defineSubscription(ws: WebSocketClient) {
 
           this.state = "SUBSCRIBED"
 
-          this.onResult(msg as ResponseMessageSuccess<T>)
-          if (msg.status === "snapshot") this.onSnapshot(msg.data as T)
-          if (msg.status === "update") this.onUpdate(msg.data as T)
+          this.onResult(msg as ResponseMessageSuccess<DataRes>)
+          if (msg.status === "snapshot") this.onSnapshot(msg.data as DataRes)
+          if (msg.status === "update") this.onUpdate(msg.data as DataRes)
 
           if (this.isOnce) this.unsubscribe()
         })
@@ -169,11 +169,11 @@ export function defineSubscription(ws: WebSocketClient) {
      * @param msg - The WebSocket request message.
      * @returns A promise that resolves with the response data or rejects with an error.
      */
-    static request<T = any>(msg: RequestMessage<T> & {eid?: string}): Promise<T> {
+    static request<DataRes, DataReq>(msg: RequestMessage<DataReq> & {eid?: string}): Promise<DataRes> {
       return new Promise((resolve, reject) => {
         new Subscription({
           msg: {...msg, eid: msg.eid ?? randomUUID()},
-          onResult: (data) => resolve(data.data as unknown as T),
+          onResult: (data) => resolve(data.data as unknown as DataRes),
           onError: reject,
           isOnce: true,
           isKeepAlive: false,

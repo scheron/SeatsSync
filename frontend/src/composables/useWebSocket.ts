@@ -10,10 +10,10 @@ import type {Ref} from "vue"
 type UseWebSocketReturn = {
   connectionState: Ref<ConnectionState>
   subscriptions: Ref<Map<string, SubscriptionInstance>>
-  subscribe: <T = any, D = any>(options: SubscriptionOptions<T, D>) => SubscriptionInstance["unsubscribe"]
+  subscribe: <DataRes = any, DataReq = any>(options: SubscriptionOptions<DataRes, DataReq>) => SubscriptionInstance["unsubscribe"]
   unsubscribe: (id: string) => void
   resubscribe: (id: string) => void
-  send: <T = any>(message: RequestMessage<T>) => Promise<T>
+  send: <DataRes = any, DataReq = any>(message: RequestMessage<DataReq>) => Promise<DataRes>
   cleanup: () => void
 }
 
@@ -26,8 +26,8 @@ export function useWebSocket(): UseWebSocketReturn {
     connectionState.value = state
   })
 
-  function subscribe<T, D>(options: SubscriptionOptions<T, D>): SubscriptionInstance["unsubscribe"] {
-    const subscription = new Subscription<T, D>(options)
+  function subscribe<DataRes = any, DataReq = any>(options: SubscriptionOptions<DataRes, DataReq>): SubscriptionInstance["unsubscribe"] {
+    const subscription = new Subscription<DataRes, DataReq>(options)
 
     subscriptions.value.set(subscription.id, subscription as SubscriptionInstance)
 
@@ -49,9 +49,9 @@ export function useWebSocket(): UseWebSocketReturn {
     subscription.resubscribe()
   }
 
-  async function send<T = any>(message: RequestMessage<T>): Promise<T> {
+  async function send<DataRes = any, DataReq = any>(message: RequestMessage<DataReq>): Promise<DataRes> {
     try {
-      return await Subscription.request<T>(message)
+      return await Subscription.request<DataRes, DataReq>(message)
     } catch (error) {
       console.error("Error sending message:", message, error)
       throw error

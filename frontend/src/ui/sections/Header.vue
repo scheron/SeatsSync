@@ -13,7 +13,7 @@ const themeStore = useThemeStore()
 const isUserLoggedIn = ref(false)
 
 const {subscribe, cleanup} = useWebSocket()
-const request = useHttp()
+const {request} = useHttp()
 
 subscribe<{status: "user" | "guest"}, null>({
   msg: {type: "user.subscribe", data: null},

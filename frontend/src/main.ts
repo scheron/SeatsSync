@@ -7,12 +7,14 @@ import "@/assets/styles/rewrites/floating-vue.css"
 /* prettier-ignore */
 import { createApp } from "vue";
 
+import router from "@/router"
 import FloatingVue from "floating-vue"
 import {createPinia} from "pinia"
 import App from "./App.vue"
 
 createApp(App)
   .use(createPinia())
+  .use(router)
   .use(FloatingVue, {
     themes: {
       tooltip: {

@@ -28,7 +28,7 @@ export function useHttp() {
     unsubscribe()
   })
 
-  return <TypeResponse, TypeBody = unknown>(config: RequestConfig<TypeResponse, TypeBody>) => {
+  function request<TypeResponse, TypeBody = unknown>(config: RequestConfig<TypeResponse, TypeBody>) {
     const {method, url, data, onSuccess, onError} = config
 
     let observable: Observable<TypeResponse>
@@ -52,4 +52,10 @@ export function useHttp() {
 
     subscriptions.add(subscription)
   }
+
+  async function requestAsync<TypeResponse, TypeBody = unknown>(config: RequestConfig<TypeResponse, TypeBody>) {
+    return new Promise<TypeResponse>((resolve, reject) => request({...config, onSuccess: resolve, onError: reject}))
+  }
+
+  return {request, requestAsync}
 }
