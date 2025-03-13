@@ -1,4 +1,4 @@
-import {ref} from "vue"
+import {computed, ref} from "vue"
 import {tryOnBeforeMount, tryOnBeforeUnmount} from "@vueuse/core"
 import {defineStore} from "pinia"
 import {useHttp} from "@/composables/useHttp"
@@ -7,16 +7,16 @@ import {useWebSocket} from "@/composables/useWebSocket"
 type UserStatus = {status: "user" | "guest"}
 
 export const useUserStore = defineStore("user", () => {
-  const isLoggedIn = ref(false)
+  const user = ref<UserStatus | null>(null)
+
+  const isLoggedIn = computed(() => user.value?.status === "user")
 
   const {subscribe, cleanup} = useWebSocket()
   const {requestAsync, request} = useHttp()
 
-  async function checkUserStatus() {
+  async function getUserStatus() {
     const data = await requestAsync<UserStatus, null>({method: "POST", url: "user.status"})
-    isLoggedIn.value = data.status === "user"
-
-    return isLoggedIn.value
+    return data.status
   }
 
   function logout() {
@@ -28,7 +28,7 @@ export const useUserStore = defineStore("user", () => {
       msg: {type: "user.subscribe", data: null},
       onResult: ({data}) => {
         console.log("user.subscribe", data)
-        isLoggedIn.value = data.status === "user"
+        user.value = data
       },
     })
   })
@@ -40,7 +40,7 @@ export const useUserStore = defineStore("user", () => {
   return {
     isLoggedIn,
 
-    checkUserStatus,
+    getUserStatus,
     logout,
   }
 })

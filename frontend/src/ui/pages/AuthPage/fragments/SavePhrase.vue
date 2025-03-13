@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// TODO: This is should be as a modal after the user is logged in
 import {ref} from "vue"
 import {toast} from "@/lib/toasts-lite"
 import {useHttp} from "@/composables/useHttp"

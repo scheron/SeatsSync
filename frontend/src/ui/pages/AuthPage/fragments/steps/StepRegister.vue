@@ -13,7 +13,7 @@ import AuthFormLayout from "../AuthFormLayout.vue"
 const emit = defineEmits<{submit: [code: string]; back: [void]}>()
 const props = defineProps<{username: string; qrCode: string; code?: string}>()
 
-const request = useHttp()
+const {request} = useHttp()
 
 function onSubmit(code: string) {
   request<{username: string}, {username: string; code: string}>({

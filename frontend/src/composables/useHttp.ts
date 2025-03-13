@@ -1,4 +1,4 @@
-import {onUnmounted} from "vue"
+import {tryOnBeforeUnmount} from "@vueuse/core"
 import {httpClient} from "@/api/http"
 
 import type {ErrorCode} from "@/constants/errors"
@@ -24,9 +24,7 @@ export function useHttp() {
     subscriptions.clear()
   }
 
-  onUnmounted(() => {
-    unsubscribe()
-  })
+  tryOnBeforeUnmount(unsubscribe)
 
   function request<TypeResponse, TypeBody = unknown>(config: RequestConfig<TypeResponse, TypeBody>) {
     const {method, url, data, onSuccess, onError} = config

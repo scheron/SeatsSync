@@ -3,6 +3,7 @@ import {tryOnBeforeUnmount} from "@vueuse/core"
 import {wsClient} from "@/api/ws"
 import {ModalsLiteContainer} from "@/lib/modals-lite"
 import {toast, ToastsLiteProvider} from "@/lib/toasts-lite"
+import Header from "@/ui/sections/Header.vue"
 
 let toastID: string
 
@@ -21,7 +22,13 @@ tryOnBeforeUnmount(() => wsClient.destroy())
 </script>
 
 <template>
-  <RouterView />
+  <div class="bg-primary-200 flex h-svh w-screen flex-col overflow-hidden">
+    <Header />
+
+    <main class="h-page-body overflow-y-auto">
+      <RouterView />
+    </main>
+  </div>
 
   <ToastsLiteProvider />
   <ModalsLiteContainer />

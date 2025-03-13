@@ -60,7 +60,6 @@ class User {
     const result = await this.db.findOne<UserTypes.User>({
       where: {username},
     })
-    console.log(result)
 
     return result.success ? result.data! : null
   }

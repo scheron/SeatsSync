@@ -31,6 +31,9 @@
   --color-primary-700: hsl(var(--primary-700));
   --color-primary-800: hsl(var(--primary-800));
   --color-primary-900: hsl(var(--primary-900));
+
+  --spacing-page-header: 52px;
+  --spacing-page-body: calc(100dvh - var(--spacing-page-header));
 }
 
 @utility absolute-center {
