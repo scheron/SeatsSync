@@ -1,6 +1,6 @@
-import type {Subscription} from "@/constants/messageTypes"
 import type {IWebSocketClient} from "@/core/ws"
-import type {MessageRequest} from "@/utils/messages/types"
+import type {MessageRequest} from "@/core/ws/messages"
+import type {Subscription} from "@/shared/constants/messageTypes"
 
 export type Subscriber = {
   ws: IWebSocketClient

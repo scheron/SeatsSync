@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "nodemon --watch src -e ts --exec tsx src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
@@ -41,11 +42,11 @@
   },
   "_moduleAliases": {
     "@": "dist",
+    "@/lib": "dist/lib",
     "@/core": "dist/core",
-    "@/modules": "dist/modules",
     "@/constants": "dist/constants",
-    "@/utils": "dist/utils",
-    "@/services": "dist/services",
-    "@/methods": "dist/methods"
+    "@/modules": "dist/modules",
+    "@/shared": "dist/shared",
+    "@/utils": "dist/utils"
   }
 }

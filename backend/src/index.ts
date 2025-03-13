@@ -2,11 +2,11 @@ import {createServer} from "http"
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import express from "express"
-import {resolveMessage, WebSocketClient} from "@/core/ws"
+import {resolveMessages, WebSocketClient} from "@/core/ws"
 import {CinemaController, CinemaSubscription} from "@/modules/cinema"
 import {HallController, HallSubscription} from "@/modules/hall"
 import {UserController, UserSubscription} from "@/modules/user"
-import {env} from "@/constants/env"
+import {env} from "@/shared/constants/env"
 
 const app = express()
 const router = express.Router()
@@ -31,7 +31,7 @@ const ws = new WebSocketClient(server, {
   pingInterval: 5_000,
   autoCloseTimeout: 15_000,
   enablePingPong: true,
-  onMessage: resolveMessage([
+  onMessage: resolveMessages([
     //
     CinemaController.onMessage,
     UserController.onMessage,

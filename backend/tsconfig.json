@@ -18,16 +18,15 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "importHelpers": true,
-    "baseUrl": "./src/", 
+    "baseUrl": "./src/",
     "paths": {
       "@/*": ["*"],
       "@/core/*": ["core/*"],
       "@/modules/*": ["modules/*"],
-      "@/methods/*": ["methods/*"],
-      "@/services/*": ["services/*"],
+      "@/lib/*": ["lib/*"],
       "@/constants/*": ["constants/*"],
-      "@/utils/*": ["utils/*"]
-
+      "@/utils/*": ["utils/*"],
+      "@/shared/*": ["shared/*"]
     },
     "noEmitOnError": false
   },

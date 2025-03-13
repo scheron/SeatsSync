@@ -1,8 +1,7 @@
+import speakeasy from "speakeasy"
 import {hash, verify} from "@/lib/crypto"
 import {logger} from "@/lib/logger"
-import speakeasy from "speakeasy"
-import {Errors} from "@/constants/errors"
-import {ApiError} from "@/utils/errors/ApiError"
+import {ApiError, Errors} from "@/shared/errors"
 import {
   CODE_REGEX,
   LOGIN_ATTEMPTS_WINDOW,
@@ -12,7 +11,8 @@ import {
   VALIDATION_ATTEMPTS_WINDOW,
 } from "./user.constants"
 import {UserModel} from "./user.model"
-import {User} from "./user.types"
+
+import type {User} from "./user.types"
 
 const loginAttempts = new Map<string, {count: number; resetAt: number}>()
 const validationAttempts = new Map<string, {count: number; resetAt: number}>()

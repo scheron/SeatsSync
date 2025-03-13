@@ -1,5 +1,5 @@
 import {nanoid} from "nanoid"
-import {objectFilter} from "@/utils/objects"
+import {objectFilter} from "@/shared/utils/objects"
 import {validateMessage} from "./validators"
 
 import type {RawData} from "ws"

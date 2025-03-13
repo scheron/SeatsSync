@@ -1,8 +1,8 @@
-import {logger} from "@/lib/logger"
 import jwt from "jsonwebtoken"
-import {env} from "@/constants/env"
-import {AuthErrors} from "@/constants/errors"
-import {ApiError} from "@/utils/errors/ApiError"
+import {logger} from "@/lib/logger"
+import {env} from "@/shared/constants/env"
+import {Errors} from "@/shared/errors"
+import {ApiError} from "@/shared/errors/ApiError"
 
 if (!env.JWT_SECRET) {
   logger.error("JWT_SECRET is not set")
@@ -27,13 +27,13 @@ export function createJWT(payload: Omit<TokenPayload, "iat" | "exp">): string {
     })
   } catch (error) {
     logger.error("Error creating JWT", {error})
-    throw ApiError.internal()
+    throw new ApiError(Errors.InternalServerError)
   }
 }
 
 export function verifyJWT(token: string): TokenPayload | null {
   if (!token) {
-    throw ApiError.unauthorized(AuthErrors.TokenMissing)
+    throw new ApiError(Errors.Unauthorized)
   }
 
   try {
@@ -45,15 +45,15 @@ export function verifyJWT(token: string): TokenPayload | null {
       return decoded as TokenPayload
     }
 
-    throw ApiError.unauthorized(AuthErrors.TokenInvalid)
+    throw new ApiError(Errors.TokenExpired)
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      throw ApiError.unauthorized(AuthErrors.TokenExpired)
+      throw new ApiError(Errors.TokenExpired)
     }
     if (error instanceof ApiError) {
       throw error
     }
-    throw ApiError.unauthorized(AuthErrors.TokenInvalid)
+    throw new ApiError(Errors.TokenInvalid)
   }
 }
 
@@ -69,7 +69,7 @@ export function refreshJWT(token: string): string | null {
   try {
     const payload = verifyJWT(token)
     if (!payload) {
-      throw ApiError.unauthorized(AuthErrors.TokenInvalid)
+      throw new ApiError(Errors.TokenInvalid)
     }
 
     const {username, sub} = payload
@@ -79,6 +79,6 @@ export function refreshJWT(token: string): string | null {
       throw error
     }
     logger.error("Error refreshing JWT", {error})
-    throw ApiError.unauthorized(AuthErrors.TokenInvalid)
+    throw new ApiError(Errors.TokenInvalid)
   }
 }

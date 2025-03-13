@@ -1,4 +1,5 @@
-export const SystemErrors = {
+export const Errors = {
+  // SystemErrors
   InternalServerError: "InternalServerError",
   ValidationError: "ValidationError",
   Unauthorized: "Unauthorized",
@@ -16,9 +17,8 @@ export const SystemErrors = {
   TooManyConnections: "TooManyConnections",
   SubscriptionAlreadyExists: "SubscriptionAlreadyExists",
   SubscriptionNotFound: "SubscriptionNotFound",
-} as const
 
-export const AuthErrors = {
+  // AuthErrors
   InvalidCredentials: "InvalidCredentials",
   TokenExpired: "TokenExpired",
   TokenInvalid: "TokenInvalid",
@@ -39,9 +39,8 @@ export const AuthErrors = {
   UserAlreadyExists: "UserAlreadyExists",
   InvalidRecoveryPhrase: "InvalidRecoveryPhrase",
   RequiredUsername: "RequiredUsername",
-} as const
 
-export const CinemaErrors = {
+  // CinemaErrors
   CinemaNotFound: "CinemaNotFound",
   CinemaExists: "CinemaExists",
   InvalidCinemaData: "InvalidCinemaData",
@@ -49,9 +48,8 @@ export const CinemaErrors = {
   CinemaDeleteFailed: "CinemaDeleteFailed",
   CinemaCreateFailed: "CinemaCreateFailed",
   CinemaFetchFailed: "CinemaFetchFailed",
-} as const
 
-export const HallErrors = {
+  // HallErrors
   HallNotFound: "HallNotFound",
   HallExists: "HallExists",
   InvalidHallData: "InvalidHallData",
@@ -59,9 +57,8 @@ export const HallErrors = {
   HallDeleteFailed: "HallDeleteFailed",
   HallFetchFailed: "HallFetchFailed",
   RequiredHallId: "RequiredHallId",
-} as const
 
-export const SeatErrors = {
+  // SeatErrors
   SeatNotFound: "SeatNotFound",
   SeatExists: "SeatExists",
   InvalidSeatData: "InvalidSeatData",
@@ -70,14 +67,6 @@ export const SeatErrors = {
   SeatOccupied: "SeatOccupied",
   SeatTypeNotFound: "SeatTypeNotFound",
   SeatTypesFetchFailed: "SeatTypesFetchFailed",
-} as const
-
-export const Errors = {
-  ...SystemErrors,
-  ...AuthErrors,
-  ...CinemaErrors,
-  ...HallErrors,
-  ...SeatErrors,
 } as const
 
 export type ErrorCode = keyof typeof Errors

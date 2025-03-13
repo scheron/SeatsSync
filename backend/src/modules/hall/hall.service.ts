@@ -1,5 +1,4 @@
-import {Errors} from "@/constants/errors"
-import {ApiError} from "@/utils/errors/ApiError"
+import {ApiError, Errors} from "@/shared/errors"
 import {hallModel} from "./hall.model"
 
 export async function getHall(hallId: number) {

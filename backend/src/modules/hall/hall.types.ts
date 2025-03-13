@@ -1,6 +1,6 @@
-import {MessageRequest} from "@/core/ws/messages"
-import {Subscription} from "@/constants/messageTypes"
-import {SeatStatus} from "@/utils/types"
+import type {MessageRequest} from "@/core/ws/messages"
+import type {Subscription} from "@/shared/constants/messageTypes"
+import type {SeatStatus} from "@/shared/types"
 
 export type HallMessage = MessageRequest<Subscription>
 

@@ -1,5 +1,5 @@
-import {IWebSocketClient} from "./types"
-import {RawData} from "ws"
+import type {RawData} from "ws"
+import type {IWebSocketClient} from "./types"
 
 type HeartbeatOptions = {
   enablePingPong: boolean

@@ -9,10 +9,12 @@
   "trailingComma": "all",
   "importOrder": [
     "<THIRD_PARTY_MODULES>",
+    "^@/lib(.*)$",
     "^@/core(.*)$",
     "^@/modules(.*)$",
     "^@/constants(.*)$",
     "^@/utils(.*)$",
+    "^@/shared(.*)$",
     "^(?!.*)[./].*$",
     "^[./]",
     "",

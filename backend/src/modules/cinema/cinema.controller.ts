@@ -1,14 +1,15 @@
-import {IWebSocketClient} from "@/core/ws"
-import {MessageRequest} from "@/core/ws/messages"
-import {Methods, Subscription, Subscriptions} from "@/constants/messageTypes"
+import {Methods, Subscriptions} from "@/shared/constants/messageTypes"
 import {getCinemas} from "./cinema.methods"
 import {subscribe, unsubscribe} from "./cinema.subscription"
 
+import type {IWebSocketClient} from "@/core/ws"
+import type {MessageRequest} from "@/core/ws/messages"
+import type {Subscription} from "@/shared/constants/messageTypes"
 import type {CinemaMessage} from "./cinema.types"
 
 export function onMessage(ws: IWebSocketClient, message: CinemaMessage) {
   switch (message.type) {
-    case Methods["cinema.get_cinemas"]:
+    case Methods["cinemas.get_cinemas"]:
       getCinemas(ws, message)
       return true
     case Subscriptions["cinemas.subscribe"]:

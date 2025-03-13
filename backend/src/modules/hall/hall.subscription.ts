@@ -1,10 +1,11 @@
 import {publisher} from "@/core/pubsub"
-import {IWebSocketClient} from "@/core/ws"
-import {formatError, MessageRequest} from "@/core/ws/messages"
-import {Errors} from "@/constants/errors"
-import {Subscription} from "@/constants/messageTypes"
+import {formatError} from "@/core/ws/messages"
+import {Errors} from "@/shared/errors"
 import * as HallService from "./hall.service"
 
+import type {IWebSocketClient} from "@/core/ws"
+import type {MessageRequest} from "@/core/ws/messages"
+import type {Subscription} from "@/shared/constants/messageTypes"
 import type {PartialDeep} from "type-fest"
 import type {Hall} from "./hall.types"
 

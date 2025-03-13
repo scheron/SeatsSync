@@ -10,9 +10,13 @@ Real-time hall occupancy monitoring system backend service.
 src/
 ├── core/           # Application core
 ├── modules/        # Business modules
-├── utils/         # Shared utilities
-├── constants/      # Constants
-└── index.ts        # Entry point
+├── lib/            # Backend-specific libraries
+├── shared/         # Shared entities
+│   ├── types         # Common types and interfaces
+│   ├── errors        # Error types and codes
+│   ├── constants     # Shared business constants
+│   └── utils         # Platform-agnostic utilities
+└── index.ts      # Entry point
 ```
 
 ### Database Entities
@@ -161,7 +165,7 @@ modules/
 
 The protocol is message-based:
 
-```typescript
+````typescript
 // Client -> Server (Request)
 {
   type: "name",             // Method to call
@@ -193,7 +197,7 @@ sequenceDiagram
     Note over Client,HallModel: Real-time updates
     HallModel->>HallSubscription: Status change
     HallSubscription-->>Client: Notification
-```
+````
 
 ## 🛠 Development & Deployment
 

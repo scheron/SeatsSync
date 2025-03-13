@@ -1,9 +1,10 @@
-import {IWebSocketClient} from "@/core/ws"
-import {MessageRequest} from "@/core/ws/messages"
-import {Methods, Subscription, Subscriptions} from "@/constants/messageTypes"
+import {Methods, Subscriptions} from "@/shared/constants/messageTypes"
 import {authReset, authStart, login, logout, register, saveRecoveryPhrase} from "./user.methods"
 import {subscribe, unsubscribe} from "./user.subscription"
 
+import type {IWebSocketClient} from "@/core/ws"
+import type {MessageRequest} from "@/core/ws/messages"
+import type {Subscription} from "@/shared/constants/messageTypes"
 import type {Router} from "express"
 
 export function onMessage(ws: IWebSocketClient, message: MessageRequest<Subscription>) {

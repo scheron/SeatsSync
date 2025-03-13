@@ -1,6 +1,6 @@
 import {PrismaClient} from "@prisma/client"
-import {env} from "@/constants/env"
-import {Errors} from "@/constants/errors"
+import {env} from "@/shared/constants/env"
+import {Errors} from "@/shared/errors"
 
 import type {DBResponse, IDB, QueryOptions} from "./types"
 

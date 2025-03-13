@@ -1,7 +1,8 @@
 import {logger} from "@/lib/logger"
-import {ErrorCode} from "@/constants/errors"
 
-export type ErrorDetails = Record<string, unknown>
+import type {ErrorCode} from "./errors"
+
+type ErrorDetails = Record<string, unknown>
 
 export class ApiError extends Error {
   public readonly code: ErrorCode

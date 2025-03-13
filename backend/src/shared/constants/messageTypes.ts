@@ -7,7 +7,7 @@ export const Methods = {
   "user.recovery_phrase": "/user/recovery_phrase",
   "user.save_recovery_phrase": "/user/save_recovery_phrase",
 
-  "cinema.get_cinemas": "cinema.get_cinemas",
+  "cinemas.get_cinemas": "cinemas.get_cinemas",
 } as const
 
 export const Subscriptions = {

@@ -1,5 +1,4 @@
-import {Errors} from "@/constants/errors"
-import {ApiError} from "@/utils/errors/ApiError"
+import {ApiError, Errors} from "@/shared/errors"
 import {cinemaModel} from "./cinema.model"
 
 import type {Cinema} from "./cinema.types"

@@ -1,6 +1,6 @@
 import {PrismaClient} from "@prisma/client"
-import {cinemas, halls, seatLayouts, seatTypes} from "./mock.js"
 import dotenv from "dotenv"
+import {cinemas, halls, seatLayouts, seatTypes} from "./mock.js"
 
 dotenv.config()
 

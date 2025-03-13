@@ -1,6 +1,6 @@
-import {MessageRequest} from "@/core/ws/messages"
-import {Method, Subscription} from "@/constants/messageTypes"
-import {SeatStatus} from "@/utils/types"
+import type {MessageRequest} from "@/core/ws/messages"
+import type {Method, Subscription} from "@/shared/constants/messageTypes"
+import type {SeatStatus} from "@/shared/types"
 
 export type CinemaMessage = MessageRequest<Subscription> | MessageRequest<Method>
 
