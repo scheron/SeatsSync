@@ -42,6 +42,25 @@ export async function authStart(req: Request<{}, {}, {username: string}>, res: R
   }
 }
 
+export async function checkStatus(req: Request<{}, {}, {}>, res: Response) {
+  const parsedCookies = cookie.parse(req.headers.cookie || "")
+  const cookies = cookieParser.signedCookies(parsedCookies, process.env.COOKIE_SECRET || "")
+
+  if (!cookies[WS_TOKEN_NAME]) return sendSuccess(res, {status: "guest"})
+
+  try {
+    const result = verifyJWT(cookies[WS_TOKEN_NAME])
+    if (!result) return sendSuccess(res, {status: "guest"})
+
+    const user = await UserService.getUser(result.username)
+    if (!user) return sendSuccess(res, {status: "guest"})
+
+    sendSuccess(res, {username: result.username, status: "user"})
+  } catch (error) {
+    sendError(res, error.message ?? Errors.InternalServerError)
+  }
+}
+
 export async function login(req: Request<{}, {}, {username: string; code: string}>, res: Response) {
   const {username, code} = req.body
 

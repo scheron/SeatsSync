@@ -1,4 +1,5 @@
 export const Methods = {
+  "user.status": "/user/status",
   "user.auth_start": "/user/auth_start",
   "user.auth_reset": "/user/auth_reset",
   "user.login": "/user/login",

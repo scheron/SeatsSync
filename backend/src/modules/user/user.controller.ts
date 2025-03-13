@@ -1,5 +1,5 @@
 import {Methods, Subscriptions} from "@/shared/constants/messageTypes"
-import {authReset, authStart, login, logout, register, saveRecoveryPhrase} from "./user.methods"
+import {authReset, authStart, checkStatus, login, logout, register, saveRecoveryPhrase} from "./user.methods"
 import {subscribe, unsubscribe} from "./user.subscription"
 
 import type {IWebSocketClient} from "@/core/ws"
@@ -28,4 +28,5 @@ export function initUserMethods(router: Router) {
   router.post(Methods["user.logout"], logout)
   router.post(Methods["user.register"], register)
   router.post(Methods["user.save_recovery_phrase"], saveRecoveryPhrase)
+  router.post(Methods["user.status"], checkStatus)
 }
