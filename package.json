@@ -7,12 +7,13 @@
     "packages/*"
   ],
   "scripts": {
+    "prepare": "husky",
+    "clean": "rm -rf node_modules && rm -rf apps/*/node_modules && rm -rf packages/*/node_modules",
     "build": "bunx turbo run build",
     "dev": "bunx turbo run dev",
     "lint": "bunx turbo run lint",
     "test": "bunx turbo run test",
-    "prepare": "husky",
-    "clean": "rm -rf node_modules && rm -rf apps/*/node_modules && rm -rf packages/*/node_modules",
+    "format": "bunx turbo run format",
     "check-types": "bunx turbo run check-types"
   },
   "devDependencies": {

@@ -1,0 +1,13 @@
+{
+  "name": "@seats-sync/config-prettier",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "prettier.config.mjs",
+  "files": [
+    "prettier.config.mjs"
+  ],
+  "peerDependencies": {
+    "prettier": "^3.0.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.0.0"
+  }
+}

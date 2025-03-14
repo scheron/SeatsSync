@@ -1,8 +1,8 @@
-import type {DBResponse, IDB, QueryOptions} from "./types"
-
 import {PrismaClient} from "@prisma/client"
 import {env} from "@/shared/constants/env"
 import {Errors} from "@/shared/errors"
+
+import type {DBResponse, IDB, QueryOptions} from "./types"
 
 const client: PrismaClient = new PrismaClient({datasourceUrl: env.DB_URL})
 

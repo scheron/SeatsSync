@@ -1,14 +1,13 @@
 .tooltip-lite {
-    position: fixed;
-    pointer-events: none;
-    padding: 5px 10px;
-    background: var(--color-bg-1);
-    color: var(--color-text-1);
-    border-radius: 4px;
-    font-size: 12px;
-    transition: opacity 0.2s ease;
-    opacity: 0;
-    z-index: 9999;
-    white-space: nowrap;
-  }
-  
+  position: fixed;
+  pointer-events: none;
+  padding: 5px 10px;
+  background: var(--color-bg-1);
+  color: var(--color-text-1);
+  border-radius: 4px;
+  font-size: 12px;
+  transition: opacity 0.2s ease;
+  opacity: 0;
+  z-index: 9999;
+  white-space: nowrap;
+}
