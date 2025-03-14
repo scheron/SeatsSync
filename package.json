@@ -12,7 +12,8 @@
     "lint": "bunx turbo run lint",
     "test": "bunx turbo run test",
     "prepare": "husky",
-    "clean": "rm -rf node_modules && rm -rf apps/*/node_modules && rm -rf packages/*/node_modules"
+    "clean": "rm -rf node_modules && rm -rf apps/*/node_modules && rm -rf packages/*/node_modules",
+    "check-types": "bunx turbo run check-types"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",

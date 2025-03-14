@@ -22,7 +22,6 @@ const seatInfo = computed(() => {
     place: props.seat.place,
     status: props.seat.status,
     type: props.seat.seat_type,
-    price: props.seat.seat_type.price,
     icon: SEAT_TYPES[props.seat.seat_type.name],
   }
 })
@@ -69,11 +68,6 @@ defineExpose({
             <div class="flex items-center justify-between text-sm">
               <span class="text-content/70">Type:</span>
               <span class="text-content font-medium capitalize">{{ seatInfo?.type.name }}</span>
-            </div>
-
-            <div class="flex items-center justify-between text-sm">
-              <span class="text-content/70">Price:</span>
-              <span class="text-content font-medium">${{ seatInfo?.price }}</span>
             </div>
           </div>
         </div>

@@ -1,35 +1,20 @@
 {
+  "extends": "@seats-sync/config-ts/base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "lib": ["ESNext", "esnext.asynciterable"],
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "typeRoots": ["node_modules/@types"],
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "forceConsistentCasingInFileNames": true,
-    "pretty": true,
-    "sourceMap": true,
-    "declaration": true,
-    "outDir": "dist",
-    "allowJs": true,
-    "noEmit": false,
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "importHelpers": true,
     "baseUrl": "./src/",
+    "lib": ["ESNext", "esnext.asynciterable"],
+    "outDir": "dist",
     "paths": {
       "@/*": ["*"],
-      "@/core/*": ["core/*"],
-      "@/modules/*": ["modules/*"],
-      "@/lib/*": ["lib/*"],
       "@/constants/*": ["constants/*"],
-      "@/utils/*": ["utils/*"],
-      "@/shared/*": ["shared/*"]
+      "@/core/*": ["core/*"],
+      "@/lib/*": ["lib/*"],
+      "@/modules/*": ["modules/*"],
+      "@/shared/*": ["shared/*"],
+      "@/utils/*": ["utils/*"]
     },
-    "noEmitOnError": false
+    "typeRoots": ["node_modules/@types"]
   },
-  "include": ["src/**/*.ts", "src/**/*.json", ".env"],
-  "exclude": ["node_modules", "src/http", "src/logs"]
+  "exclude": ["node_modules", "src/http", "src/logs"],
+  "include": ["src/**/*.ts", "src/**/*.json", ".env"]
 }

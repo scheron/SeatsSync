@@ -1,8 +1,8 @@
+import type {DBResponse, IDB, QueryOptions} from "./types"
+
 import {PrismaClient} from "@prisma/client"
 import {env} from "@/shared/constants/env"
 import {Errors} from "@/shared/errors"
-
-import type {DBResponse, IDB, QueryOptions} from "./types"
 
 const client: PrismaClient = new PrismaClient({datasourceUrl: env.DB_URL})
 
@@ -43,7 +43,7 @@ export class DB implements IDB {
 
   async update<T, R>(id: number, data: T): Promise<DBResponse<R>> {
     try {
-      const existing = await this.findOne<R>({id})
+      const existing = await this.findOne<R>({where: {id}})
 
       if (!existing.success || !existing.data) {
         return {success: false, data: null, error: `${this.tableName.toUpperCase()}_NOT_FOUND`}
@@ -67,7 +67,7 @@ export class DB implements IDB {
 
   async delete(id: number): Promise<DBResponse<null>> {
     try {
-      const existing = await this.findOne({id})
+      const existing = await this.findOne({where: {id}})
 
       if (!existing.success || !existing.data) {
         return {success: false, data: null, error: `${this.tableName.toUpperCase()}_NOT_FOUND`}

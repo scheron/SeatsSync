@@ -1,0 +1,11 @@
+{
+    "name": "@seats-sync/config-ts",
+    "version": "0.1.0",
+    "type": "module",
+    "files": [
+        "base.json"
+    ],
+    "peerDependencies": {
+        "typescript": "^5.0.0"
+    }
+}

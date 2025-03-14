@@ -27,7 +27,6 @@ const isFree = computed(() => props.seat.status === "VACANT")
 
     <div class="flex items-center gap-2" :class="[isFree ? 'text-content' : 'text-content/40']">
       <BaseIcon name="cash" class="size-4" />
-      <span>${{ seat.seat_type.price }}</span>
     </div>
   </div>
 </template>
