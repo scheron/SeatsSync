@@ -20,11 +20,7 @@ class HallModel {
             width: true,
             height: true,
             rotation: true,
-            seat_type: {
-              select: {
-                name: true,
-              },
-            },
+            seat_type: true,
           },
         },
       },
@@ -40,3 +36,19 @@ class HallModel {
 }
 
 export const hallModel = new HallModel(new DB("Hall"))
+
+/*
+{
+1: {
+name: 'Standart',
+count: {
+  VACANT: 10,
+  OCCUPIED: 10,
+}
+
+
+} 
+}
+
+
+*/

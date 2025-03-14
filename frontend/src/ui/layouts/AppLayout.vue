@@ -8,9 +8,7 @@ const slides = ["left", "right"]
 </script>
 
 <template>
-  <div class="bg-primary-200 text-content flex h-screen w-screen flex-col gap-4 overflow-hidden p-4">
-    <slot name="header" />
-
+  <div class="bg-primary-200 text-content flex h-full w-full flex-col gap-4 overflow-hidden p-8">
     <Carousel v-if="isTablet" class="layout-carousel" height="100%" :perPage="1">
       <Slide v-for="slide in slides" :key="slide" class="relative flex h-full flex-col gap-4">
         <slot :name="slide" />

@@ -9,10 +9,7 @@ export type Seat = {
   row: number
   place: number
   status: SeatStatus
-  seat_type: {
-    name: string
-    price: number
-  }
+  seat_type: string
 }
 
 export type Hall = {

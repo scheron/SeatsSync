@@ -87,6 +87,8 @@ export const useCinemaStore = defineStore("cinema", () => {
       msg: {type: "cinemas.subscribe", data: null, eid: CINEMAS_SUB_ID},
       onSnapshot: (data) => {
         cinemas.value = data
+        onSelectCinema(data[0])
+        onSelectHall(data[0].halls[0].id)
       },
       onUpdate: (data) => {
         cinemas.value.forEach((cinema) => {

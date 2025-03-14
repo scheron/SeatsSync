@@ -25,11 +25,11 @@ const emit = defineEmits<{
 }>()
 
 function getValue(option: any): any {
-  return typeof option === "object" ? option[props.optionValue] : option
+  return typeof option === "object" ? option?.[props.optionValue] : option
 }
 
 function getLabel(option: any): string {
-  return typeof option === "object" ? option[props.optionLabel] : String(option)
+  return typeof option === "object" ? option?.[props.optionLabel] : String(option)
 }
 
 function onChange(event: Event) {

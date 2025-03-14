@@ -62,11 +62,6 @@ function onSeatClick(e: MouseEvent) {
 
 <template>
   <div v-if="cinemaStore.activeHall" class="flex size-full flex-col items-center justify-center gap-2">
-    <div class="flex w-full flex-col items-center gap-1">
-      <span class="text-content/60">{{ cinemaStore.activeCinema?.name }}</span>
-      <span class="text-content">{{ cinemaStore.activeHall?.name }}</span>
-    </div>
-
     <div class="flex size-full flex-col items-center justify-center gap-6">
       <div class="flex w-full flex-col items-center justify-center perspective-distant">
         <BaseIcon name="screen" class="text-content/60 h-20 w-full" />

@@ -22,7 +22,7 @@ tryOnBeforeUnmount(() => wsClient.destroy())
 </script>
 
 <template>
-  <div class="bg-primary-200 flex h-svh w-screen flex-col overflow-hidden">
+  <div class="bg-primary-200 text-content flex h-svh w-screen flex-col overflow-hidden">
     <Header />
 
     <main class="h-page-body overflow-y-auto">
