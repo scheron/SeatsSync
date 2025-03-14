@@ -8,6 +8,9 @@
   "tabWidth": 2,
   "trailingComma": "all",
   "importOrder": [
+    "<TYPES>",
+    "<TYPES>^[.]",
+    "",
     "<THIRD_PARTY_MODULES>",
     "^@/lib(.*)$",
     "^@/core(.*)$",
@@ -16,10 +19,7 @@
     "^@/utils(.*)$",
     "^@/shared(.*)$",
     "^(?!.*)[./].*$",
-    "^[./]",
-    "",
-    "<TYPES>",
-    "<TYPES>^[.]"
+    "^[./]"
   ],
   "importOrderParserPlugins": ["typescript", "decorators-legacy"],
   "plugins": ["@ianvs/prettier-plugin-sort-imports"]

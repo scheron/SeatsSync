@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "seats_sync_backend",
+  "name": "@seats-sync/backend",
   "description": "Backend for the SeatsSync project",
   "private": true,
   "type": "module",

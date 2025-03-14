@@ -5,6 +5,7 @@ logs*
 .vscode
 .idea
 .DS_Store
+.turbo
 
 .env
 .env.development.local
