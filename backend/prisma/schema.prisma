@@ -49,7 +49,7 @@ model Seat {
   height          Int
   rotation        Float
   status          SeatStatus      @default(VACANT)     
-  last_updated    DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime        @default(now()) @db.Timestamptz(6)
 
   hall            Hall?           @relation(fields: [hall_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
   seat_type       SeatType        @relation(fields: [seat_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)

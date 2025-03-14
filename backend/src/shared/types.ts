@@ -1,9 +1,27 @@
-export type Cinema = {
+export type SeatStatus = "VACANT" | "OCCUPIED"
+
+export type SeatType = {
   id: number
   name: string
-  color: string
-  created_at: Date
-  halls: Hall[]
+}
+
+export type SeatTypeStats = {
+  seats_count: number
+  seats: Record<SeatStatus, number>
+}
+
+export type Seat = {
+  id: number
+  row: number
+  place: number
+  x: number
+  y: number
+  width: number
+  height: number
+  rotation: number
+  seat_type: SeatType
+  updated_at: Date
+  status: SeatStatus
 }
 
 export type Hall = {
@@ -14,20 +32,13 @@ export type Hall = {
   rows: number
   places: number
   seats: Seat[]
+  seat_types: (SeatType & SeatTypeStats)[]
 }
 
-export type SeatStatus = "VACANT" | "OCCUPIED"
-
-export type Seat = {
+export type Cinema = {
   id: number
+  name: string
+  color: string
   created_at: Date
-  hall_id: number
-  row: number
-  place: number
-  x: number
-  y: number
-  width: number
-  height: number
-  rotation: number
-  status: SeatStatus
+  halls: Hall[]
 }

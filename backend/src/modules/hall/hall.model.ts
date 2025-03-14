@@ -1,12 +1,14 @@
 import {logger} from "@/lib/logger"
 import {DB} from "@/core/db"
-import {Hall} from "./hall.types"
+import {HallDB} from "./hall.types"
+
+import type {Hall, Seat, SeatType, SeatTypeStats} from "@/shared/types"
 
 class HallModel {
   constructor(private db: DB) {}
 
-  async getOne(hallId: number) {
-    const result = await this.db.findOne({
+  async getOne(hallId: number): Promise<Hall | null> {
+    const result = await this.db.findOne<HallDB>({
       where: {id: hallId},
       include: {
         seats: {
@@ -21,6 +23,7 @@ class HallModel {
             height: true,
             rotation: true,
             seat_type: true,
+            updated_at: true,
           },
         },
       },
@@ -31,24 +34,37 @@ class HallModel {
       return null
     }
 
-    return result.data as Hall
+    const seatTypes = this.getSeatTypes(result.data.seats)
+
+    return {
+      ...result.data,
+      seats: result.data.seats as Seat[],
+      seat_types: seatTypes,
+    }
+  }
+
+  private getSeatTypes(seats: HallDB["seats"]): Array<SeatType & SeatTypeStats> {
+    const seatTypeMap = seats.reduce((acc, seat) => {
+      const {id, name} = seat.seat_type
+
+      if (!acc.has(id)) {
+        acc.set(id, {
+          id,
+          name,
+          seats_count: 0,
+          seats: {VACANT: 0, OCCUPIED: 0},
+        })
+      }
+
+      const seatTypeStats = acc.get(id)!
+      seatTypeStats.seats_count++
+      seatTypeStats.seats[seat.status]++
+
+      return acc
+    }, new Map<number, SeatType & SeatTypeStats>())
+
+    return Array.from(seatTypeMap.values())
   }
 }
 
 export const hallModel = new HallModel(new DB("Hall"))
-
-/*
-{
-1: {
-name: 'Standart',
-count: {
-  VACANT: 10,
-  OCCUPIED: 10,
-}
-
-
-} 
-}
-
-
-*/

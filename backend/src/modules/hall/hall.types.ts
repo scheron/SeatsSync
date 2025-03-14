@@ -1,23 +1,10 @@
+import {Except} from "type-fest"
+
 import type {MessageRequest} from "@/core/ws/messages"
 import type {Subscription} from "@/shared/constants/messageTypes"
-import type {SeatStatus} from "@/shared/types"
+import type {Hall, Seat, SeatType} from "@prisma/client"
 
 export type HallMessage = MessageRequest<Subscription>
 
-export type Seat = {
-  id: number
-  row: number
-  place: number
-  status: SeatStatus
-  seat_type: string
-}
-
-export type Hall = {
-  id: number
-  name: string
-  cinema_id: number
-  created_at: string
-  rows: number
-  places: number
-  seats: Seat[]
-}
+type SeatDB = Except<Seat, "seat_type_id" | "hall_id"> & {seat_type: SeatType}
+export type HallDB = Hall & {seats: SeatDB[]}
