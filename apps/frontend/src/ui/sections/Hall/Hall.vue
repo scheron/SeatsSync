@@ -53,7 +53,7 @@ function onSeatClick(e: MouseEvent) {
 
   const seatId = Number(seatEl.dataset.seatId)
   const seatStatus = seatEl.dataset.status
-  if (seatStatus === "OCCUPIED") return
+  if (seatStatus === "RESERVED") return
 
   cinemaStore.onSelectSeat(seatId)
 }

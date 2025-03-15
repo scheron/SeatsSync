@@ -1,7 +1,8 @@
 {
     "name": "@seats-sync/utils",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "private": true,
+    "type": "module",
     "exports": {
         "./merge": "./src/merges.ts",
         "./number": "./src/number.ts",

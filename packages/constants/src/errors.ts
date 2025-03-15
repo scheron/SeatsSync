@@ -64,7 +64,7 @@ export const Errors = {
   InvalidSeatData: "InvalidSeatData",
   SeatUpdateFailed: "SeatUpdateFailed",
   SeatDeleteFailed: "SeatDeleteFailed",
-  SeatOccupied: "SeatOccupied",
+  SeatReserved: "SeatReserved",
   SeatTypeNotFound: "SeatTypeNotFound",
   SeatTypesFetchFailed: "SeatTypesFetchFailed",
 } as const;

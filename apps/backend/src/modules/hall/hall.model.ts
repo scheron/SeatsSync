@@ -52,7 +52,7 @@ class HallModel {
           id,
           name,
           seats_count: 0,
-          seats: {VACANT: 0, OCCUPIED: 0},
+          seats: {VACANT: 0, RESERVED: 0},
         })
       }
 

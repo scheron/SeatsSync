@@ -1,4 +1,4 @@
-export type SeatStatus = "VACANT" | "OCCUPIED";
+export type SeatStatus = "VACANT" | "RESERVED";
 
 export type SeatType = {
   id: number;

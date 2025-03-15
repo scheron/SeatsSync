@@ -23,7 +23,7 @@ defineProps<{
     :class="
       cn({
         'bg-primary-700/50 cursor-pointer': seat.status === 'VACANT',
-        'bg-primary-300/50 cursor-default': seat.status === 'OCCUPIED',
+        'bg-primary-300/50 cursor-default': seat.status === 'RESERVED',
         'bg-primary-700 cursor-pointer': selected,
       })
     "
@@ -43,6 +43,6 @@ defineProps<{
     >
       {{ seat.place }}
     </span>
-    <BaseIcon v-if="seat.status === 'OCCUPIED'" name="close" class="text-primary-700 size-4" />
+    <BaseIcon v-if="seat.status === 'RESERVED'" name="close" class="text-primary-700 size-4" />
   </div>
 </template>

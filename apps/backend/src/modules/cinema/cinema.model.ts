@@ -35,7 +35,7 @@ class CinemaModel {
         ...hall,
         seats_count: seats.reduce((acc, seat) => ({...acc, [seat.status]: (acc[seat.status] || 0) + 1}), {
           VACANT: 0,
-          OCCUPIED: 0,
+          RESERVED: 0,
         }),
       })),
     }))

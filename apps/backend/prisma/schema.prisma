@@ -63,5 +63,5 @@ model SeatType {
 
 enum SeatStatus {
   VACANT         
-  OCCUPIED       
+  RESERVED       
 }

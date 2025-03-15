@@ -162,7 +162,7 @@ async function createSeats(hall, seatTypeRecords) {
     width: seat.width,
     height: seat.height,
     rotation: seat.rotation,
-    status: Math.random() > 0.8 ? "OCCUPIED" : "VACANT",
+    status: Math.random() > 0.8 ? "RESERVED" : "VACANT",
   }))
 
   await prisma.seat.createMany({data: seats})

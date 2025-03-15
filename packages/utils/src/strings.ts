@@ -24,9 +24,9 @@ function normalizeString(str: string): string {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
-export function matchesQuery(string: string, query: string): boolean {
+export function findSubstring(string: string, substring: string): boolean {
   const normalizedString = normalizeString(string);
-  const normalizedQuery = normalizeString(query);
+  const normalizedSubstring = normalizeString(substring);
 
-  return normalizedString.includes(normalizedQuery);
+  return normalizedString.includes(normalizedSubstring);
 }

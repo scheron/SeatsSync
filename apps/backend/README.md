@@ -37,7 +37,7 @@ src/
 
 - Detailed information about each seat in the hall
 - Includes coordinates and dimensions for display
-- Has status (vacant/occupied)
+- Has status (vacant/reserved)
 - Linked to seat type
 
 #### SeatType
