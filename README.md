@@ -1,105 +1,44 @@
-# Seats Sync
+# SeatsSync
 
-## Installation and Setup
+<div align="center">
+  <h3>🎭 Seat Management System</h3>
+</div>
 
-### Requirements
+## About
 
-- **Docker** and **Docker Compose**
-- **Bun** (https://bun.sh)
+SeatsSync is a full-stack application for managing seat reservations.
 
-### Project Installation
+## Tech Stack
 
-1. Clone the repository.
-2. Create a `.env` file based on the example:
+- **Frontend:** Vue.js
+- **Backend:** Node.js
 
-```bash
- cp .env.example .env
+## Project Structure
+
+```
+SeatsSync/
+├── apps/
+│   ├── frontend/     # Vue.js frontend
+│   └── backend/      # Node.js backend
+└── packages/
+    └── config/       # Shared configs
 ```
 
-3. Ensure the `.env` file contains the following values:
+## Getting Started
 
-   ```env
-   POSTGRES_USER=
-   POSTGRES_PASSWORD=
-   POSTGRES_DB=
-   POSTGRES_PORT=
-   DATABASE_URL=
-   ```
-
-4. Run the project setup:
-   ```bash
-   make setup
-   ```
-
-## Running the Project
-
-### 1. Start the Database
-
-If the database is already set up, you can start it separately:
-
+1. Install dependencies:
 ```bash
-make start-db
+bun install
 ```
 
-### 2. Start the Backend Server
-
+2. Start development:
 ```bash
-cd backend
-bun start
+bun dev
 ```
 
-### 3. Start the Frontend
+## Available Scripts
 
-```bash
-cd frontend
-bun start
-```
-
-## Useful Makefile Commands
-
-- **Install dependencies**:
-
-  ```bash
-  make install
-  ```
-
-- **Start the database**:
-
-  ```bash
-  make start-db
-  ```
-
-- **Stop the database**:
-
-  ```bash
-  make stop-db
-  ```
-
-- **Restart the database**:
-
-  ```bash
-  make restart-db
-  ```
-
-- **Create the database (if not already created)**:
-
-  ```bash
-  make create-db
-  ```
-
-- **Initialize the database schema**:
-
-  ```bash
-  make init-db
-  ```
-
-- **Seed the database with initial data**:
-
-  ```bash
-  make seed-db
-  ```
-
-- **Full project setup**:
-  ```bash
-  make setup
-  ```
+- `bun dev` - Start development
+- `bun build` - Build project
+- `bun lint` - Run linting
+- `bun format` - Format code
