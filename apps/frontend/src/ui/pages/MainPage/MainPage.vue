@@ -5,7 +5,6 @@ import {useCinemaStore} from "@/stores/cinema/cinema.store"
 import BaseButton from "@/ui/base/BaseButton.vue"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 import BasePopover from "@/ui/base/BasePopover.vue"
-import BaseSelect from "@/ui/base/BaseSelect.vue"
 import Hall from "@/ui/sections/Hall"
 import HallList from "@/ui/sections/HallList/HallList.vue"
 

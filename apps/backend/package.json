@@ -9,6 +9,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "format": "prettier --write .",
+    "lint": "eslint . --fix --ignore-pattern .gitignore",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
@@ -40,10 +41,10 @@
     "@types/ws": "^8.5.13",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
-    "prettier-plugin-tailwindcss": "^0.6.9",
     "tsx": "^4.19.2",
     "type-fest": "^4.36.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.4.3",
+    "eslint": "^9.22.0"
   },
   "_moduleAliases": {
     "@": "dist",

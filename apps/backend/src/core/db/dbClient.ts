@@ -13,7 +13,7 @@ export class DB implements IDB {
     try {
       const result = await client[this.tableName].findMany({...options})
       return {success: true, data: result}
-    } catch (error: any) {
+    } catch {
       return {success: false, data: null, error: Errors.InternalServerError}
     }
   }
@@ -27,7 +27,7 @@ export class DB implements IDB {
       }
 
       return {success: true, data: result}
-    } catch (error: any) {
+    } catch {
       return {success: false, data: null, error: Errors.InternalServerError}
     }
   }
@@ -36,7 +36,7 @@ export class DB implements IDB {
     try {
       const result = await client[this.tableName].create({data})
       return {success: true, data: result}
-    } catch (error: any) {
+    } catch {
       return {success: false, data: null, error: `${this.tableName.toUpperCase()}_CREATE_FAILED`}
     }
   }
@@ -51,7 +51,7 @@ export class DB implements IDB {
 
       const result = await client[this.tableName].update({where: {id}, data})
       return {success: true, data: result}
-    } catch (error: any) {
+    } catch {
       return {success: false, data: null, error: `${this.tableName.toUpperCase()}_UPDATE_FAILED`}
     }
   }
@@ -60,7 +60,7 @@ export class DB implements IDB {
     try {
       const result = await client[this.tableName].updateMany({where, data})
       return {success: true, data: result as R}
-    } catch (error: any) {
+    } catch {
       return {success: false, data: null, error: `${this.tableName.toUpperCase()}_UPDATE_FAILED`}
     }
   }
@@ -75,7 +75,7 @@ export class DB implements IDB {
 
       await client[this.tableName].delete({where: {id}})
       return {success: true, data: null}
-    } catch (error: any) {
+    } catch {
       return {success: false, data: null, error: `${this.tableName.toUpperCase()}_DELETE_FAILED`}
     }
   }
@@ -86,7 +86,7 @@ export class DB implements IDB {
         return await fn(tx as PrismaClient)
       })
       return {success: true, data: result}
-    } catch (error: any) {
+    } catch {
       return {success: false, data: null, error: Errors.InternalServerError}
     }
   }

@@ -1,5 +1,4 @@
-import {MessageRequest} from "@/core/ws/messages"
-
+import type {MessageRequest} from "@/core/ws/messages"
 import type {WebSocket} from "ws"
 
 export type IWebSocketClient = WebSocket & {

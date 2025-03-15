@@ -21,7 +21,7 @@ function handleOverlayClick(event: MouseEvent) {
 </script>
 
 <template>
-  <div :class="classesOverlay" @click="handleOverlayClick" :style="{position: modalContext.strategy.strategy}">
+  <div :class="classesOverlay" :style="{position: modalContext.strategy.strategy}" @click="handleOverlayClick">
     <div :class="classContainer">
       <slot />
     </div>

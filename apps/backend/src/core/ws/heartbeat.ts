@@ -87,7 +87,7 @@ export class Heartbeat {
         try {
           ws.send("1")
           this.onSend(ws, "1")
-        } catch (error) {
+        } catch {
           ws.terminate()
           this.clients.delete(ws)
           this.onPingTimeout(ws)

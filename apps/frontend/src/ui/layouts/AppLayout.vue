@@ -16,7 +16,7 @@ const slides = ["left", "right"]
     </Carousel>
 
     <div v-else class="grid h-full grid-cols-[2fr_1fr] gap-4">
-      <div v-for="slide in slides" :data-layout-section="slide" :key="slide" class="relative">
+      <div v-for="slide in slides" :key="slide" :data-layout-section="slide" class="relative">
         <slot :name="slide" />
       </div>
     </div>

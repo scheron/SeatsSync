@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import {onMounted} from "vue"
-import {useRouter} from "vue-router"
 import {useMachine} from "@xstate/vue"
 import BaseCard from "@/ui/base/BaseCard.vue"
 import {authMachine} from "./auth.machine"
@@ -8,13 +6,7 @@ import StepLogin from "./fragments/steps/StepLogin.vue"
 import StepRegister from "./fragments/steps/StepRegister.vue"
 import StepStart from "./fragments/steps/StepStart.vue"
 
-const router = useRouter()
-
 const {snapshot, send} = useMachine(authMachine)
-
-onMounted(() => {
-  //   router.routerLoaded()
-})
 </script>
 
 <template>

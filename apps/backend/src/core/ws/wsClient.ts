@@ -155,16 +155,6 @@ export class WebSocketClient {
     if (isHeartbeat) return
 
     try {
-      let length: number
-
-      if (message instanceof ArrayBuffer) {
-        length = message.byteLength
-      } else if (typeof message === "string" || Buffer.isBuffer(message)) {
-        length = message.length
-      } else {
-        throw new Error("Unsupported data type")
-      }
-
       const parsedMessage = JSON.parse(message.toString())
 
       if (!parsedMessage.type) {

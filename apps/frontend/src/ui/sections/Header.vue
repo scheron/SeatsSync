@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {ref} from "vue"
 import {ROUTE_NAMES} from "@/router/routes"
 import {useCinemaStore} from "@/stores/cinema/cinema.store"
 import {useThemeStore} from "@/stores/theme"

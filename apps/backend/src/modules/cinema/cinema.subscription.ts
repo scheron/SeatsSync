@@ -1,9 +1,10 @@
 import {publisher} from "@/core/pubsub"
-import {formatError, MessageRequest} from "@/core/ws/messages"
+import {formatError} from "@/core/ws/messages"
 import {Errors} from "@/shared/errors"
 import * as CinemaService from "./cinema.service"
 
 import type {IWebSocketClient} from "@/core/ws"
+import type {MessageRequest} from "@/core/ws/messages"
 import type {Subscription} from "@/shared/constants/messageTypes"
 import type {PartialDeep} from "type-fest"
 import type {Cinema} from "./cinema.types"

@@ -1,8 +1,7 @@
-import {Except} from "type-fest"
-
 import type {MessageRequest} from "@/core/ws/messages"
 import type {Subscription} from "@/shared/constants/messageTypes"
 import type {Hall, Seat, SeatType} from "@prisma/client"
+import type {Except} from "type-fest"
 
 export type HallMessage = MessageRequest<Subscription>
 

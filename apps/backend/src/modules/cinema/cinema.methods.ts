@@ -1,7 +1,8 @@
-import {formatSuccess, MessageRequest} from "@/core/ws/messages"
+import {formatSuccess} from "@/core/ws/messages"
 import * as CinemaService from "./cinema.service"
 
 import type {IWebSocketClient} from "@/core/ws"
+import type {MessageRequest} from "@/core/ws/messages"
 import type {Method} from "@/shared/constants/messageTypes"
 
 export async function getCinemas(ws: IWebSocketClient, message: MessageRequest<Method>) {

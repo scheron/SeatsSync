@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {computed, ref} from "vue"
-import {toast} from "@/lib/toasts-lite"
 import {calculateHallSize, createSeatsSchema} from "@/utils/hall"
 import {useTooltip} from "@/composables/useTooltip"
 import {useCinemaStore} from "@/stores/cinema/cinema.store"

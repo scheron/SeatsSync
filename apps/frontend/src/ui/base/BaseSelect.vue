@@ -49,9 +49,9 @@ function onChange(event: Event) {
 
     <select
       :value="typeof modelValue === 'object' ? getValue(modelValue) : modelValue"
-      @change="onChange"
       :disabled="isDisabled"
       class="outline-none focus:outline-none"
+      @change="onChange"
     >
       <option v-if="placeholder" value="" disabled>{{ placeholder }}</option>
       <option v-for="option in options" :key="getValue(option)" :value="getValue(option)">

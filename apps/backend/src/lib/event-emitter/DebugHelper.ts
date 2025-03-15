@@ -1,4 +1,4 @@
-import {EventMap, LogOperation, LogParams} from "./types"
+import type {EventMap, LogOperation, LogParams} from "./types"
 
 export class DebugHelper<Events extends EventMap> {
   constructor(

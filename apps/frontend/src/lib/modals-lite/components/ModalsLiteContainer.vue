@@ -81,8 +81,8 @@ useEventListener(document, "keydown", handleEscape)
       <Transition name="fade" appear>
         <div :ref="(el) => setModalRef(el as HTMLElement | null, modal.id)">
           <ModalsLiteWrapper
-            :modal="modal"
             v-kbd-trap
+            :modal="modal"
             :style="{
               position: getTeleportStrategy(modal.options.teleport || 'body').strategy,
               zIndex: 1000 + allModals.indexOf(modal),
