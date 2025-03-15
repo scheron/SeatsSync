@@ -5,6 +5,8 @@ import {ModalsLiteContainer} from "@/lib/modals-lite"
 import {toast, ToastsLiteProvider} from "@/lib/toasts-lite"
 import Header from "@/ui/sections/Header.vue"
 
+import type {Toast} from "@/lib/toasts-lite"
+
 let toastID: string
 
 wsClient.connectionState.subscribe(({state, prevState}) => {

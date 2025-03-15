@@ -1,7 +1,7 @@
 import * as vueParser from "vue-eslint-parser";
 import typescript from "@typescript-eslint/parser";
 import tseslint from "@typescript-eslint/eslint-plugin";
-import baseConfig from "./base.js";
+import baseConfig from "./eslint.base.mjs";
 import importPlugin from "eslint-plugin-import";
 import vue from "eslint-plugin-vue";
 

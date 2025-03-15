@@ -8,5 +8,6 @@ export default {
   tabWidth: 2,
   trailingComma: "all",
   importOrderParserPlugins: ["typescript", "decorators-legacy"],
+  importOrderTypeScriptVersion: "5.0.0",
   plugins: ["@ianvs/prettier-plugin-sort-imports"],
-};
+}

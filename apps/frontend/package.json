@@ -32,8 +32,7 @@
     "xstate": "^5.19.0"
   },
   "devDependencies": {
-    "@seats-sync/config-prettier": "workspace:*",
-    "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
+    "@seats-sync/config": "*",
     "@tailwindcss/vite": "^4.0.8",
     "@types/node": "^22.10.2",
     "@types/svg-sprite": "^0.0.39",

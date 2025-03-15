@@ -1,4 +1,4 @@
-import baseConfig from "@seats-sync/config-prettier"
+import baseConfig from "@seats-sync/config/prettier"
 
 export default {
   ...baseConfig,

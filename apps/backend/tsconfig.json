@@ -1,5 +1,5 @@
 {
-  "extends": "@seats-sync/config-ts/base.json",
+  "extends": "@seats-sync/config/typescript",
   "compilerOptions": {
     "baseUrl": "./src/",
     "lib": ["ESNext", "esnext.asynciterable"],

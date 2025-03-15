@@ -1,4 +1,5 @@
 {
+  "extends": ["@vue/tsconfig/tsconfig.dom.json", "@seats-sync/config/typescript"],
   "compilerOptions": {
     "baseUrl": "./src/",
     "jsx": "preserve",
@@ -8,9 +9,8 @@
     },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo"
   },
-  "exclude": ["node_modules", "dist"],
-  "extends": ["@seats-sync/config-ts/base.json", "@vue/tsconfig/tsconfig.dom.json"],
   "files": [],
+  "exclude": ["node_modules", "dist"],
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
