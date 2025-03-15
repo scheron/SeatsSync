@@ -1,0 +1,11 @@
+{
+    "name": "@seats-sync/constants",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        "./errors": "./src/errors.ts",
+        "./methods": "./src/methods.ts",
+        "./subscriptions": "./src/subscriptions.ts"
+    }
+}

@@ -1,8 +1,4 @@
-import type {MessageRequest} from "@/core/ws/messages"
-import type {Method, Subscription} from "@/shared/constants/messageTypes"
-import type {SeatStatus} from "@/shared/types"
-
-export type CinemaMessage = MessageRequest<Subscription> | MessageRequest<Method>
+import type {SeatStatus} from "@seats-sync/types/cinema"
 
 export type CinemaDB = {
   id: number
@@ -21,20 +17,4 @@ export type HallDB = {
     id: number
     status: SeatStatus
   }[]
-}
-
-export type Cinema = {
-  id: number
-  name: string
-  color: string
-  created_at: Date
-  halls: Hall[]
-}
-
-export type Hall = {
-  id: number
-  name: string
-  rows: number
-  places: number
-  seats_count: Record<SeatStatus, number>
 }

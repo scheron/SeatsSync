@@ -1,23 +1,23 @@
+import {Errors} from "@seats-sync/constants/errors"
 import {WebSocket} from "ws"
 import {logger} from "@/lib/logger"
 import {formatError, formatSuccess} from "@/core/ws/messages"
-import {Errors} from "@/shared/errors"
 
 import type {IWebSocketClient} from "@/core/ws"
-import type {MessageRequest, ResponseStatus} from "@/core/ws/messages"
-import type {ErrorCode} from "@/shared/errors"
+import type {ErrorCode} from "@seats-sync/constants/errors"
+import type {MessageRequest, ResponseStatus} from "@seats-sync/types/websocket"
 import type {Subscriber as ISubscriber, SubscriptionHandler} from "./types"
 
-export class Subscriber<T extends string = string, D = any> {
+export class Subscriber<D = any> {
   private subscribers = new Map<string, ISubscriber>()
 
   private compositeKey(clientId: string, eid: string) {
     return `${clientId}::${eid}`
   }
 
-  constructor(private handler: SubscriptionHandler<T, D>) {}
+  constructor(private handler: SubscriptionHandler<D>) {}
 
-  async subscribe(ws: IWebSocketClient, message: MessageRequest<T, D>) {
+  async subscribe(ws: IWebSocketClient, message: MessageRequest<D>) {
     try {
       const clientId = ws.context?.id
 

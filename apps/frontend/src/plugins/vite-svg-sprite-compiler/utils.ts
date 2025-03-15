@@ -1,6 +1,7 @@
 import crypto from "crypto"
 import {promises as fs, readFileSync} from "fs"
 import {basename, dirname, join} from "path"
+
 import SVGSprite from "svg-sprite"
 import {optimize} from "svgo"
 import {getSpriteBaseName, SPRITE_FILENAME_EXTENSION, SVGO_CONFIG} from "./config"

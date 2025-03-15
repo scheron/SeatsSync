@@ -1,5 +1,6 @@
 import {promises as fs} from "fs"
 import {dirname, join} from "path"
+
 import {generateSpriteFilename, generateTypesContent, getDefaultSpritePath} from "./config"
 import {
   cleanupOldSprites,

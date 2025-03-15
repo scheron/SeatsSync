@@ -1,52 +1,29 @@
-import type {Errors} from "@/constants/errors"
-import type {Method, Subscription} from "@/constants/messageTypes"
+import type {Method} from "@seats-sync/constants/methods"
+import type {Subscription} from "@seats-sync/constants/subscriptions"
+import type {MessageError, MessageRequest, MessageSuccess} from "@seats-sync/types/websocket"
 
 export type MessageType = Method | Subscription | "*"
 
-export type ResponseStatus = "success" | "error" | "snapshot" | "update"
-
-export type RequestMessage<T = any> = {
-  type: MessageType
-  eid?: string
-  data: T
-}
-
 export type SubscriptionOptions<T = any, D = any> = {
-  msg?: RequestMessage<D>
+  msg?: Partial<MessageRequest<D>>
   onSnapshot?: (data: T) => void
   onUpdate?: (data: T) => void
-  onResult?: (msg: ResponseMessageSuccess<T>) => void
-  onError?: (msg: ResponseMessageError) => void
+  onResult?: (msg: MessageSuccess<T>) => void
+  onError?: (msg: MessageError) => void
   onDelete?: () => void
   isKeepAlive?: boolean
   isOnce?: boolean
 }
 
-export type ResponseMessageSuccess<T = any> = {
-  type: MessageType
-  eid: string
-  data: T
-  error: null
-  status: Exclude<ResponseStatus, "error">
-}
-
-export type ResponseMessageError = {
-  type: MessageType
-  eid: string
-  data: null
-  error: keyof typeof Errors
-  status: "error"
-}
-
-export type ResponseMessage<T = any> = ResponseMessageSuccess<T> | ResponseMessageError
+export type ResponseMessage<T = any> = MessageSuccess<T> | MessageError
 export type PingMessage = 1
 export type WebSocketMessage<T> = ResponseMessage<T> | PingMessage
 
-export function isErrorMessage<T>(message: ResponseMessage<T>): message is ResponseMessageError {
+export function isErrorMessage<T>(message: ResponseMessage<T>): message is MessageError {
   return message.status === "error" && message.error !== null
 }
 
-export function isSuccessMessage<T>(message: ResponseMessage<T>): message is ResponseMessageSuccess<T> {
+export function isSuccessMessage<T>(message: ResponseMessage<T>): message is MessageSuccess<T> {
   return message.status !== "error" && message.error === null
 }
 

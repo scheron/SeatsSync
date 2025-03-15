@@ -1,20 +1,12 @@
+import {randomUUID} from "@seats-sync/utils/random"
 import {BehaviorSubject, catchError, distinctUntilChanged, EMPTY, filter, interval, map, ReplaySubject, Subject, takeUntil, tap} from "rxjs"
 import {webSocket} from "rxjs/webSocket"
 import {Logger} from "@/lib/logger"
-import {randomUUID} from "@/utils/random"
 
+import type {Message, MessageError, MessageRequest, MessageSuccess, ResponseStatus} from "@seats-sync/types/websocket"
 import type {Observable, Subscription} from "rxjs"
 import type {WebSocketSubject} from "rxjs/webSocket"
-import type {
-  ConnectionState,
-  MessageType,
-  RequestMessage,
-  ResponseMessage,
-  ResponseMessageError,
-  ResponseMessageSuccess,
-  ResponseStatus,
-  WebSocketMessage,
-} from "./types"
+import type {ConnectionState, MessageType, ResponseMessage, WebSocketMessage} from "./types"
 
 type State = {
   connectionState: ConnectionState
@@ -51,7 +43,7 @@ export class WebSocketClient {
   private readonly logger: Logger
 
   private isManualClose: boolean = false
-  private messageQueue: RequestMessage<any>[] = []
+  private messageQueue: MessageRequest<any>[] = []
 
   constructor(
     private readonly url: string,
@@ -185,7 +177,7 @@ export class WebSocketClient {
     }, delay)
   }
 
-  send<T = any>(message: RequestMessage<T>) {
+  send<T = any>(message: MessageRequest<T>) {
     if (!message.eid) {
       message.eid = randomUUID()
     }
@@ -208,9 +200,9 @@ export class WebSocketClient {
     this.socket$.next(message as WebSocketMessage<T>)
   }
 
-  on(type: MessageType, status: "error"): Observable<ResponseMessageError>
-  on<T = any>(type: MessageType, status: Exclude<ResponseStatus, "error">): Observable<ResponseMessageSuccess<T>>
-  on<T = any>(type: MessageType): Observable<ResponseMessage<T>>
+  on(type: MessageType, status: "error"): Observable<MessageError>
+  on<T = any>(type: MessageType, status: Exclude<ResponseStatus, "error">): Observable<MessageSuccess<T>>
+  on<T = any>(type: MessageType): Observable<Message<T>>
   on<T = any>(type?: MessageType, status?: ResponseStatus | ResponseStatus[]): Observable<ResponseMessage<T>> {
     this.logger.info("[WebSocket] Subscribing to messages:", {type, status})
 

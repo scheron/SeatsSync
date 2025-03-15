@@ -1,0 +1,10 @@
+{
+    "name": "@seats-sync/types",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        "./cinema": "./src/cinema.ts",
+        "./websocket": "./src/websocket.ts"
+    }
+}

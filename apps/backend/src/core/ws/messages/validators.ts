@@ -1,12 +1,12 @@
-import type {MessageRequest} from "./types"
+import type {MessageRequest} from "@seats-sync/types/websocket"
 
 const MAX_MESSAGE_SIZE = 1024 * 1024
 const MAX_DATA_SIZE = 100 * 1024
 
-export function validateMessage<T extends string, D>(message: unknown): message is MessageRequest<T, D> {
+export function validateMessage<D>(message: unknown): message is MessageRequest<D> {
   if (!message || typeof message !== "object") return false
 
-  const msg = message as Partial<MessageRequest<T, D>>
+  const msg = message as Partial<MessageRequest<D>>
 
   if (typeof msg.type !== "string" || !msg.type) return false
   if (!msg.eid || (typeof msg.eid !== "string" && typeof msg.eid !== "number")) return false

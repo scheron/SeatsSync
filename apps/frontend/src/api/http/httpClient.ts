@@ -1,9 +1,9 @@
+import {Errors} from "@seats-sync/constants/errors"
+import {Methods} from "@seats-sync/constants/methods"
 import {from, map} from "rxjs"
 import {switchMap} from "rxjs/operators"
-import {Errors} from "@/constants/errors"
-import {Methods} from "@/constants/messageTypes"
 
-import type {Method} from "@/constants/messageTypes"
+import type {Method} from "@seats-sync/constants/methods"
 import type {Observable} from "rxjs"
 import type {ApiResponse} from "./types"
 

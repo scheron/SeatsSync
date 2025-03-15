@@ -1,7 +1,8 @@
+import {Errors} from "@seats-sync/constants/errors"
 import speakeasy from "speakeasy"
 import {hash, verify} from "@/lib/crypto"
 import {logger} from "@/lib/logger"
-import {ApiError, Errors} from "@/shared/errors"
+import {ApiError} from "@/core/ws"
 import {
   CODE_REGEX,
   LOGIN_ATTEMPTS_WINDOW,

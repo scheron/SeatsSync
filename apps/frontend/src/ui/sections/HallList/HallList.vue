@@ -6,7 +6,7 @@ import BaseIcon from "@/ui/base/BaseIcon.vue"
 import BasePanel from "@/ui/base/BasePanel.vue"
 import {useBookingTicketsModal} from "@/ui/modals/BookingTickets"
 
-import type {Cinema} from "@/types/cinema"
+import type {Cinema} from "@seats-sync/types/cinema"
 
 const cinemaStore = useCinemaStore()
 const availableCinemas = computed(() => cinemaStore.cinemas)
@@ -56,13 +56,6 @@ function onSelectHall(cinema: Cinema, hall: Cinema["halls"][number]) {
               @keydown.enter="onSelectHall(item, hall)"
             >
               <span class="">{{ hall.name }}</span>
-
-              <div class="flex items-center gap-2">
-                <span v-if="!hall.seats_count.VACANT" class="rounded-md border px-1 py-0.5 text-[8px] uppercase">Sold out</span>
-                <span v-else class="text-sm"> {{ hall.seats_count.VACANT }} / {{ hall.seats_count.OCCUPIED + hall.seats_count.VACANT }} </span>
-
-                <BaseIcon name="chair" class="size-4" />
-              </div>
             </BasePanel>
 
             <div v-if="!item.halls.length" class="text-content/60 py-2 text-center">There are no halls</div>

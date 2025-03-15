@@ -30,6 +30,9 @@
   },
   "devDependencies": {
     "@seats-sync/config": "*",
+    "@seats-sync/types": "*",
+    "@seats-sync/constants": "*",
+    "@seats-sync/utils": "*",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
     "@types/cookie-parser": "^1.4.8",
     "@types/cors": "^2.8.17",

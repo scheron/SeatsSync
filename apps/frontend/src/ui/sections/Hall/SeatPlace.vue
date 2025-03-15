@@ -2,7 +2,7 @@
 import {cn} from "@/utils/tailwindcss"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 
-import type {Seat} from "@/types/cinema"
+import type {Seat} from "@seats-sync/types/cinema"
 
 defineProps<{
   seat: Seat

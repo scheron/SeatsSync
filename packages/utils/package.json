@@ -1,0 +1,14 @@
+{
+    "name": "@seats-sync/utils",
+    "version": "0.0.1",
+    "private": true,
+    "exports": {
+        "./merge": "./src/merges.ts",
+        "./number": "./src/number.ts",
+        "./objects": "./src/objects.ts",
+        "./random": "./src/random.ts",
+        "./strings": "./src/strings.ts",
+        "./time": "./src/time.ts",
+        "./withResolvers": "./src/withResolvers.ts"
+    }
+}

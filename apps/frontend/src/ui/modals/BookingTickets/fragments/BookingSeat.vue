@@ -4,7 +4,7 @@ import {getSeatRowChar} from "@/utils/hall"
 import {SEAT_TYPES} from "@/constants/icons"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 
-import type {Seat} from "@/types/cinema"
+import type {Seat} from "@seats-sync/types/cinema"
 
 const props = defineProps<{
   seat: Seat

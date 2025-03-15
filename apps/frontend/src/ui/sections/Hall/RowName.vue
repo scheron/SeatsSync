@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {getSeatRowChar} from "@/utils/hall"
 
-import type {Seat} from "@/types/cinema"
+import type {Seat} from "@seats-sync/types/cinema"
 
 defineProps<{
   rowIndex: number

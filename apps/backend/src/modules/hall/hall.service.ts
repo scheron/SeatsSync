@@ -1,4 +1,5 @@
-import {ApiError, Errors} from "@/shared/errors"
+import {Errors} from "@seats-sync/constants/errors"
+import {ApiError} from "@/core/ws"
 import {hallModel} from "./hall.model"
 
 export async function getHall(hallId: number) {

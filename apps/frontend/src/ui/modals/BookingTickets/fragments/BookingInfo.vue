@@ -4,7 +4,7 @@ import {useTooltip} from "@/composables/useTooltip"
 import SeatTooltip from "@/ui/tooltips/SeatTooltip.vue"
 import BookingSeat from "./BookingSeat.vue"
 
-import type {Cinema, Hall, Seat} from "@/types/cinema"
+import type {Cinema, Hall, Seat} from "@seats-sync/types/cinema"
 
 const props = defineProps<{
   seats: Seat[]

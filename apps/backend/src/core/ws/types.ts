@@ -1,4 +1,4 @@
-import type {MessageRequest} from "@/core/ws/messages"
+import type {MessageRequest} from "@seats-sync/types/websocket"
 import type {WebSocket} from "ws"
 
 export type IWebSocketClient = WebSocket & {
@@ -12,8 +12,8 @@ export type IWebSocketClient = WebSocket & {
   }
 }
 
-export type OnMessageHandler = (ws: IWebSocketClient, message: MessageRequest<any, any>) => boolean
-export type WebSocketOnMessage = (ws: IWebSocketClient, message: MessageRequest<any, any>) => void
+export type OnMessageHandler = (ws: IWebSocketClient, message: MessageRequest<any>) => boolean
+export type WebSocketOnMessage = (ws: IWebSocketClient, message: MessageRequest<any>) => void
 
 export type WebSocketClientOptions = {
   pingMsg?: string | number

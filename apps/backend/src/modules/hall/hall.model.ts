@@ -1,7 +1,7 @@
 import {logger} from "@/lib/logger"
 import {DB} from "@/core/db"
 
-import type {Hall, Seat, SeatType, SeatTypeStats} from "@/shared/types"
+import type {Hall, Seat, SeatType, SeatTypeStats} from "@seats-sync/types/cinema"
 import type {HallDB} from "./hall.types"
 
 class HallModel {

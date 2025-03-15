@@ -1,7 +1,8 @@
-import {ApiError, Errors} from "@/shared/errors"
+import {Errors} from "@seats-sync/constants/errors"
+import {ApiError} from "@/core/ws"
 import {cinemaModel} from "./cinema.model"
 
-import type {Cinema} from "./cinema.types"
+import type {Cinema} from "@seats-sync/types/cinema"
 
 export async function getCinemas(): Promise<Cinema[]> {
   try {

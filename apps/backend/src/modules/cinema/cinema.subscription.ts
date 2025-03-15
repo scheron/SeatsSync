@@ -1,13 +1,12 @@
+import {Errors} from "@seats-sync/constants/errors"
 import {publisher} from "@/core/pubsub"
 import {formatError} from "@/core/ws/messages"
-import {Errors} from "@/shared/errors"
 import * as CinemaService from "./cinema.service"
 
 import type {IWebSocketClient} from "@/core/ws"
-import type {MessageRequest} from "@/core/ws/messages"
-import type {Subscription} from "@/shared/constants/messageTypes"
+import type {Cinema} from "@seats-sync/types/cinema"
+import type {MessageRequest} from "@seats-sync/types/websocket"
 import type {PartialDeep} from "type-fest"
-import type {Cinema} from "./cinema.types"
 
 const subscription = publisher.register({
   name: "cinemas.subscribe",
@@ -18,11 +17,11 @@ const subscription = publisher.register({
   },
 })
 
-export function subscribe(ws: IWebSocketClient, message: MessageRequest<Subscription, {id: number}>) {
+export function subscribe(ws: IWebSocketClient, message: MessageRequest<{id: number}>) {
   return subscription.subscribe(ws, message)
 }
 
-export function unsubscribe(ws: IWebSocketClient, message?: MessageRequest<Subscription, {sub_eid?: string}>) {
+export function unsubscribe(ws: IWebSocketClient, message?: MessageRequest<{sub_eid?: string}>) {
   if (!message) {
     subscription.unsubscribe(ws.context.id)
     return

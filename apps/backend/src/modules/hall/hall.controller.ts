@@ -1,15 +1,13 @@
-import {Subscriptions} from "@/shared/constants/messageTypes"
+import {Subscriptions} from "@seats-sync/constants/subscriptions"
 import {subscribe, unsubscribe} from "./hall.subscription"
 
 import type {IWebSocketClient} from "@/core/ws"
-import type {MessageRequest} from "@/core/ws/messages"
-import type {Subscription} from "@/shared/constants/messageTypes"
-import type {HallMessage} from "./hall.types"
+import type {MessageRequest} from "@seats-sync/types/websocket"
 
-export function onMessage(ws: IWebSocketClient, message: HallMessage) {
+export function onMessage(ws: IWebSocketClient, message: MessageRequest<any>) {
   switch (message.type) {
     case Subscriptions["hall.subscribe"]:
-      subscribe(ws, message as MessageRequest<Subscription, {id: number}>)
+      subscribe(ws, message as MessageRequest<{id: number}>)
       return true
     case Subscriptions["hall.unsubscribe"]:
       unsubscribe(ws, message)

@@ -3,13 +3,13 @@ export function getCurrentDateTime() {
     day: "numeric",
     month: "long",
     year: "numeric",
-  })
+  });
 
   const time = new Date().toLocaleTimeString("en-US", {
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
-  })
+  });
 
-  return {time, date}
+  return { time, date };
 }

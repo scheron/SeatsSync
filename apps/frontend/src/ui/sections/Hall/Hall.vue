@@ -9,7 +9,7 @@ import RowName from "./RowName.vue"
 import SeatPlace from "./SeatPlace.vue"
 import SeatsSchemeInfo from "./SeatsSchemeInfo.vue"
 
-import type {Seat} from "@/types/cinema"
+import type {Seat} from "@seats-sync/types/cinema"
 
 const cinemaStore = useCinemaStore()
 

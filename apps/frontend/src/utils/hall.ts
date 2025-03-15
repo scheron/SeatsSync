@@ -1,4 +1,4 @@
-import type {Seat} from "@/types/cinema"
+import type {Seat} from "@seats-sync/types/cinema"
 
 /**
  * Get the character for a row

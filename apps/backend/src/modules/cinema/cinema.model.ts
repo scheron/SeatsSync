@@ -1,7 +1,8 @@
 import {logger} from "@/lib/logger"
 import {DB} from "@/core/db"
 
-import type {Cinema, CinemaDB} from "./cinema.types"
+import type {Cinema} from "@seats-sync/types/cinema"
+import type {CinemaDB} from "./cinema.types"
 
 class CinemaModel {
   constructor(private db: DB) {}
@@ -28,7 +29,7 @@ class CinemaModel {
       return []
     }
 
-    return result.data.map((cinema) => ({
+    const cinemas = result.data.map((cinema) => ({
       ...cinema,
       halls: cinema.halls.map(({seats, ...hall}) => ({
         ...hall,
@@ -38,6 +39,8 @@ class CinemaModel {
         }),
       })),
     }))
+
+    return cinemas as unknown as Cinema[]
   }
 }
 

@@ -1,4 +1,4 @@
-import type {ErrorCode} from "@/constants/errors"
+import type {ErrorCode} from "@seats-sync/constants/errors"
 
 export type ApiResponse<T> = {
   data: T

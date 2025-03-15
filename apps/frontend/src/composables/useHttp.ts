@@ -1,8 +1,8 @@
 import {tryOnBeforeUnmount} from "@vueuse/core"
 import {httpClient} from "@/api/http"
 
-import type {ErrorCode} from "@/constants/errors"
-import type {Method} from "@/constants/messageTypes"
+import type {ErrorCode} from "@seats-sync/constants/errors"
+import type {Method} from "@seats-sync/constants/methods"
 import type {Observable, Subscription} from "rxjs"
 
 type Handler<TypeResponse> = (data: TypeResponse) => void

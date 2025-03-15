@@ -1,12 +1,12 @@
 import {computed, ref} from "vue"
 import {tryOnBeforeUnmount, tryOnMounted} from "@vueuse/core"
+import {deepMerge} from "@seats-sync/utils/merge"
 import {defineStore} from "pinia"
 import {toast} from "@/lib/toasts-lite"
-import {deepMerge} from "@/utils/merges"
 import {useWebSocket} from "@/composables/useWebSocket"
 import {useThemeStore} from "@/stores/theme"
 
-import type {Cinema, Hall, Seat} from "@/types/cinema"
+import type {Cinema, Hall, Seat} from "@seats-sync/types/cinema"
 
 export const useCinemaStore = defineStore("cinema", () => {
   const HALL_SUB_ID = "hall-sub"

@@ -1,11 +1,13 @@
+import {randomUUID} from "@seats-sync/utils/random"
 import {filter, Subject, takeUntil} from "rxjs"
 import {Logger} from "@/lib/logger"
-import {randomUUID} from "@/utils/random"
 
-import type {RequestMessage, ResponseMessage, ResponseMessageError, ResponseMessageSuccess, SubscriptionOptions} from "./types"
+import type {MessageError, MessageRequest, MessageSuccess} from "@seats-sync/types/websocket"
+import type {ResponseMessage, SubscriptionOptions} from "./types"
 import type {WebSocketClient} from "./wsClient"
 
 type SubscriptionState = "INIT" | "PENDING" | "SUBSCRIBED" | "ERROR" | "UNSUBSCRIBED" | "DESTROYED"
+
 export function defineSubscription(ws: WebSocketClient) {
   const logger = new Logger(false)
   let _counter = 0
@@ -18,17 +20,17 @@ export function defineSubscription(ws: WebSocketClient) {
     state: SubscriptionState = "INIT"
 
     id: string
-    msg: RequestMessage<DataReq>
+    msg: MessageRequest<DataReq>
     onSnapshot: (data: DataRes) => void
     onUpdate: (data: DataRes) => void
-    onResult: (msg: ResponseMessageSuccess<DataRes>) => void
-    onError: (msg: ResponseMessageError) => void
+    onResult: (msg: MessageSuccess<DataRes>) => void
+    onError: (msg: MessageError) => void
     onDelete: () => void
     isOnce: boolean
     isKeepAlive: boolean
 
     constructor({
-      msg = {type: "*"} as RequestMessage<DataReq>,
+      msg = {type: "*"} as MessageRequest<DataReq>,
       onSnapshot = () => {},
       onUpdate = () => {},
       onResult = () => {},
@@ -38,7 +40,7 @@ export function defineSubscription(ws: WebSocketClient) {
       isOnce = false,
     }: SubscriptionOptions<DataRes, DataReq>) {
       this.id = msg?.eid ?? `${++_counter}`
-      this.msg = {...msg, eid: this.id}
+      this.msg = {...msg, eid: this.id} as MessageRequest<DataReq>
       this.onSnapshot = onSnapshot
       this.onUpdate = onUpdate
       this.onResult = onResult
@@ -67,14 +69,14 @@ export function defineSubscription(ws: WebSocketClient) {
 
           if (msg.status === "error") {
             this.state = "ERROR"
-            this.onError(msg as ResponseMessageError)
+            this.onError(msg as MessageError)
             this.destroy()
             return
           }
 
           this.state = "SUBSCRIBED"
 
-          this.onResult(msg as ResponseMessageSuccess<DataRes>)
+          this.onResult(msg as MessageSuccess<DataRes>)
           if (msg.status === "snapshot") this.onSnapshot(msg.data as DataRes)
           if (msg.status === "update") this.onUpdate(msg.data as DataRes)
 
@@ -87,7 +89,7 @@ export function defineSubscription(ws: WebSocketClient) {
       if (this.msg.type === "*") return
 
       this.state = "PENDING"
-      ws.send(this.msg as RequestMessage)
+      ws.send(this.msg as MessageRequest)
     }
 
     resubscribe() {
@@ -117,7 +119,7 @@ export function defineSubscription(ws: WebSocketClient) {
       }
 
       if (this.msg.type.includes("subscribe")) {
-        const message: RequestMessage = {
+        const message: MessageRequest = {
           type: this.msg.type.replace("subscribe", "unsubscribe") as any,
           data: {sub_eid: this.id},
           eid: randomUUID(),
@@ -137,7 +139,7 @@ export function defineSubscription(ws: WebSocketClient) {
       if (this.state === "DESTROYED") return
       if (this.msg.type === "*") return
 
-      const message: RequestMessage<any> = {
+      const message: MessageRequest<any> = {
         type: this.msg.type.replace("subscribe", "unsubscribe") as any,
         data: {sub_eid: this.id},
         eid: randomUUID(),
@@ -169,7 +171,7 @@ export function defineSubscription(ws: WebSocketClient) {
      * @param msg - The WebSocket request message.
      * @returns A promise that resolves with the response data or rejects with an error.
      */
-    static request<DataRes, DataReq>(msg: RequestMessage<DataReq> & {eid?: string}): Promise<DataRes> {
+    static request<DataRes, DataReq>(msg: MessageRequest<DataReq> & {eid?: string}): Promise<DataRes> {
       return new Promise((resolve, reject) => {
         new Subscription({
           msg: {...msg, eid: msg.eid ?? randomUUID()},
@@ -212,7 +214,7 @@ export function defineSubscription(ws: WebSocketClient) {
 
   ws.on("*")
     .pipe(filter((msg) => !!msg?.eid && subscriptions.has(msg.eid)))
-    .subscribe((msg) => subscriptionEvents$.next(msg))
+    .subscribe((msg) => subscriptionEvents$.next(msg as ResponseMessage))
 
   return Subscription
 }

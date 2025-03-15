@@ -1,21 +1,20 @@
+import {objectFilter} from "@seats-sync/utils/objects"
 import {nanoid} from "nanoid"
-import {objectFilter} from "@/shared/utils/objects"
 import {validateMessage} from "./validators"
 
-import type {RawData} from "ws"
-import type {MessageError, MessageRequest, MessageSuccess, ResponseStatus} from "./types"
+import type {MessageError, MessageRequest, MessageSuccess, ResponseStatus} from "@seats-sync/types/websocket"
 
 function normalizeEid(eid?: string | number): string {
   return String(eid ?? nanoid())
 }
 
-export function formatRequest<T extends string, D = unknown>(message: RawData): MessageRequest<T, D> | null {
+export function formatRequest<D = unknown>(message: MessageRequest<D>): MessageRequest<D> | null {
   try {
-    if (!validateMessage<T, D>(message)) return null
+    if (!validateMessage<D>(message)) return null
 
     return {
       ...message,
-      eid: normalizeEid(message.eid),
+      eid: normalizeEid(message?.eid),
       ts: Date.now(),
     }
   } catch {
@@ -39,7 +38,7 @@ export function formatSuccess<T extends string, D = unknown>(msg: {
       ts: Date.now(),
     },
     (value) => value !== undefined,
-  ) as MessageSuccess<T, D>
+  ) as MessageSuccess<D>
 
   return JSON.stringify(response)
 }
@@ -55,7 +54,7 @@ export function formatError<T extends string>(msg: {eid?: string | number; type?
       ts: Date.now(),
     },
     (value) => value !== undefined,
-  ) as MessageError<T>
+  ) as MessageError
 
   return JSON.stringify(response)
 }

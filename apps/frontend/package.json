@@ -33,6 +33,9 @@
   },
   "devDependencies": {
     "@seats-sync/config": "*",
+    "@seats-sync/types": "*",
+    "@seats-sync/constants": "*",
+    "@seats-sync/utils": "*",
     "@tailwindcss/vite": "^4.0.8",
     "@types/node": "^22.10.2",
     "@types/svg-sprite": "^0.0.39",

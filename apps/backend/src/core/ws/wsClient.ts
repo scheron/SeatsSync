@@ -1,11 +1,12 @@
+import {Errors} from "@seats-sync/constants/errors"
 import cookie from "cookie"
 import cookieParser from "cookie-parser"
 import {nanoid} from "nanoid"
 import {WebSocket, WebSocketServer} from "ws"
 import {decodeJWT, verifyJWT} from "@/lib/jwt"
 import {logger, LogMessageType} from "@/lib/logger"
+import {ApiError} from "@/core/ws"
 import {formatError, formatRequest} from "@/core/ws/messages"
-import {ApiError, Errors} from "@/shared/errors"
 import {WS_TOKEN_NAME} from "./constants"
 import {Heartbeat} from "./heartbeat"
 
@@ -165,8 +166,8 @@ export class WebSocketClient {
         type: LogMessageType.WS_INCOMING,
         data: {
           clientId: ws.id,
-          messageId: parsedMessage.eid,
-          messageType: parsedMessage.type,
+          messageId: parsedMessage?.eid,
+          messageType: parsedMessage?.type,
           payload: JSON.stringify(parsedMessage?.data).slice(0, 200),
         },
       })

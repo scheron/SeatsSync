@@ -1,10 +1,10 @@
+import {Errors} from "@seats-sync/constants/errors"
 import {publisher} from "@/core/pubsub"
 import {formatError} from "@/core/ws/messages"
-import {Errors} from "@/shared/errors"
 
 import type {IWebSocketClient} from "@/core/ws"
-import type {MessageRequest} from "@/core/ws/messages"
-import type {Subscription} from "@/shared/constants/messageTypes"
+import type {Subscription} from "@seats-sync/constants/subscriptions"
+import type {MessageRequest} from "@seats-sync/types/websocket"
 import type {UserStatus} from "./user.types"
 
 const subscription = publisher.register({
@@ -22,7 +22,7 @@ export function subscribe(ws: IWebSocketClient, message: MessageRequest<Subscrip
   return subscription.subscribe(ws, message)
 }
 
-export function unsubscribe(ws: IWebSocketClient, message?: MessageRequest<Subscription, {sub_eid?: string}>) {
+export function unsubscribe(ws: IWebSocketClient, message?: MessageRequest<{sub_eid?: string}>) {
   if (!message) {
     subscription.unsubscribe(ws.context.id)
     return

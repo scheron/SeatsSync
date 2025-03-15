@@ -1,6 +1,6 @@
 import {logger} from "@/lib/logger"
 
-import type {ErrorCode} from "./errors"
+import type {ErrorCode} from "@seats-sync/constants/errors"
 
 type ErrorDetails = Record<string, unknown>
 

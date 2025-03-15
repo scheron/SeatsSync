@@ -5,7 +5,7 @@ import {SEAT_TYPES} from "@/constants/icons"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 import BaseTransitions from "@/ui/base/BaseTransitions.vue"
 
-import type {Seat} from "@/types/cinema"
+import type {Seat} from "@seats-sync/types/cinema"
 
 const props = defineProps<{
   tooltipVisible: boolean

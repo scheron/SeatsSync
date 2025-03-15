@@ -1,14 +1,14 @@
 import {Subscriber} from "./subscriber"
 
-import type {ResponseStatus} from "@/core/ws/messages"
-import type {Subscription} from "@/shared/constants/messageTypes"
-import type {ErrorCode} from "@/shared/errors"
+import type {ErrorCode} from "@seats-sync/constants/errors"
+import type {Subscription} from "@seats-sync/constants/subscriptions"
+import type {ResponseStatus} from "@seats-sync/types/websocket"
 import type {SubscriptionHandler} from "./types"
 
 export class Publisher {
   private subscriptions = new Map<string, Subscriber>()
 
-  register<T extends string, D>(handler: SubscriptionHandler<T, D>): Subscriber<T, D> {
+  register<D>(handler: SubscriptionHandler<D>): Subscriber<D> {
     const subscription = new Subscriber(handler)
 
     this.subscriptions.set(handler.name, subscription)
