@@ -35,6 +35,7 @@
     "@seats-sync/types": "*",
     "@seats-sync/constants": "*",
     "@seats-sync/utils": "*",
+    "@seats-sync/logger": "*",
     "@tailwindcss/vite": "^4.0.8",
     "@types/node": "^22.10.2",
     "@types/svg-sprite": "^0.0.39",

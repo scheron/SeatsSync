@@ -1,7 +1,7 @@
+import {Logger} from "@seats-sync/logger"
 import {randomUUID} from "@seats-sync/utils/random"
 import {BehaviorSubject, catchError, distinctUntilChanged, EMPTY, filter, interval, map, ReplaySubject, Subject, takeUntil, tap} from "rxjs"
 import {webSocket} from "rxjs/webSocket"
-import {Logger} from "@/lib/logger"
 
 import type {Message, MessageError, MessageRequest, MessageSuccess, ResponseStatus} from "@seats-sync/types/websocket"
 import type {Observable, Subscription} from "rxjs"
@@ -56,7 +56,7 @@ export class WebSocketClient {
     this.backoffFactor = config.backoffFactor ?? 1.2
     this.isManualClose = false
 
-    this.logger = new Logger(config.debug ?? false)
+    this.logger = new Logger({enabled: config.debug ?? false, styled: true})
     this.logger.info("[WebSocket] Initializing with URL:", url)
 
     this.startPing()
