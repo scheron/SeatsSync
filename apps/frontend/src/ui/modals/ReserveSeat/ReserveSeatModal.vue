@@ -3,6 +3,7 @@ import {computed} from "vue"
 import {getSeatRowChar} from "@/utils/hall"
 import {SEAT_TYPES} from "@/constants/icons"
 import {useDevice} from "@/composables/useDevice"
+import {useWebSocket} from "@/composables/useWebSocket"
 import BaseButton from "@/ui/base/BaseButton.vue"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 import BaseModal from "@/ui/base/BaseModal"
@@ -11,8 +12,9 @@ import QRCode from "@/ui/common/QRCode.vue"
 import type {Seat} from "@seats-sync/types/cinema"
 
 const {isMobile} = useDevice()
+const {send} = useWebSocket()
 
-const props = defineProps<{seat: Seat}>()
+const props = defineProps<{hallId: number; seat: Seat}>()
 const emit = defineEmits<{confirm: [void]; cancel: [void]}>()
 
 const seatInfo = computed(() => {
@@ -41,8 +43,15 @@ function onCancel() {
 }
 
 function onPurchase() {
-  console.log("purchase seat", props.seat)
-  // emit("confirm")
+  send({
+    type: "hall.update_seat_status",
+    data: {
+      hall_id: props.hallId,
+      seat_id: props.seat.id,
+      status: "RESERVED",
+    },
+  })
+  emit("confirm")
 }
 </script>
 
@@ -77,11 +86,13 @@ function onPurchase() {
         </div>
       </div>
 
-      <div class="my-4 flex items-center justify-center gap-4 text-sm">
-        <QRCode :code="`Reservation: ${seatInfo?.row}${seatInfo?.place}?token=${1234}`" :size="140" />
-      </div>
+      <template v-if="seat.status === 'VACANT'">
+        <div class="my-4 flex items-center justify-center gap-4 text-sm">
+          <QRCode :code="`Reservation: ${seatInfo?.row}${seatInfo?.place}?token=${1234}`" :size="140" />
+        </div>
 
-      <BaseButton v-focus-on-mount icon="ticket-filled" size="sm" variant="accent" class="w-full" @click="onPurchase"> Reserve </BaseButton>
+        <BaseButton v-focus-on-mount icon="ticket-filled" size="sm" variant="accent" class="w-full" @click="onPurchase"> Reserve </BaseButton>
+      </template>
     </div>
   </BaseModal>
 </template>

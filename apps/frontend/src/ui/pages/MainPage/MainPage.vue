@@ -39,7 +39,7 @@ function onSelectHall(hall: HallInCinema) {
 
 function onSelectSeat(seat: Seat) {
   if (!seat || seat.status === "RESERVED") return
-  open(seat)
+  open(cinemaStore.activeHall?.id, seat)
 }
 </script>
 
@@ -64,7 +64,7 @@ function onSelectSeat(seat: Seat) {
           :name="name"
           :seats="seats"
           :seat-types="cinemaStore.activeHall?.seat_types ?? []"
-          @select-seat="open"
+          @select-seat="open(cinemaStore.activeHall?.id, $event)"
         />
       </BaseCard>
 

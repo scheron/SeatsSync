@@ -9,6 +9,7 @@ export const Methods = {
   "user.save_recovery_phrase": "/user/save_recovery_phrase",
 
   "cinemas.get_cinemas": "cinemas.get_cinemas",
+  "hall.update_seat_status": "hall.update_seat_status",
 } as const;
 
 export type Method = keyof typeof Methods;

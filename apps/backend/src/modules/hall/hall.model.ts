@@ -1,8 +1,9 @@
 import {logger} from "@/lib/logger"
 import {DB} from "@/core/db"
+import {getSeatTypes} from "./hall.helpers"
 
-import type {Hall, Seat, SeatType, SeatTypeStats} from "@seats-sync/types/cinema"
-import type {HallDB} from "./hall.types"
+import type {Hall, Seat} from "@seats-sync/types/cinema"
+import type {HallDB, SeatTypeDB} from "./hall.types"
 
 class HallModel {
   constructor(private db: DB) {}
@@ -34,36 +35,38 @@ class HallModel {
       return null
     }
 
-    const seatTypes = this.getSeatTypes(result.data.seats)
-
     return {
       ...result.data,
       seats: result.data.seats as Seat[],
-      seat_types: seatTypes.sort((a, b) => a.id - b.id),
+      seat_types: getSeatTypes(result.data.seats),
     }
   }
 
-  private getSeatTypes(seats: HallDB["seats"]): Array<SeatType & SeatTypeStats> {
-    const seatTypeMap = seats.reduce((acc, seat) => {
-      const {id, name} = seat.seat_type
+  async updateSeat(hallId: number, seatId: number, data: Partial<Seat>) {
+    const result = await this.db.update(hallId, {
+      seats: {update: [{where: {id: seatId}, data}]},
+    })
 
-      if (!acc.has(id)) {
-        acc.set(id, {
-          id,
-          name,
-          seats_count: 0,
-          seats: {VACANT: 0, RESERVED: 0},
-        })
-      }
+    if (!result.success) {
+      logger.error({message: "Failed to update seat", error: result.error})
+      return null
+    }
 
-      const seatTypeStats = acc.get(id)!
-      seatTypeStats.seats_count++
-      seatTypeStats.seats[seat.status]++
+    return result.data
+  }
 
-      return acc
-    }, new Map<number, SeatType & SeatTypeStats>())
+  async getSeatTypes(hallId: number): Promise<SeatTypeDB[]> {
+    const result = await this.db.findOne<HallDB>({
+      where: {id: hallId},
+      include: {seats: {select: {id: true, status: true, seat_type: true}}},
+    })
 
-    return Array.from(seatTypeMap.values())
+    if (!result.success) {
+      logger.error({message: "Failed to fetch seat types", error: result.error})
+      return []
+    }
+
+    return getSeatTypes(result.data.seats)
   }
 }
 

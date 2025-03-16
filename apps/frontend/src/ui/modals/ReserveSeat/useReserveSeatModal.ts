@@ -7,10 +7,13 @@ import type {Seat} from "@seats-sync/types/cinema"
 export default function useReserveSeatModal() {
   const {show, hideAll} = useModalsLite()
 
-  async function open(seat: Seat) {
+  async function open(hallId?: number, seat?: Seat) {
+    if (!hallId || !seat) return
+
     const {hide} = show(
       ReserveSeatModal,
       {
+        hallId,
         seat,
         onConfirm: () => hide(),
         onCancel: () => hide(),
