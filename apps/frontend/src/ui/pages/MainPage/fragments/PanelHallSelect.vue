@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import BaseButton from "@/ui/base/BaseButton.vue"
+import BaseIcon from "@/ui/base/BaseIcon.vue"
 import BasePopover from "@/ui/base/BasePopover.vue"
 
 import type {Cinema, Hall, HallInCinema} from "@seats-sync/types/cinema"
