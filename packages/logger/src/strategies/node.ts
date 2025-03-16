@@ -1,6 +1,7 @@
 import { LogLevel, LoggerStrategy, NodeStrategy } from "../types";
 
 export class NodeLoggerStrategy implements LoggerStrategy {
+  private allowFileLogging = false;
   private fileStream?: any;
 
   constructor(
@@ -9,13 +10,15 @@ export class NodeLoggerStrategy implements LoggerStrategy {
     private strategy: NodeStrategy = "all",
   ) {
     if (filePath) {
-      try {
-        import("fs").then((fs) => {
+      import("fs")
+        .then((fs) => {
           this.fileStream = fs.createWriteStream(filePath, { flags: "a" });
+          this.allowFileLogging = true;
+        })
+        .catch((err) => {
+          this.allowFileLogging = false;
+          console.error("Failed to initialize file logging:", err);
         });
-      } catch (err) {
-        console.error("Failed to initialize file logging:", err);
-      }
     }
   }
 
@@ -34,25 +37,38 @@ export class NodeLoggerStrategy implements LoggerStrategy {
     }
   }
 
+  private logToConsole(
+    formatted: string,
+    level: LogLevel,
+    optionalParams: any[],
+  ): void {
+    if (this.styled) {
+      const ansiColor = this.getANSICode(level);
+      const reset = "\x1b[0m";
+      console.log(`${ansiColor}${formatted}${reset}`, ...optionalParams);
+    } else {
+      console.log(formatted, ...optionalParams);
+    }
+  }
+
+  private logToFile(formatted: string, optionalParams: any[]): void {
+    if (this.fileStream && this.allowFileLogging) {
+      this.fileStream.write(
+        formatted +
+          optionalParams.map((p) => JSON.stringify(p)).join(" ") +
+          "\n",
+      );
+    }
+  }
+
   log(formatted: string, level: LogLevel, optionalParams: any[]): void {
     try {
       if (this.strategy === "all" || this.strategy === "console") {
-        if (this.styled) {
-          const ansiColor = this.getANSICode(level);
-          const reset = "\x1b[0m";
-          console.log(`${ansiColor}${formatted}${reset}`, ...optionalParams);
-        } else {
-          console.log(formatted, ...optionalParams);
-        }
+        this.logToConsole(formatted, level, optionalParams);
       }
 
       if (this.strategy === "all" || this.strategy === "file") {
-        if (this.fileStream)
-          this.fileStream.write(
-            formatted +
-              optionalParams.map((p) => JSON.stringify(p)).join(" ") +
-              "\n",
-          );
+        this.logToFile(formatted, optionalParams);
       }
     } catch (err) {
       console.error("Failed to log to file:", err);
