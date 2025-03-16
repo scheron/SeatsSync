@@ -2,8 +2,8 @@
 import {computed, ref} from "vue"
 import {calculateHallSize, createSeatsSchema} from "@/utils/hall"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
-import RowName from "./RowName.vue"
 import SeatPlace from "./SeatPlace.vue"
+import SeatRowName from "./SeatRowName.vue"
 
 import type {Seat} from "@seats-sync/types/cinema"
 
@@ -71,8 +71,8 @@ function onSeatClick(e: MouseEvent) {
       </div>
 
       <template v-for="row in seatsSchema" :key="row[0].row">
-        <RowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat" left />
-        <RowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat" />
+        <SeatRowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat" left />
+        <SeatRowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat" />
       </template>
     </div>
   </div>
