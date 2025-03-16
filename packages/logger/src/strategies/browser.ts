@@ -1,4 +1,4 @@
-import { LogLevel, LoggerStrategy } from "../types";
+import type { LogLevel, LoggerStrategy } from "../types";
 
 export class BrowserLoggerStrategy implements LoggerStrategy {
   constructor(private styled: boolean) {}

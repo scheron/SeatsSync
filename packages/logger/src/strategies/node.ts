@@ -1,4 +1,4 @@
-import { LogLevel, LoggerStrategy, NodeStrategy } from "../types";
+import type { LogLevel, LoggerStrategy, NodeStrategy } from "../types";
 
 export class NodeLoggerStrategy implements LoggerStrategy {
   private allowFileLogging = false;

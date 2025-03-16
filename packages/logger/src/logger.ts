@@ -1,6 +1,6 @@
-import { LoggerOptions, LogLevel, LoggerStrategy } from "./types.js";
-import { NodeLoggerStrategy } from "./strategies/node.js";
-import { BrowserLoggerStrategy } from "./strategies/browser.js";
+import type { LogLevel, LoggerOptions, LoggerStrategy } from "./types";
+import { NodeLoggerStrategy } from "./strategies/node";
+import { BrowserLoggerStrategy } from "./strategies/browser";
 
 export class Logger {
   private stackTrace: boolean;
