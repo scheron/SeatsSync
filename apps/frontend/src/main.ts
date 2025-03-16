@@ -1,6 +1,5 @@
 /* prettier-ignore */
 import "floating-vue/dist/style.css";
-import "vue3-carousel/dist/carousel.css"
 /* prettier-ignore */
 import "@/assets/styles/index.css";
 import "@/assets/styles/rewrites/floating-vue.css"
@@ -11,6 +10,7 @@ import router from "@/router"
 import FloatingVue from "floating-vue"
 import {createPinia} from "pinia"
 import App from "./App.vue"
+import vFocusOnMount from "./directives/vFocusOnMount"
 
 createApp(App)
   .use(createPinia())
@@ -30,4 +30,5 @@ createApp(App)
       },
     },
   })
+  .directive("focus-on-mount", vFocusOnMount)
   .mount("#app")

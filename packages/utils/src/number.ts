@@ -14,3 +14,7 @@ export function formatNumber(number: number, separator: string = " "): string {
 
   return !decimals ? formattedInt : formattedInt + "." + decimals;
 }
+
+export function getPercent(num: number, total: number): number {
+  return Math.round((num / total) * 100);
+}

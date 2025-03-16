@@ -7,7 +7,6 @@ import type {Seat} from "@seats-sync/types/cinema"
 defineProps<{
   seat: Seat
   hovered?: boolean
-  selected?: boolean
 }>()
 </script>
 
@@ -24,7 +23,6 @@ defineProps<{
       cn({
         'bg-primary-700/50 cursor-pointer': seat.status === 'VACANT',
         'bg-primary-300/50 cursor-default': seat.status === 'RESERVED',
-        'bg-primary-700 cursor-pointer': selected,
       })
     "
     data-seat
@@ -36,10 +34,7 @@ defineProps<{
     <span
       v-if="seat.status === 'VACANT'"
       class="text-content pointer-events-none flex cursor-default items-center justify-center transition-opacity duration-200 select-none"
-      :class="{
-        'opacity-100': hovered || selected,
-        'opacity-0': !hovered,
-      }"
+      :class="{'opacity-100': hovered, 'opacity-0': !hovered}"
     >
       {{ seat.place }}
     </span>

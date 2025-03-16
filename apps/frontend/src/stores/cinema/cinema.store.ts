@@ -1,17 +1,15 @@
-import {computed, ref} from "vue"
+import {ref} from "vue"
 import {tryOnBeforeUnmount, tryOnMounted} from "@vueuse/core"
 import {deepMerge} from "@seats-sync/utils/merge"
 import {defineStore} from "pinia"
-import {toast} from "@/lib/toasts-lite"
 import {useWebSocket} from "@/composables/useWebSocket"
 import {useThemeStore} from "@/stores/theme"
 
-import type {Cinema, Hall, Seat} from "@seats-sync/types/cinema"
+import type {Cinema, Hall} from "@seats-sync/types/cinema"
 
 export const useCinemaStore = defineStore("cinema", () => {
   const HALL_SUB_ID = "hall-sub"
   const CINEMAS_SUB_ID = "cinemas-sub"
-  const SELECTION_LIMIT = 10
 
   const themeStore = useThemeStore()
   const {subscribe, unsubscribe, cleanup} = useWebSocket()
@@ -20,39 +18,16 @@ export const useCinemaStore = defineStore("cinema", () => {
 
   const activeCinema = ref<Cinema | null>(null)
   const activeHall = ref<Hall | null>(null)
-  const selectedSeats = ref<Map<Seat["id"], Seat>>(new Map())
 
   function onSelectCinema(cinema: Cinema) {
     activeCinema.value = cinema
+    onSelectHall(cinema.halls[0].id)
 
     themeStore.setPrimaryColor(cinema.color)
   }
 
-  function onSelectSeat(seatId: Seat["id"]) {
-    if (selectedSeats.value.has(seatId)) {
-      selectedSeats.value.delete(seatId)
-    } else {
-      if (selectedSeats.value.size >= SELECTION_LIMIT) {
-        toast.error(`You can only select up to ${SELECTION_LIMIT} seats`, {id: "selection-limit"})
-        return
-      }
-    }
-
-    const seat = activeHall.value?.seats.find((seat) => seat.id === seatId)
-    if (seat) selectedSeats.value.set(seatId, seat)
-  }
-
-  function onClearSelectedSeats() {
-    selectedSeats.value.clear()
-  }
-
-  function isSeatSelected(seatId: Seat["id"]) {
-    return selectedSeats.value.has(seatId)
-  }
-
   function onSelectHall(hallId: Hall["id"]) {
     if (activeHall.value?.id === hallId) return
-    selectedSeats.value.clear()
 
     unsubscribe(HALL_SUB_ID)
 
@@ -62,22 +37,15 @@ export const useCinemaStore = defineStore("cinema", () => {
         activeHall.value = data
       },
       onUpdate: (data) => {
+        console.log("onUpdate", data)
         if (activeHall.value?.id !== data.id) return
         activeHall.value = deepMerge(activeHall.value, data)
-        if (!activeHall.value) return
-
-        activeHall.value.seats.forEach((seat) => {
-          if (selectedSeats.value.has(seat.id) && seat.status === "RESERVED") {
-            selectedSeats.value.delete(seat.id)
-          }
-        })
       },
     })
   }
 
   function onClearActiveHall() {
     activeHall.value = null
-    selectedSeats.value.clear()
   }
 
   function onSubscribeCinemas() {
@@ -107,11 +75,6 @@ export const useCinemaStore = defineStore("cinema", () => {
     cinemas,
     activeCinema,
     activeHall,
-
-    selectedSeats: computed(() => Array.from(selectedSeats.value.values())),
-    onSelectSeat,
-    isSeatSelected,
-    onClearSelectedSeats,
 
     onSelectCinema,
 

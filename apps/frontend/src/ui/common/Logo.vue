@@ -3,10 +3,10 @@ import BaseIcon from "@/ui/base/BaseIcon.vue"
 </script>
 
 <template>
-  <div class="text-content flex shrink-0 items-center gap-2 text-2xl">
+  <div class="text-content flex shrink-0 items-center gap-2 text-xl">
     <span class="font-thin"> Seats </span>
-    <BaseIcon name="seat" class="mb-1 size-8 shrink-0" />
+    <BaseIcon name="seat" class="mb-1 size-7 shrink-0" />
 
-    <span class="text-3xl font-bold"> Sync </span>
+    <span class="text-2xl font-bold"> Sync </span>
   </div>
 </template>

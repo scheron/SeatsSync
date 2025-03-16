@@ -35,10 +35,18 @@ export type Hall = {
   seat_types: (SeatType & SeatTypeStats)[];
 };
 
+export type HallInCinema = {
+  id: number;
+  name: string;
+  rows: number;
+  places: number;
+  seats_count: Record<SeatStatus, number>;
+};
+
 export type Cinema = {
   id: number;
   name: string;
   color: string;
   created_at: Date;
-  halls: Hall[];
+  halls: HallInCinema[];
 };

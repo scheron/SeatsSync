@@ -40,7 +40,7 @@ class CinemaModel {
       })),
     }))
 
-    return cinemas as unknown as Cinema[]
+    return cinemas as Cinema[]
   }
 }
 

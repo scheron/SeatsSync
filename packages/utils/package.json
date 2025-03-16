@@ -10,6 +10,7 @@
         "./random": "./src/random.ts",
         "./strings": "./src/strings.ts",
         "./time": "./src/time.ts",
+        "./dom": "./src/dom.ts",
         "./withResolvers": "./src/withResolvers.ts"
     }
 }

@@ -5,8 +5,6 @@ import {ModalsLiteContainer} from "@/lib/modals-lite"
 import {toast, ToastsLiteProvider} from "@/lib/toasts-lite"
 import Header from "@/ui/sections/Header.vue"
 
-import type {Toast} from "@/lib/toasts-lite"
-
 let toastID: string
 
 wsClient.connectionState.subscribe(({state, prevState}) => {
@@ -25,9 +23,11 @@ tryOnBeforeUnmount(() => wsClient.destroy())
 
 <template>
   <div class="bg-primary-200 text-content flex h-svh w-screen flex-col overflow-hidden">
-    <Header />
+    <header class="h-page-header shadow-md">
+      <Header />
+    </header>
 
-    <main class="h-page-body overflow-y-auto">
+    <main class="h-page-body overflow-hidden">
       <RouterView />
     </main>
   </div>

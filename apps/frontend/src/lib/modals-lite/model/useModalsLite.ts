@@ -92,8 +92,10 @@ function createModal() {
   }
 
   function hideAll() {
-    modalGroups.clearGroup()
-    allModals.value.forEach((modal) => modalsUpdated.trigger({type: "remove", modal}))
+    setTimeout(() => {
+      modalGroups.clearGroup()
+      allModals.value.forEach((modal) => modalsUpdated.trigger({type: "remove", modal}))
+    }, 100)
   }
 
   function patchOptions(modalId: string, newProps: Partial<ModalLiteComponentProps<ModalComponent>>) {
