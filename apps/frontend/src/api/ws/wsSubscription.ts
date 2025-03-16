@@ -1,6 +1,6 @@
+import {Logger} from "@seats-sync/logger"
 import {randomUUID} from "@seats-sync/utils/random"
 import {filter, Subject, takeUntil} from "rxjs"
-import {Logger} from "@/lib/logger"
 
 import type {MessageError, MessageRequest, MessageSuccess} from "@seats-sync/types/websocket"
 import type {ResponseMessage, SubscriptionOptions} from "./types"
@@ -8,8 +8,8 @@ import type {WebSocketClient} from "./wsClient"
 
 type SubscriptionState = "INIT" | "PENDING" | "SUBSCRIBED" | "ERROR" | "UNSUBSCRIBED" | "DESTROYED"
 
-export function defineSubscription(ws: WebSocketClient) {
-  const logger = new Logger(false)
+export function defineSubscription(ws: WebSocketClient, {debug = false} = {}) {
+  const logger = new Logger({enabled: debug})
   let _counter = 0
 
   const subscriptions = new Map<string, Subscription>()
