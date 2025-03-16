@@ -2,8 +2,8 @@
 import {computed, ref} from "vue"
 import {calculateHallSize, createSeatsSchema} from "@/utils/hall"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
-import SeatPlace from "./SeatPlace.vue"
-import SeatRowName from "./SeatRowName.vue"
+import SchemeRowName from "./SchemeRowName.vue"
+import SchemeSeat from "./SchemeSeat.vue"
 
 import type {Seat} from "@seats-sync/types/cinema"
 
@@ -67,12 +67,22 @@ function onSeatClick(e: MouseEvent) {
       @mouseleave="onRowMouseLeave"
     >
       <div v-for="row in seatsSchema" :key="row[0].row" class="flex" :data-row="row[0].row" @click="onSeatClick">
-        <SeatPlace v-for="seat in row" :key="seat.id" :seat="seat" :hovered="hoveredSeat?.row === seat.row && hoveredSeat?.place === seat.place" />
+        <SchemeSeat
+          v-for="seat in row"
+          :key="seat.id"
+          :seat="seat"
+          :hovered="hoveredSeat?.row === seat.row && hoveredSeat?.place === seat.place"
+          data-seat
+          :data-row="seat.row"
+          :data-place="seat.place"
+          :data-seat-id="seat.id"
+          :data-status="seat.status"
+        />
       </div>
 
       <template v-for="row in seatsSchema" :key="row[0].row">
-        <SeatRowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat" left />
-        <SeatRowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat" />
+        <SchemeRowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat" left />
+        <SchemeRowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat" />
       </template>
     </div>
   </div>

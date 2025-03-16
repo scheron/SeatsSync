@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import BaseButton from "@/ui/base/BaseButton.vue"
-import BaseIcon from "@/ui/base/BaseIcon.vue"
 import BasePopover from "@/ui/base/BasePopover.vue"
 
-import type {Cinema} from "@seats-sync/types/cinema"
+import type {Cinema, Hall, HallInCinema} from "@seats-sync/types/cinema"
 
-defineProps<{cinemas: Cinema[]; activeCinema: Cinema}>()
-const emit = defineEmits<{"select-cinema": [Cinema]}>()
+const props = defineProps<{cinemas: Cinema[]; activeCinema: Cinema; activeHall: Hall | null}>()
+const emit = defineEmits<{"select-hall": [HallInCinema]; "select-cinema": [Cinema]}>()
+
+function isActive(hall: HallInCinema) {
+  return hall.id === props.activeHall?.id
+}
 
 function onSelectCinema(cinema: Cinema) {
   emit("select-cinema", cinema)
+}
+
+function onSelectHall(hall: HallInCinema) {
+  emit("select-hall", hall)
 }
 </script>
 
@@ -33,8 +40,23 @@ function onSelectCinema(cinema: Cinema) {
           @click="(onSelectCinema(cinema), hide())"
         >
           {{ cinema.name }}
+          <span class="inline-block size-2 ml-auto rounded-full" :style="{backgroundColor: cinema.color}" />
         </BaseButton>
       </div>
     </template>
   </BasePopover>
+
+  <div class="flex gap-2 overflow-x-auto items-center h-full flex-1">
+    <BaseButton
+      v-for="hall in activeCinema?.halls"
+      :key="hall.id"
+      :variant="isActive(hall) ? 'outline' : 'primary'"
+      icon="hall"
+      class="px-2 py-px flex-shrink-0 h-fit"
+      :class="{'cursor-auto': isActive(hall)}"
+      @click="onSelectHall(hall)"
+    >
+      {{ hall.name }}
+    </BaseButton>
+  </div>
 </template>

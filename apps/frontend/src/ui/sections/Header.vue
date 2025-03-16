@@ -10,7 +10,7 @@ const userStore = useUserStore()
 </script>
 
 <template>
-  <div class="bg-primary-100 relative text-content p-1 h-auto w-full flex items-center justify-between">
+  <div class="bg-primary-100 relative text-content p-1 h-full w-full flex items-center justify-between">
     <BaseButton :icon="themeStore.isDarkMode ? 'sun' : 'moon'" @click="themeStore.toggleDarkMode" />
 
     <RouterLink :to="{name: ROUTE_NAMES.MAIN}">
