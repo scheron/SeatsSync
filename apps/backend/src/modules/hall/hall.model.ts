@@ -39,7 +39,7 @@ class HallModel {
     return {
       ...result.data,
       seats: result.data.seats as Seat[],
-      seat_types: seatTypes,
+      seat_types: seatTypes.sort((a, b) => a.id - b.id),
     }
   }
 

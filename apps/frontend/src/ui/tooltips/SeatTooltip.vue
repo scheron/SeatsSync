@@ -77,7 +77,7 @@ defineExpose({
             </div>
 
             <div class="flex items-center justify-between gap-4 text-sm">
-              <BaseButton icon="clipboard-doc" size="sm" variant="accent" class="w-full"> Reserve </BaseButton>
+              <BaseButton icon="tag" size="sm" variant="accent" class="w-full"> Reserve </BaseButton>
             </div>
           </div>
         </div>

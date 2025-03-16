@@ -24,11 +24,6 @@ const sizes = computed(() => calculateHallSize(cinemaStore.activeHall?.seats ?? 
 function onRowMouseMove(e: MouseEvent) {
   const seatEl = (e.target as HTMLElement).closest("[data-seat]") as HTMLElement
 
-  if (!seatEl) {
-    hideTooltip()
-    return
-  }
-
   const seatRow = Number(seatEl.dataset.row)
   const seatPlace = Number(seatEl.dataset.place)
   const seatId = Number(seatEl.dataset.seatId)
@@ -39,11 +34,9 @@ function onRowMouseMove(e: MouseEvent) {
   if (!seat) return
 
   hoveredSeatFull.value = seat
-  showTooltip()
 }
 
 async function onRowMouseLeave() {
-  await hideTooltip()
   hoveredSeat.value = null
   hoveredSeatFull.value = null
 }
