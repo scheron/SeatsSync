@@ -1,11 +1,12 @@
 import type {Method} from "@seats-sync/constants/methods"
 import type {Subscription} from "@seats-sync/constants/subscriptions"
 import type {MessageError, MessageRequest, MessageSuccess} from "@seats-sync/types/websocket"
+import type {PartialDeep} from "type-fest"
 
 export type MessageType = Method | Subscription | "*"
 
 export type SubscriptionOptions<T = any, D = any> = {
-  msg?: Partial<MessageRequest<D>>
+  msg?: PartialDeep<MessageRequest<D>>
   onSnapshot?: (data: T) => void
   onUpdate?: (data: T) => void
   onResult?: (msg: MessageSuccess<T>) => void

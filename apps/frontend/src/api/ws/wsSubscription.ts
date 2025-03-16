@@ -3,6 +3,7 @@ import {randomUUID} from "@seats-sync/utils/random"
 import {filter, Subject, takeUntil} from "rxjs"
 
 import type {MessageError, MessageRequest, MessageSuccess} from "@seats-sync/types/websocket"
+import type {PartialDeep} from "type-fest"
 import type {ResponseMessage, SubscriptionOptions} from "./types"
 import type {WebSocketClient} from "./wsClient"
 
@@ -30,7 +31,7 @@ export function defineSubscription(ws: WebSocketClient, {debug = false} = {}) {
     isKeepAlive: boolean
 
     constructor({
-      msg = {type: "*"} as MessageRequest<DataReq>,
+      msg = {type: "*"} as PartialDeep<MessageRequest<DataReq>>,
       onSnapshot = () => {},
       onUpdate = () => {},
       onResult = () => {},
@@ -171,7 +172,7 @@ export function defineSubscription(ws: WebSocketClient, {debug = false} = {}) {
      * @param msg - The WebSocket request message.
      * @returns A promise that resolves with the response data or rejects with an error.
      */
-    static request<DataRes, DataReq>(msg: MessageRequest<DataReq> & {eid?: string}): Promise<DataRes> {
+    static request<DataRes, DataReq>(msg: PartialDeep<MessageRequest<DataReq>> & {eid?: string}): Promise<DataRes> {
       return new Promise((resolve, reject) => {
         new Subscription({
           msg: {...msg, eid: msg.eid ?? randomUUID()},

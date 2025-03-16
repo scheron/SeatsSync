@@ -6,6 +6,7 @@ import {Subscription, wsClient} from "@/api/ws"
 
 import type {ConnectionState, SubscriptionInstance, SubscriptionOptions} from "@/api/ws"
 import type {MessageRequest} from "@seats-sync/types/websocket"
+import type {PartialDeep} from "type-fest"
 import type {Ref} from "vue"
 
 type UseWebSocketReturn = {
@@ -14,7 +15,7 @@ type UseWebSocketReturn = {
   subscribe: <DataRes = any, DataReq = any>(options: SubscriptionOptions<DataRes, DataReq>) => SubscriptionInstance["unsubscribe"]
   unsubscribe: (id: string) => void
   resubscribe: (id: string) => void
-  send: <DataRes = any, DataReq = any>(message: MessageRequest<DataReq>) => Promise<DataRes>
+  send: <DataRes = any, DataReq = any>(message: PartialDeep<MessageRequest<DataReq>>) => Promise<DataRes>
   cleanup: () => void
 }
 
@@ -50,7 +51,7 @@ export function useWebSocket(): UseWebSocketReturn {
     subscription.resubscribe()
   }
 
-  async function send<DataRes = any, DataReq = any>(message: MessageRequest<DataReq>): Promise<DataRes> {
+  async function send<DataRes = any, DataReq = any>(message: PartialDeep<MessageRequest<DataReq>>): Promise<DataRes> {
     try {
       return await Subscription.request<DataRes, DataReq>(message)
     } catch (error) {
