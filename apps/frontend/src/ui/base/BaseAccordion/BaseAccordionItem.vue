@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {ref} from "vue"
-import {useExpansionGroupItem} from "@/composables/useExpansionGroupItem"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 import BasePanel from "@/ui/base/BasePanel.vue"
 import BaseTransitions from "@/ui/base/BaseTransitions.vue"
+import {useExpansionGroupItem} from "./useExpansionGroupItem"
 
 const props = withDefaults(
   defineProps<{
