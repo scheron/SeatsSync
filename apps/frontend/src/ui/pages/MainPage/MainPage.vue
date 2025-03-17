@@ -10,7 +10,7 @@ import Scheme from "./fragments/Scheme.vue"
 import SchemeInfo from "./fragments/SchemeInfo.vue"
 import {groupSeatsByType} from "./helpers"
 
-import type {HallInCinema, Seat} from "@seats-sync/types/cinema"
+import type {Cinema, HallInCinema, Seat} from "@seats-sync/types/cinema"
 
 const cinemaStore = useCinemaStore()
 const {isOpened, open, close} = useReserveSeatModal()

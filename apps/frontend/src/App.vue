@@ -4,6 +4,7 @@ import {wsClient} from "@/api/ws"
 import {ModalsLiteContainer} from "@/lib/modals-lite"
 import {ToastsLiteProvider} from "@/lib/toasts-lite"
 import {useWebsocketConnected} from "@/composables/useWebsocketConnected"
+import ErrorBoundary from "@/ui/common/ErrorBoundary"
 import Header from "@/ui/sections/Header.vue"
 
 useWebsocketConnected()
@@ -18,7 +19,9 @@ tryOnBeforeUnmount(() => wsClient.destroy())
     </header>
 
     <main class="h-page-body overflow-hidden">
-      <RouterView />
+      <ErrorBoundary stop-propagation>
+        <RouterView />
+      </ErrorBoundary>
     </main>
   </div>
 
