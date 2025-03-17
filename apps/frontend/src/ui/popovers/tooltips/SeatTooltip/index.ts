@@ -1,0 +1,1 @@
+export {useSeatTooltip} from "./useSeatTooltip"

@@ -2,7 +2,7 @@
 import {computed, toRef} from "vue"
 import {cn} from "@/utils/tailwindcss"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
-import {useSeatTooltip} from "@/ui/popovers/tooltips/useSeatTooltip"
+import {useSeatTooltip} from "@/ui/popovers/tooltips/SeatTooltip"
 
 import type {Seat} from "@seats-sync/types/cinema"
 
