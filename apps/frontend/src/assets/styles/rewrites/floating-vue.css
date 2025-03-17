@@ -1,9 +1,10 @@
 .v-popper--theme-dropdown .v-popper__inner,
 .v-popper--theme-tooltip .v-popper__inner {
-  background: none;
-  color: none;
+  background: hsl(var(--primary-200));
+  color: hsl(var(--primary-900));
+  backdrop-filter: blur(10px);
   border-radius: 8px;
-  border: none;
+  border: 1px solid hsl(var(--primary-300));
   box-shadow: none;
   font-size: 14px;
   padding: none;
