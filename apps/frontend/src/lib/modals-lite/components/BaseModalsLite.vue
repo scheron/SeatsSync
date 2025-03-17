@@ -5,10 +5,8 @@ import {cn} from "../utils/tailwindcss"
 
 import type {ModalContext} from "../model/types"
 
-const props = defineProps<{
-  classOverlay?: string
-  classContainer?: string
-}>()
+const props = defineProps<{classOverlay?: string; classContainer?: string}>()
+const emit = defineEmits<{"click-outside": []}>()
 
 const modalContext = inject<ModalContext>(MODAL_CONTEXT)!
 
@@ -17,6 +15,7 @@ const classesOverlay = computed(() => cn("fixed inset-0 flex items-center justif
 function handleOverlayClick(event: MouseEvent) {
   if (event.target !== event.currentTarget) return
   modalContext?.closeSelf?.()
+  emit("click-outside")
 }
 </script>
 

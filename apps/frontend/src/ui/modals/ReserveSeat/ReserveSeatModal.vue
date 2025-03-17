@@ -60,6 +60,7 @@ function onPurchase() {
     class-container=" flex flex-col max-w-[400px] size-fit"
     class-content="relative px-3 pb-3 pt-8 border border-primary-300"
     :fullscreen="isMobile"
+    @close="onCancel"
   >
     <BaseButton icon="close" size="sm" class="absolute right-1 top-1 size-6 p-0" @click="onCancel" />
 

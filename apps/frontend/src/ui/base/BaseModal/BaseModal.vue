@@ -16,13 +16,15 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
 })
 
+const emit = defineEmits<{close: []}>()
+
 const containerClass = computed(() => cn(containerVariants(props).value, props.classContainer))
 const contentClass = computed(() => cn(contentVariants(props).value, props.classContent))
 const overlayClass = computed(() => cn("bg-primary-100/90", props.classOverlay))
 </script>
 
 <template>
-  <BaseModalsLite :class-container="containerClass" :class-overlay="overlayClass">
+  <BaseModalsLite :class-container="containerClass" :class-overlay="overlayClass" @click-outside="emit('close')">
     <div class="size-full overflow-auto" :class="contentClass">
       <slot v-if="loading" name="loader">
         <div class="size-full min-h-48 min-w-48">
