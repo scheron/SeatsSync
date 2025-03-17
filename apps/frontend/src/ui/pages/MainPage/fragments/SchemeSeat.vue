@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import {computed} from "vue"
+import {computed, toRef} from "vue"
 import {cn} from "@/utils/tailwindcss"
+import {useSeatTooltip} from "@/composables/tooltips/useSeatTooltip"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 
 import type {Seat} from "@seats-sync/types/cinema"
 
 const props = defineProps<{seat: Seat; hovered?: boolean}>()
+const {seatRef} = useSeatTooltip(toRef(props, "hovered"), toRef(props, "seat"))
 
 const styles = computed(() => ({
   width: props.seat.width + "px",
@@ -13,16 +15,18 @@ const styles = computed(() => ({
   left: props.seat.x + "px",
   top: props.seat.y + "px",
 }))
+
 const classes = computed(() => {
   return cn({
     "bg-primary-700/50 cursor-pointer": props.seat.status === "VACANT",
     "bg-primary-300/50 cursor-default": props.seat.status === "RESERVED",
+    "bg-primary-600": props.seat.status === "VACANT" && props.hovered,
   })
 })
 </script>
 
 <template>
-  <div class="border-accent/20 absolute flex items-center justify-center rounded-md border" :style="styles" :class="classes">
+  <div ref="seatRef" class="border-accent/20 absolute flex items-center justify-center rounded-md border" :style="styles" :class="classes">
     <span
       v-if="seat.status === 'VACANT'"
       class="text-content pointer-events-none flex cursor-default items-center justify-center transition-opacity duration-200 select-none"

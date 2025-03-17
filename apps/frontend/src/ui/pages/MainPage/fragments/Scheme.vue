@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {computed, ref} from "vue"
+import {computed, watch} from "vue"
 import {calculateHallSize, createSeatsSchema} from "@/utils/hall"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 import SchemeRowName from "./SchemeRowName.vue"
@@ -7,12 +7,11 @@ import SchemeSeat from "./SchemeSeat.vue"
 
 import type {Seat} from "@seats-sync/types/cinema"
 
-const props = withDefaults(defineProps<{seats: Seat[]}>(), {
+const props = withDefaults(defineProps<{seats: Seat[]; stopHover?: boolean; hoveredSeat?: Seat | null}>(), {
   seats: () => [],
+  hoveredSeat: null,
 })
 const emit = defineEmits<{"hover-seat": [Seat | null]; "select-seat": [Seat]}>()
-
-const hoveredSeat = ref<{row: number; place: number} | null>(null)
 
 const seatsSchema = computed(() => createSeatsSchema(props.seats))
 const sizes = computed(() => calculateHallSize(props.seats))
@@ -28,12 +27,9 @@ function onRowMouseMove(e: MouseEvent) {
     return
   }
 
-  const seatRow = Number(seatEl.dataset.row)
-  const seatPlace = Number(seatEl.dataset.place)
+  if (props.stopHover) return
+
   const seatId = Number(seatEl.dataset.seatId)
-
-  hoveredSeat.value = {row: seatRow, place: seatPlace}
-
   const seat = props.seats.find(({id}) => id === seatId)
   if (!seat) return
 
@@ -41,7 +37,6 @@ function onRowMouseMove(e: MouseEvent) {
 }
 
 function onRowMouseLeave() {
-  hoveredSeat.value = null
   emit("hover-seat", null)
 }
 
@@ -54,6 +49,8 @@ function onSeatClick(e: MouseEvent) {
 
   if (seat) emit("select-seat", seat)
 }
+
+watch(() => props.stopHover, onRowMouseLeave)
 </script>
 
 <template>
@@ -71,7 +68,7 @@ function onSeatClick(e: MouseEvent) {
           v-for="seat in row"
           :key="seat.id"
           :seat="seat"
-          :hovered="hoveredSeat?.row === seat.row && hoveredSeat?.place === seat.place"
+          :hovered="hoveredSeat?.id === seat.id"
           data-seat
           :data-row="seat.row"
           :data-place="seat.place"
@@ -81,8 +78,8 @@ function onSeatClick(e: MouseEvent) {
       </div>
 
       <template v-for="row in seatsSchema" :key="row[0].row">
-        <SchemeRowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat" left />
-        <SchemeRowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat" />
+        <SchemeRowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat ? {row: hoveredSeat.row, place: hoveredSeat.place} : null" left />
+        <SchemeRowName :row="row" :rowIndex="row[0].row" :hoveredSeat="hoveredSeat ? {row: hoveredSeat.row, place: hoveredSeat.place} : null" />
       </template>
     </div>
   </div>
