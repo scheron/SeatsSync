@@ -14,13 +14,12 @@
     "lint": "bunx turbo run lint",
     "test": "bunx turbo run test",
     "format": "bunx turbo run format",
-    "lint-staged": "lint-staged",
+    "lint-staged": "bunx turbo run lint-staged",
     "check-types": "bunx turbo run check-types"
   },
   "devDependencies": {
     "husky": "^9.1.6",
-    "turbo": "^2.4.4",
-    "typescript": "5.4.3"
+    "turbo": "^2.4.4"
   },
   "packageManager": "bun@1.1.33"
 }

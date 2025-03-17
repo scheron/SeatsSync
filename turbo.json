@@ -13,6 +13,9 @@
     "lint": {
       "outputs": []
     },
+    "lint-staged": {
+      "outputs": []
+    },
     "install": {
       "cache": false
     },

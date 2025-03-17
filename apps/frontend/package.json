@@ -15,9 +15,11 @@
   },
   "lint-staged": {
     "*.{js,vue}": [
+      "eslint --fix",
       "prettier --write"
     ],
     "*.ts": [
+      "eslint --fix",
       "prettier  --parser=typescript --write"
     ]
   },
