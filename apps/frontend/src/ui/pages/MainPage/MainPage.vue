@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import {ref} from "vue"
-import {useCinemaStore} from "@/stores/cinema/cinema.store"
+import {useRouter} from "vue-router"
+import {invoke, until} from "@vueuse/core"
+import {useCinemaStore} from "@/stores/cinema"
 import BaseCard from "@/ui/base/BaseCard.vue"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
 import {useReserveSeatModal} from "@/ui/popovers/modals/ReserveSeat"
@@ -12,8 +14,11 @@ import {groupSeatsByType} from "./helpers"
 
 import type {Cinema, HallInCinema, Seat} from "@seats-sync/types/cinema"
 
+const router = useRouter()
 const cinemaStore = useCinemaStore()
+
 const {isOpened, open, close} = useReserveSeatModal()
+
 const hoveredSeat = ref<Seat | null>(null)
 
 function onHoverSeat(seat: Seat | null) {
@@ -40,6 +45,11 @@ function onSelectSeat(seat: Seat) {
   hoveredSeat.value = null
   open(cinemaStore.activeHall?.id, seat)
 }
+
+invoke(async () => {
+  await until(() => cinemaStore.isCinemaLoaded).toBeTruthy()
+  router.routeLoaded()
+})
 </script>
 
 <template>

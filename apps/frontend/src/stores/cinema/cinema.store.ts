@@ -15,6 +15,7 @@ export const useCinemaStore = defineStore("cinema", () => {
   const themeStore = useThemeStore()
   const {subscribe, unsubscribe, cleanup} = useWebSocket()
 
+  const isCinemaLoaded = ref(false)
   const cinemas = ref<Cinema[]>([])
 
   const activeCinema = ref<Cinema | null>(null)
@@ -47,6 +48,8 @@ export const useCinemaStore = defineStore("cinema", () => {
     cinemas.value = []
     activeCinema.value = null
     activeHall.value = null
+    isCinemaLoaded.value = false
+    themeStore.reset()
     cleanup()
   }
 
@@ -57,8 +60,13 @@ export const useCinemaStore = defineStore("cinema", () => {
       msg: {type: "cinemas.subscribe", data: null, eid: CINEMAS_SUB_ID},
       onSnapshot: (data) => {
         cinemas.value = data
+        isCinemaLoaded.value = true
         onSelectCinema(data[0])
         onSelectHall(data[0].halls[0].id)
+      },
+      onError: (error) => {
+        console.error("onSubscribeCinemas", error)
+        isCinemaLoaded.value = true
       },
       onUpdate: (data) => {
         cinemas.value.forEach((cinema) => {
@@ -79,6 +87,7 @@ export const useCinemaStore = defineStore("cinema", () => {
   )
 
   return {
+    isCinemaLoaded,
     cinemas,
     activeCinema,
     activeHall,

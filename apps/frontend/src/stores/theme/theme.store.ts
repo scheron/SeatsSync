@@ -5,6 +5,7 @@ import {generatePrimaryPalette, updateCssVariables} from "./utils/colorPalette"
 import {changeThemeSafari, setTransition, watchUserSystemTheme} from "./utils/darkMode"
 
 const STORAGE_KEY_MODE = "seats-sync.dark"
+const DEFAULT_PRIMARY_COLOR = "#372CD3"
 
 export const useThemeStore = defineStore("theme", () => {
   const primaryColor = ref("#372CD3")
@@ -33,14 +34,20 @@ export const useThemeStore = defineStore("theme", () => {
     setItem<boolean>(STORAGE_KEY_MODE, isDark)
   }
 
+  function reset() {
+    setPrimaryColor(DEFAULT_PRIMARY_COLOR)
+  }
+
   watch(isDarkMode, setMode, {immediate: true})
   watchUserSystemTheme((isDark) => (isDarkMode.value = isDark))
   setPrimaryColor(primaryColor.value)
 
   return {
     isDarkMode,
-    toggleDarkMode,
     primaryColor,
+
+    toggleDarkMode,
     setPrimaryColor,
+    reset,
   }
 })

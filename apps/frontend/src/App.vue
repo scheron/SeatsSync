@@ -4,8 +4,12 @@ import {wsClient} from "@/api/ws"
 import {ModalsLiteContainer} from "@/lib/modals-lite"
 import {ToastsLiteProvider} from "@/lib/toasts-lite"
 import {useWebsocketConnected} from "@/composables/useWebsocketConnected"
+import {useUIStore} from "@/stores/ui"
 import ErrorBoundary from "@/ui/common/ErrorBoundary"
+import PageLoader from "@/ui/common/PageLoader.vue"
 import Header from "@/ui/sections/Header.vue"
+
+const uiStore = useUIStore()
 
 useWebsocketConnected()
 
@@ -14,11 +18,13 @@ tryOnBeforeUnmount(() => wsClient.destroy())
 
 <template>
   <div class="bg-primary-200 text-content flex h-svh w-screen flex-col overflow-hidden">
-    <header class="h-page-header shadow-md">
+    <PageLoader v-if="uiStore.isLoadingPage" />
+
+    <header v-if="uiStore.isShowHeader" v-show="!uiStore.isLoadingPage" class="h-page-header shadow-md">
       <Header />
     </header>
 
-    <main class="h-page-body overflow-hidden">
+    <main v-show="!uiStore.isLoadingPage" class="h-page-body overflow-hidden">
       <ErrorBoundary stop-propagation>
         <RouterView />
       </ErrorBoundary>

@@ -9,13 +9,24 @@ export const routes: RouteRecordRaw[] = [
   {
     path: "/",
     name: ROUTE_NAMES.MAIN,
-    meta: {requiredStatus: "user", title: "Seats Sync"},
+    meta: {
+      requiredStatus: "user",
+      title: "Seats Sync",
+      loadingShowDelay: 0,
+      manualLoadingStop: true,
+    },
     component: () => import("@/ui/pages/MainPage"),
   },
   {
     path: "/auth",
     name: ROUTE_NAMES.AUTH,
-    meta: {hideHeader: true, requiredStatus: "guest", title: "Welcome"},
+    meta: {
+      hideHeader: true,
+      requiredStatus: "guest",
+      title: "Welcome",
+      loadingShowDelay: 0,
+      loadingHideTimeout: 0,
+    },
     component: () => import("@/ui/pages/AuthPage"),
   },
   {
