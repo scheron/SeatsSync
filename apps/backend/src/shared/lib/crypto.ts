@@ -1,7 +1,7 @@
 import {randomBytes, scrypt} from "crypto"
 import {promisify} from "util"
 
-import {logger} from "@/lib/logger"
+import {logger} from "@/shared/lib/logger"
 
 const scryptAsync = promisify(scrypt)
 

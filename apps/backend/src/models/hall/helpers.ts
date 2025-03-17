@@ -1,4 +1,4 @@
-import type {HallDB, SeatTypeDB} from "./hall.types"
+import type {HallDB, SeatTypeDB} from "./types"
 
 export function getSeatTypes(seats: HallDB["seats"]): SeatTypeDB[] {
   const seatTypeMap = seats.reduce((acc, seat) => {

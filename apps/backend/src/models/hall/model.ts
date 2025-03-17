@@ -1,9 +1,9 @@
-import {logger} from "@/lib/logger"
 import {DB} from "@/core/db"
-import {getSeatTypes} from "./hall.helpers"
+import {logger} from "@/shared/lib/logger"
+import {getSeatTypes} from "./helpers"
 
 import type {Hall, Seat} from "@seats-sync/types/cinema"
-import type {HallDB, SeatTypeDB} from "./hall.types"
+import type {HallDB, SeatTypeDB} from "./types"
 
 class HallModel {
   constructor(private db: DB) {}

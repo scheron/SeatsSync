@@ -1,8 +1,8 @@
-import {Errors} from "@seats-sync/constants/errors"
 import jwt from "jsonwebtoken"
-import {logger} from "@/lib/logger"
 import {ApiError} from "@/core/ws/utils/ApiError"
 import {env} from "@/shared/constants/env"
+import {logger} from "@/shared/lib/logger"
+import {Errors} from "../../../../../packages/constants/src/errors"
 
 if (!env.JWT_SECRET) {
   logger.error("JWT_SECRET is not set")

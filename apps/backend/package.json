@@ -60,11 +60,11 @@
   },
   "_moduleAliases": {
     "@": "dist",
-    "@/lib": "dist/lib",
+    "@/controllers": "dist/controllers",
     "@/core": "dist/core",
-    "@/constants": "dist/constants",
-    "@/modules": "dist/modules",
+    "@/methods": "dist/methods",
+    "@/models": "dist/models",
     "@/shared": "dist/shared",
-    "@/utils": "dist/utils"
+    "@/subscriptions": "dist/subscriptions"
   }
 }

@@ -1,7 +1,7 @@
 import {Errors} from "@seats-sync/constants/errors"
 import {WebSocket} from "ws"
-import {logger} from "@/lib/logger"
 import {formatError, formatSuccess} from "@/core/ws/messages"
+import {logger} from "@/shared/lib/logger"
 
 import type {IWebSocketClient} from "@/core/ws"
 import type {ErrorCode} from "@seats-sync/constants/errors"

@@ -1,9 +1,9 @@
-import {logger} from "@/lib/logger"
+import {getCinemaHalls} from "@/models/cinema/helpers"
 import {DB} from "@/core/db"
-import {getCinemaHalls} from "./cinema.helpers"
+import {logger} from "@/shared/lib/logger"
 
+import type {CinemaDB} from "@/models/cinema/types"
 import type {Cinema} from "@seats-sync/types/cinema"
-import type {CinemaDB} from "./cinema.types"
 
 class CinemaModel {
   constructor(private db: DB) {}

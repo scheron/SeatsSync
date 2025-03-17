@@ -1,12 +1,12 @@
 import {createServer} from "http"
 
+import {CinemaController} from "@/controllers/cinema"
+import {HallController} from "@/controllers/hall"
+import {UserController} from "@/controllers/user"
 import cookieParser from "cookie-parser"
 import cors from "cors"
 import express from "express"
 import {resolveMessages, WebSocketClient} from "@/core/ws"
-import {CinemaController, CinemaSubscription} from "@/modules/cinema"
-import {HallController, HallSubscription} from "@/modules/hall"
-import {UserController, UserSubscription} from "@/modules/user"
 import {env} from "@/shared/constants/env"
 
 const app = express()
@@ -26,22 +26,17 @@ app.use(
 )
 app.use("/api", router)
 
-UserController.initUserMethods(router)
+UserController.initRouter(router)
 
 const ws = new WebSocketClient(server, {
   pingInterval: 5_000,
   autoCloseTimeout: 15_000,
   enablePingPong: true,
-  onMessage: resolveMessages([
-    //
-    CinemaController.onMessage,
-    UserController.onMessage,
-    HallController.onMessage,
-  ]),
+  onMessage: resolveMessages([CinemaController.onMessage, HallController.onMessage, UserController.onMessage]),
   onDisconnect: (ws) => {
-    UserSubscription.unsubscribe(ws)
-    HallSubscription.unsubscribe(ws)
-    CinemaSubscription.unsubscribe(ws)
+    UserController.onDisconnect(ws)
+    HallController.onDisconnect(ws)
+    CinemaController.onDisconnect(ws)
   },
 })
 

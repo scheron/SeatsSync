@@ -5,6 +5,7 @@
     "type": "module",
     "exports": {
         "./cinema": "./src/cinema.ts",
-        "./websocket": "./src/websocket.ts"
+        "./websocket": "./src/websocket.ts",
+        "./user": "./src/user.ts"
     }
 }

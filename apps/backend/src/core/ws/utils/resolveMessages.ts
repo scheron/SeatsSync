@@ -5,11 +5,11 @@ import type {MessageRequest} from "@seats-sync/types/websocket"
 import type {IWebSocketClient, OnMessageHandler, WebSocketOnMessage} from "../types"
 
 export function resolveMessages(handlers: OnMessageHandler[]): WebSocketOnMessage {
-  return (ws: IWebSocketClient, message: MessageRequest<any>) => {
+  return async (ws: IWebSocketClient, message: MessageRequest<any>) => {
     let resolved = false
 
     for (const handler of handlers) {
-      resolved = handler(ws, message)
+      resolved = await handler(ws, message)
       if (resolved) break
     }
 

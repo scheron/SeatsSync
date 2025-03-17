@@ -1,4 +1,4 @@
-import {logger} from "@/lib/logger"
+import {logger} from "@/shared/lib/logger"
 
 import type {ErrorCode} from "@seats-sync/constants/errors"
 

@@ -1,6 +1,6 @@
-import type {NavigationGuardNext, RouteLocationNormalized, Router} from "vue-router"
-
 import {useUIStore} from "@/stores/ui"
+
+import type {NavigationGuardNext, RouteLocationNormalized, Router} from "vue-router"
 
 declare module "vue-router" {
   interface Router {

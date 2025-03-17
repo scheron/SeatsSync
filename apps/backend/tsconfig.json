@@ -6,12 +6,12 @@
     "outDir": "dist",
     "paths": {
       "@/*": ["*"],
-      "@/constants/*": ["constants/*"],
+      "@/controllers/*": ["controllers/*"],
       "@/core/*": ["core/*"],
-      "@/lib/*": ["lib/*"],
-      "@/modules/*": ["modules/*"],
+      "@/methods/*": ["methods/*"],
+      "@/models/*": ["models/*"],
       "@/shared/*": ["shared/*"],
-      "@/utils/*": ["utils/*"]
+      "@/subscriptions/*": ["subscriptions/*"]
     },
     "typeRoots": ["node_modules/@types"]
   },

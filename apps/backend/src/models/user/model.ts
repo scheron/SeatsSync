@@ -1,7 +1,7 @@
-import {logger} from "@/lib/logger"
 import {DB} from "@/core/db"
+import {logger} from "@/shared/lib/logger"
 
-import type * as UserTypes from "./user.types"
+import type * as UserTypes from "./types"
 
 class Candidate extends Map<string, UserTypes.Candidate> {
   constructor(private readonly candidateTTL = 5 * 60 * 1000) {

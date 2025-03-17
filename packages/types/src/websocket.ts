@@ -11,7 +11,7 @@ export type BaseMessage = {
   ts?: number;
 };
 
-export type MessageRequest<Data = unknown> = BaseMessage & {
+export type MessageRequest<Data = any> = BaseMessage & {
   /** Message type */
   type: Method | Subscription | "*";
   /** Message payload */

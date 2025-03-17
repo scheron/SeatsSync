@@ -1,5 +1,5 @@
 import type {Cinema} from "@seats-sync/types/cinema"
-import type {CinemaDB} from "./cinema.types"
+import type {CinemaDB} from "./types"
 
 export function getCinemaHalls(halls: CinemaDB["halls"]): Cinema["halls"] {
   return halls.map(({seats, ...hall}) => ({

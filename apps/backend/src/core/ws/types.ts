@@ -12,7 +12,7 @@ export type IWebSocketClient = WebSocket & {
   }
 }
 
-export type OnMessageHandler = (ws: IWebSocketClient, message: MessageRequest<any>) => boolean
+export type OnMessageHandler = (ws: IWebSocketClient, message: MessageRequest<any>) => Promise<boolean>
 export type WebSocketOnMessage = (ws: IWebSocketClient, message: MessageRequest<any>) => void
 
 export type WebSocketClientOptions = {

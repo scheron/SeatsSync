@@ -1,0 +1,1 @@
+export {hallModel} from "./model"

@@ -1,0 +1,1 @@
+export {cinemaModel} from "./model"

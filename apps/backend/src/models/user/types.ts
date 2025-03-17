@@ -10,7 +10,7 @@ export type Candidate = {
   username: string
   secret: string
   qr_url: string
-  createdAt: number
+  created_at: number
 }
 
 export type UserStatus = "guest" | "user"

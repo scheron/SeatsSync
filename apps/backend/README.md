@@ -1,143 +1,46 @@
-# Seats Sync Backend
+# Backend Architecture
 
-Real-time hall occupancy monitoring system backend service.
+The backend follows a layered architecture with strict dependency rules where each layer can only import from layers below it. This ensures a predictable data flow and maintainable codebase.
 
-## 🏗 Architecture
-
-### Module Structure
+## Architecture Overview
 
 ```
 src/
-├── core/           # Application core
-├── modules/        # Business modules
-├── lib/            # Backend-specific libraries
-├── shared/         # Shared entities
-│   ├── types         # Common types and interfaces
-│   ├── errors        # Error types and codes
-│   ├── constants     # Shared business constants
-│   └── utils         # Platform-agnostic utilities
-└── index.ts      # Entry point
+├── controllers/      # Application entry points (WebSocket, HTTP)
+├── methods/          # Business logic operations
+├── subscriptions/    # Real-time updates handling
+├── models/           # Data access and business rules
+├── core/             # Infrastructure (DB, WebSocket, PubSub)
+└── shared/           # Shared utilities, types, and constants
 ```
 
-### Database Entities
-
-#### Cinema
-
-- Main entity representing a cinema
-- Contains basic information: name and color scheme
-- Has one-to-many relationship with halls
-
-#### Hall
-
-- Represents a cinema hall
-- Contains size information (rows and seats)
-- Connected to cinema and contains seats
-
-#### Seat
-
-- Detailed information about each seat in the hall
-- Includes coordinates and dimensions for display
-- Has status (vacant/reserved)
-- Linked to seat type
-
-#### SeatType
-
-- Defines the type of seat (standard, VIP, etc.)
-- Used for seat categorization
-
-#### User
-
-- System user information
-- Two-factor authentication support
-- Token and recovery management
-
-### Business Modules
-
-Each module is organized according to Domain-Driven Design (DDD) principles and contains:
+### Layer Dependencies
 
 ```
-modules/
-├── cinema/                 # Cinema module
-│   ├── cinema.types.ts    # Types and interfaces
-│   ├── cinema.model.ts    # Database operations
-│   ├── cinema.service.ts  # Business logic
-│   ├── cinema.methods.ts  # API methods
-│   ├── cinema.controller.ts # Request handling
-│   ├── cinema.subscription.ts # WebSocket subscriptions
-│   └── index.ts          # Public API
-├── hall/                  # Hall module
-└── user/                  # User module
+┌─────────────────┐
+│   CONTROLLERS   │ → WebSocket and HTTP entry points
+├─────────────────┤
+│    METHODS      │ → Business operations
+│  SUBSCRIPTIONS  │ → Real-time updates
+├─────────────────┤
+│     MODELS      │ → Data access and business rules
+├─────────────────┤
+│      CORE       │ → Infrastructure services
+├─────────────────┤
+│     SHARED      │ → Common utilities and types
+└─────────────────┘
 ```
 
-## 🔧 Tech Stack
+## Authentication Flows
 
-- **Runtime**: Node.js with TypeScript
-- **Language**: TypeScript 5.6
-- **Database**: PostgreSQL with Prisma ORM
-- **API Framework**: Express.js
-- **WebSocket**: ws library with custom implementation
-- **Authentication**: Two-factor auth with speakeasy
-- **Logging**: Winston
-- **Containerization**: Docker
-
-### Core Dependencies
-
-- **@prisma/client**: ^5.22.0 - Database ORM
-- **express**: ^4.21.1 - Web framework
-- **ws**: ^8.18.0 - WebSocket server
-- **jsonwebtoken**: ^9.0.2 - JWT authentication
-- **speakeasy**: ^2.0.0 - Two-factor authentication
-- **winston**: ^3.17.0 - Logging
-- **node-cache**: ^5.1.2 - In-memory caching
-
-### Development Tools
-
-- **nodemon**: Hot reloading for development
-- **tsx**: TypeScript execution
-- **typescript**: ^5.6.3
-- **prettier**: Code formatting
-
-## 📐 Architectural Decisions
-
-### 1. Modular Architecture
-
-- Each module is independent and self-contained
-- Clear separation of responsibilities within modules
-- Business logic encapsulation
-
-### 2. Data Operations
-
-- **Model**: Direct database interaction
-- **Service**: Business logic and validation
-- **Controller**: HTTP/WebSocket request handling
-- **Types**: Strong typing
-
-### 3. Real-time Communication
-
-- WebSocket for real-time updates
-- Publisher/Subscriber pattern for notifications
-- Multiple connection support
-
-### 4. Error Handling
-
-- Centralized error handling
-- Typed errors for different cases
-- Error logging with context
-
-## 🔄 Data Flows
-
-### Authentication
-
-> FE - Frontend | BE - Backend
+### Connection Authentication
 
 0. FE open the socket connection.
 1. While opening the connections, BE checks the http-only token in the cookie.
 2. If token is active, user is logged in.
 3. If token is expired or not exists, user is not logged in.
 
----
-
-### Login
+### Login Flow
 
 0. FE start to auth.
 1. FE send request with username to BE.
@@ -147,9 +50,7 @@ modules/
 5. BE returns a token to FE.
 6. FE should recreate the socket connection.
 
----
-
-### Register
+### Registration Flow
 
 0. FE start to auth.
 1. FE send request with username to BE.
@@ -159,13 +60,11 @@ modules/
 5. BE returns a token to FE.
 6. FE should recreate the socket connection.
 
----
-
-### WebSocket Communication
+## WebSocket Communication
 
 The protocol is message-based:
 
-````typescript
+```typescript
 // Client -> Server (Request)
 {
   type: "name",             // Method to call
@@ -182,9 +81,10 @@ The protocol is message-based:
   ts: 1234567890,              // Timestamp
   error?:  "ERROR_CODE",       // Error code
 }
+```
 
+### Seat Status Update Flow
 
-### Seat Status Update
 ```mermaid
 sequenceDiagram
     Client->>WebSocket: Hall subscription
@@ -197,44 +97,117 @@ sequenceDiagram
     Note over Client,HallModel: Real-time updates
     HallModel->>HallSubscription: Status change
     HallSubscription-->>Client: Notification
-````
-
-## 🛠 Development & Deployment
-
-### Available Scripts
-
-```bash
-# Install dependencies
-npm install
-
-# Run in development mode with hot reload
-npm run dev
-
-# Build the project
-npm run build
-
-# Run in production mode
-npm run start
 ```
 
-### Docker Deployment
+## Layer Responsibilities
 
-```bash
-# Build and run with Docker Compose
-make up
+### 1. Entrypoints
 
-# Stop containers
-make down
+- Application initialization
+- Request routing
+- Dependencies: controllers
 
-# View logs
-make logs
+### 2. Controllers
+
+- Request handling
+- Coordination between methods and subscriptions
+- Dependencies: methods, subscriptions
+
+### 3. Methods & Subscriptions
+
+- Methods: Business logic operations
+- Subscriptions: Real-time update handling
+- Dependencies: models
+- Note: Methods and Subscriptions interact only through controllers
+
+### 4. Models
+
+- Data access
+- Business rules implementation
+- Dependencies: core
+
+### 5. Core
+
+- Infrastructure services (Database, WebSocket, PubSub)
+- Dependencies: shared
+
+### 6. Shared
+
+- Types
+- Constants
+- Utility functions
+- Dependencies: none
+
+## Code Examples
+
+### Data Flow Example
+
+Example of `get_cinemas` request flow:
+
+```typescript
+// 1. Request arrives at entrypoint
+WebSocket
+  // 2. Routes to controller
+  → CinemaController
+    // 3. Controller calls method
+    → getCinemas method
+      // 4. Method works with model
+      → CinemaModel
+        // 5. Model uses core for data access
+        → Database (core)
 ```
+
+## Benefits
+
+1. **Predictable Data Flow**
+
+   - Data always flows from top to bottom
+   - Clear dependency hierarchy
+
+2. **Isolated Layers**
+
+   - Each layer has clear responsibility
+   - Easy to test each layer independently
+
+3. **Easy to Extend**
+
+   - Clear place for new functionality
+   - Simple to add new methods and subscriptions
+
+4. **Improved Maintainability**
+   - No circular dependencies
+   - Clear project structure
+
+## Development
+
+### Prerequisites
+
+- Node.js 18+
+- PostgreSQL
+- Bun
 
 ### Environment Setup
 
 1. Copy `.env.example` to `.env`
-2. Configure the following variables:
+2. Configure database connection in `.env`
+3. Configure the following variables:
    - `DATABASE_URL` - PostgreSQL connection string
    - `JWT_SECRET` - Secret for JWT tokens
    - `PORT` - Server port (default: 3000)
    - `WS_PORT` - WebSocket port (default: 3001)
+
+### Available Scripts
+
+- `bun dev` - Start development server
+- `bun build` - Build for production
+- `bun lint` - Run linting
+- `bun format` - Format code
+- `bun test` - Run tests
+
+### Database
+
+The project uses Prisma as ORM. To work with database:
+
+- `bun prisma generate` - Generate Prisma Client
+- `bun prisma migrate dev` - Run migrations
+- `bun prisma studio` - Open Prisma Studio
