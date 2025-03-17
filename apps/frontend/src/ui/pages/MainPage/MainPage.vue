@@ -24,6 +24,11 @@ function onHoverSeat(seat: Seat | null) {
   hoveredSeat.value = seat
 }
 
+function onSelectCinema(cinema: Cinema) {
+  cinemaStore.onSelectCinema(cinema)
+  cinemaStore.onSelectHall(cinema.halls[0].id)
+}
+
 function onSelectHall(hall: HallInCinema) {
   if (hall.id === cinemaStore.activeHall?.id) return
   cinemaStore.onSelectHall(hall.id)
@@ -47,7 +52,7 @@ function onSelectSeat(seat: Seat) {
           :active-cinema="cinemaStore.activeCinema"
           :active-hall="cinemaStore.activeHall"
           @select-hall="onSelectHall"
-          @select-cinema="cinemaStore.onSelectCinema"
+          @select-cinema="onSelectCinema"
         />
       </BaseCard>
     </div>

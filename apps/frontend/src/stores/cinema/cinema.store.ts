@@ -1,9 +1,9 @@
-import {ref} from "vue"
-import {tryOnBeforeUnmount, tryOnMounted} from "@vueuse/core"
+import {ref, watch} from "vue"
 import {deepMerge} from "@seats-sync/utils/merge"
 import {defineStore} from "pinia"
 import {useWebSocket} from "@/composables/useWebSocket"
 import {useThemeStore} from "@/stores/theme"
+import {useUserStore} from "@/stores/user"
 
 import type {Cinema, Hall} from "@seats-sync/types/cinema"
 
@@ -11,6 +11,7 @@ export const useCinemaStore = defineStore("cinema", () => {
   const HALL_SUB_ID = "hall-sub"
   const CINEMAS_SUB_ID = "cinemas-sub"
 
+  const userStore = useUserStore()
   const themeStore = useThemeStore()
   const {subscribe, unsubscribe, cleanup} = useWebSocket()
 
@@ -21,12 +22,11 @@ export const useCinemaStore = defineStore("cinema", () => {
 
   function onSelectCinema(cinema: Cinema) {
     activeCinema.value = cinema
-    onSelectHall(cinema.halls[0].id)
-
     themeStore.setPrimaryColor(cinema.color)
   }
 
   function onSelectHall(hallId: Hall["id"]) {
+    console.log("onSelectHall", hallId, activeHall.value?.id)
     if (activeHall.value?.id === hallId) return
 
     unsubscribe(HALL_SUB_ID)
@@ -44,8 +44,11 @@ export const useCinemaStore = defineStore("cinema", () => {
     })
   }
 
-  function onClearActiveHall() {
+  function clearCinemas() {
+    cinemas.value = []
+    activeCinema.value = null
     activeHall.value = null
+    cleanup()
   }
 
   function onSubscribeCinemas() {
@@ -67,9 +70,14 @@ export const useCinemaStore = defineStore("cinema", () => {
     })
   }
 
-  tryOnMounted(onSubscribeCinemas)
-
-  tryOnBeforeUnmount(() => cleanup())
+  watch(
+    () => userStore.isLoggedIn,
+    (isLoggedIn) => {
+      if (isLoggedIn) onSubscribeCinemas()
+      else clearCinemas()
+    },
+    {immediate: true},
+  )
 
   return {
     cinemas,
@@ -77,8 +85,6 @@ export const useCinemaStore = defineStore("cinema", () => {
     activeHall,
 
     onSelectCinema,
-
     onSelectHall,
-    onClearActiveHall,
   }
 })
