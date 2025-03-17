@@ -40,9 +40,7 @@ export const useUserStore = defineStore("user", () => {
     })
   })
 
-  tryOnBeforeUnmount(() => {
-    cleanup()
-  })
+  tryOnBeforeUnmount(cleanup)
 
   return {
     isLoggedIn,

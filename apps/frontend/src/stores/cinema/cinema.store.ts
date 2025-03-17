@@ -37,7 +37,6 @@ export const useCinemaStore = defineStore("cinema", () => {
         activeHall.value = data
       },
       onUpdate: (data) => {
-        console.log("onUpdate", data)
         if (activeHall.value?.id !== data.id) return
         activeHall.value = deepMerge(activeHall.value, data)
       },
