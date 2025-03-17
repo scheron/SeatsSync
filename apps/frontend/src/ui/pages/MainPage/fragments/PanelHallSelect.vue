@@ -8,6 +8,12 @@ import type {Cinema, Hall, HallInCinema} from "@seats-sync/types/cinema"
 const props = defineProps<{cinemas: Cinema[]; activeCinema: Cinema; activeHall: Hall | null}>()
 const emit = defineEmits<{"select-hall": [HallInCinema]; "select-cinema": [Cinema]}>()
 
+function calcHallReserve(hall: HallInCinema) {
+  const total = hall.seats_count.RESERVED + hall.seats_count.VACANT
+  const percent = (hall.seats_count.RESERVED / total) * 100
+  return `${percent.toFixed(0)}%`
+}
+
 function isActive(hall: HallInCinema) {
   return hall.id === props.activeHall?.id
 }
@@ -58,6 +64,10 @@ function onSelectHall(hall: HallInCinema) {
       @click="onSelectHall(hall)"
     >
       {{ hall.name }}
+
+      <span class="ml-1 text-xs">
+        {{ calcHallReserve(hall) }}
+      </span>
     </BaseButton>
   </div>
 </template>
