@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import {computed, toRef} from "vue"
 import {cn} from "@/utils/tailwindcss"
-import {useSeatTooltip} from "@/composables/tooltips/useSeatTooltip"
 import BaseIcon from "@/ui/base/BaseIcon.vue"
+import {useSeatTooltip} from "@/ui/popovers/tooltips/useSeatTooltip"
 
 import type {Seat} from "@seats-sync/types/cinema"
 
