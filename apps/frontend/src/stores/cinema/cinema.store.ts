@@ -26,7 +26,6 @@ export const useCinemaStore = defineStore("cinema", () => {
   }
 
   function onSelectHall(hallId: Hall["id"]) {
-    console.log("onSelectHall", hallId, activeHall.value?.id)
     if (activeHall.value?.id === hallId) return
 
     unsubscribe(HALL_SUB_ID)
