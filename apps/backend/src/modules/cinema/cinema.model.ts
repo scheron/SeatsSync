@@ -1,5 +1,6 @@
 import {logger} from "@/lib/logger"
 import {DB} from "@/core/db"
+import {getCinemaHalls} from "./cinema.helpers"
 
 import type {Cinema} from "@seats-sync/types/cinema"
 import type {CinemaDB} from "./cinema.types"
@@ -31,16 +32,33 @@ class CinemaModel {
 
     const cinemas = result.data.map((cinema) => ({
       ...cinema,
-      halls: cinema.halls.map(({seats, ...hall}) => ({
-        ...hall,
-        seats_count: seats.reduce((acc, seat) => ({...acc, [seat.status]: (acc[seat.status] || 0) + 1}), {
-          VACANT: 0,
-          RESERVED: 0,
-        }),
-      })),
+      halls: getCinemaHalls(cinema.halls),
     }))
 
     return cinemas as Cinema[]
+  }
+
+  async getOne(id: number): Promise<Cinema> {
+    const result = await this.db.findOne<CinemaDB>({
+      where: {id},
+      include: {
+        halls: {
+          select: {
+            id: true,
+            name: true,
+            rows: true,
+            places: true,
+            seats: {
+              select: {id: true, status: true},
+            },
+          },
+        },
+      },
+    })
+
+    const {halls, ...cinema} = result.data
+
+    return {...cinema, halls: getCinemaHalls(halls)}
   }
 }
 
