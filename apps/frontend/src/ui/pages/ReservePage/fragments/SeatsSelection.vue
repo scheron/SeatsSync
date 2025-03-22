@@ -11,17 +11,10 @@ import type {Hall, Seat} from "@seats-sync/types/cinema"
 withDefaults(defineProps<{name: string; seats: Seat[]; seatTypes: Hall["seat_types"]}>(), {
   seats: () => [],
 })
-const emit = defineEmits<{
-  "select-seat": [Seat]
-  "hover-seat": [Seat | null]
-}>()
+const emit = defineEmits<{"select-seat": [Seat]}>()
 
 function onSelectSeat(seat: Seat) {
   emit("select-seat", seat)
-}
-
-function onHoverSeat(seat: Seat | null) {
-  emit("hover-seat", seat)
 }
 </script>
 
@@ -48,8 +41,6 @@ function onHoverSeat(seat: Seat | null) {
         :disabled="seat.status === 'RESERVED'"
         size="sm"
         @click="onSelectSeat(seat)"
-        @mouseenter="onHoverSeat(seat)"
-        @mouseleave="onHoverSeat(null)"
       >
         {{ getSeatRowChar(seat.row) }}{{ seat.place }}
 

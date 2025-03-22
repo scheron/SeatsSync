@@ -1,4 +1,4 @@
-import {computed, ref} from "vue"
+import {computed, ref, watch} from "vue"
 import {useRouter} from "vue-router"
 import {tryOnBeforeMount, tryOnBeforeUnmount} from "@vueuse/core"
 import {ROUTE_NAMES} from "@/router/routes"
@@ -31,20 +31,24 @@ export const useUserStore = defineStore("user", () => {
       msg: {type: "user.subscribe", data: null},
       onResult: ({data}) => {
         user.value = data
-
-        if (Object.hasOwn(data, "status")) {
-          if (data.status === "user") router.push({name: ROUTE_NAMES.MAIN})
-          else router.push({name: ROUTE_NAMES.AUTH})
-        }
       },
     })
   })
+
+  watch(
+    () => user.value?.status,
+    (newStatus, prevStatus) => {
+      if (!prevStatus || newStatus === prevStatus) return
+
+      if (newStatus === "user") router.push({name: ROUTE_NAMES.MAIN})
+      else router.push({name: ROUTE_NAMES.AUTH})
+    },
+  )
 
   tryOnBeforeUnmount(cleanup)
 
   return {
     isLoggedIn,
-
     getUserStatus,
     logout,
   }

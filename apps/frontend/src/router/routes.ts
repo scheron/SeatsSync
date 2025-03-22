@@ -3,6 +3,7 @@ import type {RouteRecordRaw} from "vue-router"
 export const ROUTE_NAMES = {
   MAIN: "MAIN",
   AUTH: "AUTH",
+  RESERVE: "RESERVE",
 }
 
 export const routes: RouteRecordRaw[] = [
@@ -16,6 +17,16 @@ export const routes: RouteRecordRaw[] = [
       manualLoadingStop: true,
     },
     component: () => import("@/ui/pages/MainPage"),
+  },
+  {
+    path: "/reserve",
+    name: ROUTE_NAMES.RESERVE,
+    meta: {
+      requiredStatus: "user",
+      title: "Reserve",
+      loadingShowDelay: 0,
+    },
+    component: () => import("@/ui/pages/ReservePage"),
   },
   {
     path: "/auth",
