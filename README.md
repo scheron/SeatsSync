@@ -22,11 +22,17 @@ SeatsSync is a sophisticated full-stack application for managing seat reservatio
 
 ## 🎥 Interface Demo
 
+### Live Demo
+https://github.com/user-attachments/assets/21112cb3-cdd6-458d-bade-78a67cccf966
+
 ### Main Interface
 <div align="center">
   <img src="media/main_light.jpeg" alt="Main Interface Light Theme" width="45%">
   <img src="media/main_dark.jpeg" alt="Main Interface Dark Theme" width="45%">
 </div>
+
+### Theme Switching
+https://github.com/user-attachments/assets/eba6921e-e427-4c22-85dc-b97d0e3a104a
 
 ### Authentication Flow
 <div align="center">
@@ -34,15 +40,6 @@ SeatsSync is a sophisticated full-stack application for managing seat reservatio
   <img src="media/auth_login.jpeg" alt="Auth Login" width="30%">
   <img src="media/auth_register.jpeg" alt="Auth Register" width="30%">
 </div>
-
-### Live Demo
-
-https://github.com/user-attachments/assets/21112cb3-cdd6-458d-bade-78a67cccf966
-
-
-### Theme Switching
-https://github.com/user-attachments/assets/eba6921e-e427-4c22-85dc-b97d0e3a104a
-
 
 ## 🌟 Key Features
 
