@@ -79,7 +79,7 @@ SeatsSync/
 
 ## 🔧 Technical Stack
 
-### Frontend [![README](https://img.shields.io/badge/Frontend%20README-42b883?style=flat-square)](./apps/frontend/README.md)
+### Frontend [![README](https://img.shields.io/badge/README-42b883?style=flat-square)](./apps/frontend/README.md)
 
 - **Framework**: Vue 3 with Composition API
 - **Build Tool**: Vite with custom plugins
@@ -166,7 +166,7 @@ src/
 - ESLint and Prettier for code quality and consistency
 
 
-### Backend [![README](https://img.shields.io/badge/Backend%20README-339933?style=flat-square)](./apps/backend/README.md)
+### Backend [![README](https://img.shields.io/badge/README-339933?style=flat-square)](./apps/backend/README.md)
 
 - **Server**: Node.js with Express
 - **WebSockets**: Custom WebSocket implementation with heartbeat
