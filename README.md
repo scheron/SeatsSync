@@ -38,14 +38,14 @@ SeatsSync is a sophisticated full-stack application for managing seat reservatio
 ### Live Demo
 <div align="center">
 
-![Main Demo](https://private-user-images.githubusercontent.com/80116099/425824706-8b03e5a8-d658-4e01-b26d-292f656621f2.mp4?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDI3MzM1NDAsIm5iZiI6MTc0MjczMzI0MCwicGF0aCI6Ii84MDExNjA5OS80MjU4MjQ3MDYtOGIwM2U1YTgtZDY1OC00ZTAxLWIyNmQtMjkyZjY1NjYyMWYyLm1wND9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAzMjMlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMzIzVDEyMzQwMFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWNjNmZiZjNmYjUxYTg2ZWMxYmE1YzA4MWI0ZjA4MWRkZTY2NDQ3OTM1OTI5NmM2NjBjZDk4NjBjYzllMjJhMDYmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.t7VEYaEbDtVWgnTH3TNCw3GlOtNlhqkuxxmjkR9Zmio)
+![Main Demo](https://github.com/Infected-by-js/SeatsSync/blob/main/media/main.mp4?raw=true)
 
 </div>
 
 ### Theme Switching
 <div align="center">
 
-![Theme Switch Demo](https://github-production-user-asset-6210df.s3.amazonaws.com/80116099/425824524-0503f8b5-ca21-4e27-81cb-857a8d1574fd.mp4?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250323%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250323T122918Z&X-Amz-Expires=300&X-Amz-Signature=6d8741e4300aceb56f5ab20518ac0da22c791e98d85118790ceba43796c4e8ec&X-Amz-SignedHeaders=host)
+![Theme Switch Demo](https://github.com/Infected-by-js/SeatsSync/blob/main/media/theme.mp4?raw=true)
 
 </div>
 
