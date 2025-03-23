@@ -37,18 +37,16 @@ SeatsSync is a sophisticated full-stack application for managing seat reservatio
 
 ### Live Demo
 <div align="center">
-  <video width="100%" controls>
-    <source src="media/main.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+
+![Main Demo](https://user-images.githubusercontent.com/80116099/425824706-8b03e5a8-d658-4e01-b26d-292f656621f2.mp4)
+
 </div>
 
 ### Theme Switching
 <div align="center">
-  <video width="100%" controls>
-    <source src="media/theme.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+
+![Theme Switch Demo](https://user-images.githubusercontent.com/80116099/425824524-0503f8b5-ca21-4e27-81cb-857a8d1574fd.mp4)
+
 </div>
 
 ## 🌟 Key Features
