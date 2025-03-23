@@ -1,7 +1,7 @@
 # SeatsSync
 
 <div align="center">
-  <h3>🎭 Modern Seat Reservation System</h3>
+  <h3>🎭 Seat Reservation System</h3>
   
   ![Vue.js](https://img.shields.io/badge/Vue.js-42b883?style=for-the-badge&logo=vue.js&logoColor=white)
   ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
@@ -18,7 +18,7 @@
 
 ## About
 
-SeatsSync is a sophisticated full-stack application for managing seat reservations, built as a monorepo with a shared component architecture. The system features real-time updates through WebSockets, elegant state management, and a beautifully crafted UI/UX.
+SeatsSync is a full-stack application for managing seat reservations, built as a monorepo with a shared component architecture. The system features real-time updates through WebSockets, elegant state management, and fancy UI.
 
 ## 🎥 Interface Demo
 
