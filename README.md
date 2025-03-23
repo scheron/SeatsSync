@@ -36,18 +36,13 @@ SeatsSync is a sophisticated full-stack application for managing seat reservatio
 </div>
 
 ### Live Demo
-<div align="center">
 
-![Main Demo](https://github.com/Infected-by-js/SeatsSync/blob/main/media/main.mp4?raw=true)
+https://github.com/user-attachments/assets/21112cb3-cdd6-458d-bade-78a67cccf966
 
-</div>
 
 ### Theme Switching
-<div align="center">
+https://github.com/user-attachments/assets/eba6921e-e427-4c22-85dc-b97d0e3a104a
 
-![Theme Switch Demo](https://github.com/Infected-by-js/SeatsSync/blob/main/media/theme.mp4?raw=true)
-
-</div>
 
 ## 🌟 Key Features
 
