@@ -79,8 +79,7 @@ SeatsSync/
 
 ## 🔧 Technical Stack
 
-### Frontend 
-[![README](https://img.shields.io/badge/View%20Frontend%20README-42b883?style=flat-square)](./apps/frontend/README.md)
+### Frontend [![README](https://img.shields.io/badge/Frontend%20README-42b883?style=flat-square)](./apps/frontend/README.md)
 
 - **Framework**: Vue 3 with Composition API
 - **Build Tool**: Vite with custom plugins
@@ -167,8 +166,7 @@ src/
 - ESLint and Prettier for code quality and consistency
 
 
-### Backend
-[![README](https://img.shields.io/badge/View%20Backend%20README-339933?style=flat-square)](./apps/backend/README.md)
+### Backend [![README](https://img.shields.io/badge/Backend%20README-339933?style=flat-square)](./apps/backend/README.md)
 
 - **Server**: Node.js with Express
 - **WebSockets**: Custom WebSocket implementation with heartbeat
@@ -238,7 +236,6 @@ The backend implements a single WebSocket connection per client with several rel
   - Server sends ping every 30 seconds
   - Client must respond with pong within 5 seconds
   - Connection is considered dead if no pong received
-  - Automatic reconnection on connection loss
 
 - **Message Protocol**:
   ```typescript
