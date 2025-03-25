@@ -1,4 +1,10 @@
-import type {EventMap, LogParams} from "./types"
+import type {EventMap} from "./types"
+
+type LogParams<Events extends EventMap> = {
+  event?: keyof Events
+  data?: any
+  message?: string
+}
 
 function getStackTrace(): {full: string; file: string} {
   const error = new Error()
