@@ -32,6 +32,9 @@ function getStackTrace(): {full: string; file: string} {
   return {full: callerLine, file: fileMatch[1]}
 }
 
+/**
+ * Default debug logger for the EventEmitter.
+ */
 export function log<Events extends EventMap>(operation: string, params: LogParams<Events>): void {
   const stackTrace = getStackTrace()
   const eventName = params.event ? String(params.event) : ""
