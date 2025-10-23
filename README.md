@@ -1,4 +1,4 @@
-# SeatsSync
+# SeatsSync [![Check DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/scheron/SeatsSync)
 
 <div align="center">
   <h3>🎭 Seat Reservation System</h3>
